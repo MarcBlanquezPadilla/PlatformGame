@@ -35,5 +35,6 @@ public:
 	std::string title;
 	int width = 1280;
 	int height = 720;
+	
 	int scale = 1;
 };

@@ -36,8 +36,7 @@ public:
 	float isWalking = false;
 	SDL_Texture* texture = NULL;
 	int texW, texH;
-	int ghostW = 48;
-	int ghostH = 48;
+	SDL_Rect currentFrame;
 
 	//Audio fx
 	int pickCoinFxId;

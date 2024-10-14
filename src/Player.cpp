@@ -29,19 +29,7 @@ bool Player::Start() {
 	//L03: TODO 2: Initialize Player parameters
 	texture = Engine::GetInstance().textures.get()->Load("Assets/Textures/GhostCharacter/Ghost_Sheet.png");
 
-	// L08 TODO 5: Add physics to the player - initialize physics body
-	/*Engine::GetInstance().textures.get()->GetSize(texture, texW, texH);*/
-	pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX(), (int)position.getY(), ghostW, bodyType::DYNAMIC);
-
-	// L08 TODO 6: Assign player class (using "this") to the listener of the pbody. This makes the Physics module to call the OnCollision method
-	pbody->listener = this;
-
-	// L08 TODO 7: Assign collider type
-	pbody->ctype = ColliderType::PLAYER;
-
-	//Player Animations:
-
-	//idle Anim
+	//idle anim
 	idle.PushBack({ 0, 0, 48, 48 });
 	idle.PushBack({ 48, 0, 48, 48 });
 	idle.PushBack({ 96, 0, 48, 48 });
@@ -51,13 +39,30 @@ bool Player::Start() {
 	idle.PushBack({ 288, 0, 48, 48 });
 	idle.PushBack({ 336, 0, 48, 48 });
 	idle.speed = 0.2f;
+	idle.loop = true;
+
+	*currentAnim = idle;
+	currentFrame = currentAnim->GetCurrentFrame();
+
+
+	// L08 TODO 5: Add physics to the player - initialize physics body
+	/*Engine::GetInstance().textures.get()->GetSize(texture, currentFrame.w, currentFrame.h);*/
+	pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX(), (int)position.getY(), currentFrame.h/3, bodyType::DYNAMIC);
+
+	// L08 TODO 6: Assign player class (using "this") to the listener of the pbody. This makes the Physics module to call the OnCollision method
+	pbody->listener = this;
+
+	// L08 TODO 7: Assign collider type
+	pbody->ctype = ColliderType::PLAYER;
+
+	
+	
 
 	//walkRight Anim
 	/*walkRight.PushBack({ 0,48,48,48 });
 	walkRight.PushBack({ 0,48, });*/
 
-	currentAnim = &idle;
-
+	
 
 
 	return true;
@@ -65,6 +70,7 @@ bool Player::Start() {
 
 bool Player::Update(float dt)
 {
+	currentFrame = currentAnim->GetCurrentFrame();
 	// L08 TODO 5: Add physics to the player - updated player position using physics
 	b2Vec2 velocity = b2Vec2(0, -GRAVITY_Y);
 
@@ -105,10 +111,11 @@ bool Player::Update(float dt)
 	
 
 	b2Transform pbodyPos = pbody->body->GetTransform();
-	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - texH / 2);
-	position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2);
+	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - currentFrame.w / 2);
+	position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - currentFrame.h / 2);
+	
 
-	Engine::GetInstance().render.get()->DrawTexture(texture, (int)position.getX(), (int)position.getY(), &currentAnim->GetCurrentFrame());
+	Engine::GetInstance().render.get()->DrawTexture(texture, (int)position.getX(), (int)position.getY(), &currentFrame);
 	return true;
 }
 
@@ -116,7 +123,7 @@ bool Player::CleanUp()
 {
 	LOG("Cleanup player");
 	Engine::GetInstance().textures.get()->UnLoad(texture);
-	delete[] currentAnim;
+	
 	return true;
 }
 
