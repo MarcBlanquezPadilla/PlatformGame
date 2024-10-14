@@ -33,8 +33,11 @@ public:
 
 	//Declare player parameters
 	float speed = 5.0f;
+	float isWalking = false;
 	SDL_Texture* texture = NULL;
 	int texW, texH;
+	int ghostW = 48;
+	int ghostH = 48;
 
 	//Audio fx
 	int pickCoinFxId;
@@ -45,4 +48,11 @@ public:
 	bool isJumping = false; // Flag to check if the player is currently jumping
 
 	Animation idle;
+	Animation walkRight;
+	Animation walkLeft;
+	Animation jump;
+	Animation hurt;
+	Animation death;
+	Animation* currentAnim = new Animation;
+	
 };
