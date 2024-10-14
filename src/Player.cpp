@@ -73,6 +73,14 @@ bool Player::Update(float dt)
 	// Apply the velocity to the player
 	pbody->body->SetLinearVelocity(velocity);
 
+	
+	//idle.PushBack({ 7, 14, 60, 90 });
+	//idle.PushBack({ 95, 15, 60, 89 });
+	//idle.PushBack({ 184, 14, 60, 90 });
+	//idle.PushBack({ 276, 11, 60, 93 });
+	//idle.PushBack({ 366, 12, 60, 92 });
+	//idle.speed = 0.2f;
+
 	b2Transform pbodyPos = pbody->body->GetTransform();
 	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - texH / 2);
 	position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2);

@@ -3,6 +3,8 @@
 #include "Entity.h"
 #include "SDL2/SDL.h"
 #include "Box2D/Box2D.h"
+#include "Animation.h"
+
 
 struct SDL_Texture;
 
@@ -41,4 +43,6 @@ public:
 	PhysBody* pbody;
 	float jumpForce = 1.2f; // The force to apply when jumping
 	bool isJumping = false; // Flag to check if the player is currently jumping
+
+	Animation idle;
 };

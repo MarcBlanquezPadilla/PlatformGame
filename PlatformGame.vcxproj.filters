@@ -137,7 +137,7 @@
     <ClInclude Include="src\Item.h">
       <Filter>Source Files\Game</Filter>
     </ClInclude>
-    <ClInclude Include="Animation.h">
+    <ClInclude Include="src\Animation.h">
       <Filter>Source Files\Utils</Filter>
     </ClInclude>
   </ItemGroup>
