@@ -41,6 +41,7 @@ bool Scene::Awake()
 bool Scene::Start()
 {
 	//L06 TODO 3: Call the function to load the map. 
+	
 	Engine::GetInstance().map->Load("Assets/Maps/", "Mapa.tmx");
 
 	return true;
@@ -55,11 +56,14 @@ bool Scene::PreUpdate()
 // Called each loop iteration
 bool Scene::Update(float dt)
 {
-	//L03 TODO 3: Make the camera movement independent of framerate
+	
 	float camSpeed = 1;
 
+	//
+
 	if(Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
-		Engine::GetInstance().render.get()->camera.y -= ceil(camSpeed * dt);
+
+	Engine::GetInstance().render.get()->camera.y -= ceil(camSpeed * dt);
 
 	if(Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
 		Engine::GetInstance().render.get()->camera.y += ceil(camSpeed * dt);

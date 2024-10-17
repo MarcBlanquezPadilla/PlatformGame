@@ -112,6 +112,8 @@ bool Map::Load(std::string path, std::string fileName)
 {
     bool ret = false;
 
+
+
     // Assigns the name of the map file and the path
     mapFileName = fileName;
     mapPath = path;
