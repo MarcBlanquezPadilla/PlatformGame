@@ -59,9 +59,7 @@ bool Scene::Update(float dt)
 	
 	float camSpeed = 1;
 
-	//
-	Engine::GetInstance().render.get()->camera.x -= player->GetPosition().getX();
-	Engine::GetInstance().render.get()->camera.y -= ceil(camSpeed * dt);
+	Engine::GetInstance().render.get()->camera.x = -player->position.getX();
 
 
 	return true;
