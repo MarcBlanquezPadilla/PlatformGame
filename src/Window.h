@@ -23,7 +23,7 @@ public:
 	void SetTitle(const char* title);
 
 	// Retrive window size
-	void GetWindowSize(int& width, int& height) const;
+	void GetWindowSize(int &width, int &height) const;
 
 	// Retrieve window scale
 	int GetScale() const;
@@ -33,8 +33,8 @@ public:
 	SDL_Window* window;
 
 	std::string title;
-	int width = 1280;
-	int height = 720;
+	int width = 32;
+	int height = 12;
 	
-	int scale = 1;
+	int scale = 2;
 };
