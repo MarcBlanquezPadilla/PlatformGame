@@ -74,10 +74,12 @@ bool Player::Update(float dt)
 	// L08 TODO 5: Add physics to the player - updated player position using physics
 	b2Vec2 velocity = b2Vec2(0, -GRAVITY_Y);
 
+	
+
 	// Move left
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
 		velocity.x = -0.2 * dt;
-		/*isWalking = true;*/
+		isWalking = true;
 	}
 
 	// Move right
@@ -94,10 +96,9 @@ bool Player::Update(float dt)
 	}
 
 	// If the player is jumpling, we don't want to apply gravity, we use the current velocity prduced by the jump
-	if(isJumping == true)
+	if (isJumping == true)
 	{
-		velocity = pbody->body->GetLinearVelocity();
-
+		velocity = { velocity.x, pbody->body->GetLinearVelocity().y };
 	}
 
 	// Apply the velocity to the player
