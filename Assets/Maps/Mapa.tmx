@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="30" height="10" tilewidth="16" tileheight="16" infinite="0" nextlayerid="3" nextobjectid="1">
- <tileset firstgid="1" source="Ground_Tiles.tsx"/>
- <tileset firstgid="111" source="Back_Tiles.tsx"/>
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="30" height="10" tilewidth="16" tileheight="16" infinite="0" nextlayerid="3" nextobjectid="1">
+ <tileset firstgid="1" name="Ground_Tiles" tilewidth="32" tileheight="32" tilecount="0" columns="0"/>
+ <tileset firstgid="92" name="Back_Tiles" tilewidth="32" tileheight="32" tilecount="0" columns="0"/>
  <layer id="2" name="Background" width="30" height="10">
   <data>
    <tile/>
@@ -158,12 +158,12 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="111"/>
-   <tile gid="113"/>
+   <tile gid="92"/>
+   <tile gid="94"/>
    <tile gid="1"/>
    <tile gid="2"/>
-   <tile gid="111"/>
-   <tile gid="113"/>
+   <tile gid="92"/>
+   <tile gid="94"/>
    <tile/>
    <tile/>
    <tile/>
@@ -178,71 +178,71 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="111"/>
-   <tile gid="112"/>
-   <tile gid="112"/>
-   <tile gid="113"/>
+   <tile gid="92"/>
+   <tile gid="93"/>
+   <tile gid="93"/>
+   <tile gid="94"/>
    <tile/>
    <tile/>
    <tile/>
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="133"/>
-   <tile gid="135"/>
+   <tile gid="114"/>
+   <tile gid="116"/>
    <tile gid="23"/>
    <tile gid="24"/>
-   <tile gid="122"/>
-   <tile gid="124"/>
+   <tile gid="103"/>
+   <tile gid="105"/>
    <tile/>
    <tile/>
    <tile/>
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="111"/>
-   <tile gid="113"/>
+   <tile gid="92"/>
+   <tile gid="94"/>
    <tile/>
    <tile/>
    <tile/>
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="133"/>
-   <tile gid="134"/>
-   <tile gid="134"/>
-   <tile gid="135"/>
+   <tile gid="114"/>
+   <tile gid="115"/>
+   <tile gid="115"/>
+   <tile gid="116"/>
    <tile/>
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="119"/>
-   <tile gid="119"/>
-   <tile gid="119"/>
-   <tile gid="119"/>
+   <tile gid="100"/>
+   <tile gid="100"/>
+   <tile gid="100"/>
+   <tile gid="100"/>
    <tile/>
    <tile/>
-   <tile gid="122"/>
-   <tile gid="124"/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile gid="133"/>
-   <tile gid="135"/>
+   <tile gid="103"/>
+   <tile gid="105"/>
    <tile/>
    <tile/>
    <tile/>
    <tile/>
    <tile/>
    <tile/>
+   <tile gid="114"/>
+   <tile gid="116"/>
    <tile/>
    <tile/>
-   <tile gid="111"/>
-   <tile gid="112"/>
-   <tile gid="113"/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile gid="92"/>
+   <tile gid="93"/>
+   <tile gid="94"/>
    <tile/>
    <tile/>
    <tile/>
@@ -252,8 +252,8 @@
    <tile gid="25"/>
    <tile/>
    <tile/>
-   <tile gid="122"/>
-   <tile gid="124"/>
+   <tile gid="103"/>
+   <tile gid="105"/>
    <tile/>
    <tile/>
    <tile/>
@@ -270,9 +270,9 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="133"/>
-   <tile gid="134"/>
-   <tile gid="135"/>
+   <tile gid="114"/>
+   <tile gid="115"/>
+   <tile gid="116"/>
    <tile/>
    <tile/>
    <tile/>
@@ -282,14 +282,14 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="133"/>
-   <tile gid="135"/>
+   <tile gid="114"/>
+   <tile gid="116"/>
    <tile/>
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="111"/>
-   <tile gid="113"/>
+   <tile gid="92"/>
+   <tile gid="94"/>
    <tile gid="23"/>
    <tile gid="25"/>
    <tile/>
