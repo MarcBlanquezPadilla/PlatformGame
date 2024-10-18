@@ -11,6 +11,7 @@
 #include "Player.h"
 #include "Map.h"
 #include "Item.h"
+#include "Physics.h"
 
 Scene::Scene() : Module()
 {
@@ -56,7 +57,9 @@ bool Scene::PreUpdate()
 // Called each loop iteration
 bool Scene::Update(float dt)
 {
-	Engine::GetInstance().render.get()->camera.x = -player->position.getX();
+	if (player->position.getX() < POS_TO_START_MOVING_CAM) Engine::GetInstance().render.get()->camera.x = (POS_TO_START_MOVING_CAM + CAM_EXTRA_DISPLACEMENT_X)  * -Engine::GetInstance().window.get()->scale;
+	else if (player->position.getX() > POS_TO_STOP_MOVING_CAM) Engine::GetInstance().render.get()->camera.x = (POS_TO_STOP_MOVING_CAM + CAM_EXTRA_DISPLACEMENT_X) * -Engine::GetInstance().window.get()->scale;
+	else Engine::GetInstance().render.get()->camera.x = (player->position.getX() + CAM_EXTRA_DISPLACEMENT_X) * -Engine::GetInstance().window.get()->scale;
 
 	return true;
 }

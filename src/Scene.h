@@ -3,6 +3,10 @@
 #include "Module.h"
 #include "Player.h"
 
+#define POS_TO_START_MOVING_CAM 100
+#define POS_TO_STOP_MOVING_CAM 200
+#define CAM_EXTRA_DISPLACEMENT_X -100
+
 struct SDL_Texture;
 
 class Scene : public Module
