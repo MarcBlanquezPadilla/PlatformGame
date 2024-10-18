@@ -49,6 +49,29 @@ struct MapLayer
 
 // L06: TODO 2: Create a struct to hold information for a TileSet
 // Ignore Terrain Types and Tile Types for now, but we want the image!
+enum ParalaxType
+{
+    Mountain1,
+    Mountain2,
+    Cloud1,
+    Cloud2,
+    Cloud3,
+    Moon,
+    Sky
+};
+
+struct Paralax
+{
+    int spacing;
+    int margin;
+    int width;
+    int height;
+    int slow;
+    int repeatNum;
+    bool loaded;
+    ParalaxType type;
+    SDL_Texture* texture;
+};
 
 struct TileSet
 {
@@ -85,6 +108,7 @@ struct MapData
 	int tileWidth;
 	int tileHeight;
     std::list<TileSet*> tilesets;
+    std::list<Paralax*> paralaxs;
 
     // L07: TODO 2: Add the info to the MapLayer Struct
     std::list<MapLayer*> layers;
@@ -122,6 +146,8 @@ public:
 
     // L09: TODO 6: Load a group of properties 
     bool LoadProperties(pugi::xml_node& node, Properties& properties);
+
+    bool LoadParalax(const char* path, ParalaxType type);
 
 public: 
     std::string mapFileName;

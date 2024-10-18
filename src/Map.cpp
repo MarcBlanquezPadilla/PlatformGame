@@ -5,6 +5,7 @@
 #include "Map.h"
 #include "Log.h"
 #include "Physics.h"
+#include "Window.h"
 
 #include <math.h>
 
@@ -34,6 +35,21 @@ bool Map::Start() {
 bool Map::Update(float dt)
 {
     bool ret = true;
+
+    for (const auto& paralax : mapData.paralaxs) {
+        //Check if the property Draw exist get the value, if it's true draw the lawyer
+        if (paralax->loaded)
+        {
+            int cameraX = Engine::GetInstance().render.get()->camera.x / Engine::GetInstance().window.get()->GetScale();
+
+            for (int numRep = 0; numRep < paralax->repeatNum; numRep++)
+            {
+                if (numRep%2 != 0) Engine::GetInstance().render->DrawTexture(paralax->texture, -cameraX / paralax->slow + paralax->margin + paralax->width * (numRep), 0);
+                else Engine::GetInstance().render->DrawTextureFlipped(paralax->texture, -cameraX / paralax->slow + paralax->margin + paralax->width * (numRep), 0);
+            }
+        }
+    }
+
 
     if (mapLoaded) {
 
@@ -229,6 +245,52 @@ bool Map::Load(std::string path, std::string fileName)
 
     mapLoaded = ret;
     return ret;
+}
+
+bool Map::LoadParalax(const char* path, ParalaxType type)
+{
+
+    Paralax* paralax = new Paralax();
+    paralax->loaded = true;
+    SDL_Texture* texture = Engine::GetInstance().textures.get()->Load(path);
+
+    if (texture == nullptr)
+    {
+        LOG("Could not load paralax texture from path %s", path);
+        paralax->loaded = false;
+    }
+
+    paralax->texture = texture;
+    paralax->margin = 0;
+    paralax->spacing = 0;
+    paralax->type = type;
+    paralax->width = 320;
+    paralax->height = 180;
+
+    switch (paralax->type)
+    {
+    case ParalaxType::Mountain1: paralax->slow = 20; paralax->repeatNum = 8; 
+        break;
+    case ParalaxType::Mountain2: paralax->slow = 10; paralax->repeatNum = 8; 
+        break;
+    case ParalaxType::Cloud1: paralax->slow = 5; paralax->repeatNum = 6; 
+        break;
+    case ParalaxType::Cloud2: paralax->slow = 4; paralax->repeatNum = 6;
+        break;
+    case ParalaxType::Cloud3: paralax->slow = 3; paralax->repeatNum = 6; 
+        break;
+    case ParalaxType::Moon: paralax->slow = 2; paralax->margin = 480; paralax->repeatNum = 1; 
+        break;
+    case ParalaxType::Sky: paralax->slow = 1; paralax->repeatNum = 6; 
+        break;
+    default:
+        LOG("Paralax type %i not recognised", (int)paralax->type);
+        break;
+    }
+
+    mapData.paralaxs.push_front(paralax);
+
+    return paralax->loaded;
 }
 
 // L07: TODO 8: Create a method that translates x,y coordinates from map positions to world positions

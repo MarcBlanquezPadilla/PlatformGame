@@ -44,6 +44,13 @@ bool Scene::Start()
 	//L06 TODO 3: Call the function to load the map. 
 	
 	Engine::GetInstance().map->Load("Assets/Maps/", "Mapa.tmx");
+	Engine::GetInstance().map->LoadParalax("Assets/Textures/Parallax/Mountain1.png", ParalaxType::Mountain1);
+	Engine::GetInstance().map->LoadParalax("Assets/Textures/Parallax/Mountain2.png", ParalaxType::Mountain2);
+	Engine::GetInstance().map->LoadParalax("Assets/Textures/Parallax/Cloud1.png", ParalaxType::Cloud1);
+	Engine::GetInstance().map->LoadParalax("Assets/Textures/Parallax/Moon.png", ParalaxType::Moon);
+	Engine::GetInstance().map->LoadParalax("Assets/Textures/Parallax/Cloud2.png", ParalaxType::Cloud2);
+	Engine::GetInstance().map->LoadParalax("Assets/Textures/Parallax/Cloud3.png", ParalaxType::Cloud3);
+	Engine::GetInstance().map->LoadParalax("Assets/Textures/Parallax/Sky.png", ParalaxType::Sky);
 
 	return true;
 }
