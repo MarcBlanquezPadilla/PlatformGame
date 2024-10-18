@@ -112,7 +112,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);SDL2main.lib;box2d.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:\Users\marcb\OneDrive\Documentos\GitHub\PlatformGame\vcpkg_installed\x64-windows\x64-windows\lib\manual-link</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\ccair\Documents\Programs\GitHub\PlatformGame\vcpkg_installed\x64-windows\x64-windows\lib\manual-link;C:\Users\marcb\OneDrive\Documentos\GitHub\PlatformGame\vcpkg_installed\x64-windows\x64-windows\lib\manual-link</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /E /I /Y "$(ProjectDir)Assets" "$(OutDir)Assets"</Command>
