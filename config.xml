@@ -10,7 +10,7 @@
   </render>
 
   <window>
-    <resolution width="1280" height="360" scale="2"/>
+    <resolution width="1280" height="640" scale="2"/>
     <fullscreen value="false"/>
     <borderless value="false"/>
     <resizable value="false"/>

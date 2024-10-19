@@ -20,7 +20,7 @@ Player::~Player() {
 bool Player::Awake() {
 
 	//L03: TODO 2: Initialize Player parameters
-	position = Vector2D(48, 32);
+	position = Vector2D(16, 16);
 	return true;
 }
 
@@ -28,6 +28,10 @@ bool Player::Start() {
 
 	//L03: TODO 2: Initialize Player parameters
 	texture = Engine::GetInstance().textures.get()->Load("Assets/Textures/GhostCharacter/Ghost_Sheet.png");
+
+	dir = LEFT;
+
+	
 
 	//idle anim
 	idle.PushBack({ 0, 0, 48, 48 });
@@ -47,7 +51,7 @@ bool Player::Start() {
 
 	// L08 TODO 5: Add physics to the player - initialize physics body
 	/*Engine::GetInstance().textures.get()->GetSize(texture, currentFrame.w, currentFrame.h);*/
-	pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX(), (int)position.getY(), currentFrame.h/3, bodyType::DYNAMIC);
+	pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX(), (int)position.getY(), GHOST_W, bodyType::DYNAMIC);
 
 	// L08 TODO 6: Assign player class (using "this") to the listener of the pbody. This makes the Physics module to call the OnCollision method
 	pbody->listener = this;
@@ -80,12 +84,15 @@ bool Player::Update(float dt)
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
 		velocity.x = -0.2 * dt;
 		isWalking = true;
+		dir = RIGHT;
 	}
 
 	// Move right
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
 		velocity.x = 0.2 * dt;
 		isWalking = true;
+		dir = LEFT;
+		
 	}
 	
 	//Jump
@@ -115,8 +122,13 @@ bool Player::Update(float dt)
 	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - currentFrame.w / 2);
 	position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - currentFrame.h / 2);
 	
-
-	Engine::GetInstance().render.get()->DrawTexture(texture, (int)position.getX(), (int)position.getY(), &currentFrame);
+	if (dir == LEFT) {
+		Engine::GetInstance().render.get()->DrawTexture(texture, (int)position.getX(), (int)position.getY(), &currentFrame);
+	}
+	else if (dir == RIGHT) {
+		Engine::GetInstance().render.get()->DrawTextureFlipped(texture, (int)position.getX(), (int)position.getY(), &currentFrame);
+	}
+	
 	return true;
 }
 

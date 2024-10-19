@@ -37,10 +37,11 @@ bool Map::Update(float dt)
     bool ret = true;
 
     for (const auto& paralax : mapData.paralaxs) {
-        //Check if the property Draw exist get the value, if it's true draw the lawyer
+        //Check if the property Draw exist get the value, if it's true draw the layer
         if (paralax->loaded)
         {
             int cameraX = Engine::GetInstance().render.get()->camera.x / Engine::GetInstance().window.get()->GetScale();
+            
 
             for (int numRep = 0; numRep < paralax->repeatNum; numRep++)
             {
@@ -201,14 +202,14 @@ bool Map::Load(std::string path, std::string fileName)
         // L08 TODO 3: Create colliders
         // L08 TODO 7: Assign collider type
         // Later you can create a function here to load and create the colliders from the map
-        PhysBody* c1 = Engine::GetInstance().physics.get()->CreateRectangle(16 + 56, 144 + 24, 112, 48, STATIC);
+        PhysBody* c1 = Engine::GetInstance().physics.get()->CreateRectangle(0 + 40, 208 + 24, 80, 48, STATIC);
         c1->ctype = ColliderType::PLATFORM;
 
-    /*    PhysBody* c2 = Engine::GetInstance().physics.get()->CreateRectangle(352 + 64, 384 + 32, 128, 64, STATIC);
+        PhysBody* c2 = Engine::GetInstance().physics.get()->CreateRectangle(0 + 376, 272 + 24, 725, 48, STATIC);
         c2->ctype = ColliderType::PLATFORM;
 
         PhysBody* c3 = Engine::GetInstance().physics.get()->CreateRectangle(256, 704 + 32, 576, 64, STATIC);
-        c3->ctype = ColliderType::PLATFORM;*/
+        c3->ctype = ColliderType::PLATFORM;
 
         ret = true;
 

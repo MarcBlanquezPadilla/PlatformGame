@@ -31,10 +31,13 @@ bool Scene::Awake()
 
 	//L04: TODO 3b: Instantiate the player using the entity manager
 	player = (Player*)Engine::GetInstance().entityManager->CreateEntity(EntityType::PLAYER);
-	/*player->position = Vector2D(48, 32);*/
+
+
+
+	
 	//L08 Create a new item using the entity manager and set the position to (200, 672) to test
 	Item* item = (Item*) Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM);
-	item->position = Vector2D(80, 32);
+	item->position = Vector2D(385, 150);
 	return ret;
 }
 
@@ -64,9 +67,19 @@ bool Scene::PreUpdate()
 // Called each loop iteration
 bool Scene::Update(float dt)
 {
-	if (player->position.getX() < POS_TO_START_MOVING_CAM) Engine::GetInstance().render.get()->camera.x = (POS_TO_START_MOVING_CAM + CAM_EXTRA_DISPLACEMENT_X)  * -Engine::GetInstance().window.get()->scale;
+	
+	if (player->position.getX() < POS_TO_START_MOVING_CAM) {
+		Engine::GetInstance().render.get()->camera.x = (POS_TO_START_MOVING_CAM + CAM_EXTRA_DISPLACEMENT_X) * -Engine::GetInstance().window.get()->scale;
+	}
 	else if (player->position.getX() > POS_TO_STOP_MOVING_CAM) Engine::GetInstance().render.get()->camera.x = (POS_TO_STOP_MOVING_CAM + CAM_EXTRA_DISPLACEMENT_X) * -Engine::GetInstance().window.get()->scale;
 	else Engine::GetInstance().render.get()->camera.x = (player->position.getX() + CAM_EXTRA_DISPLACEMENT_X) * -Engine::GetInstance().window.get()->scale;
+
+	//camera y
+	if (player->position.getY() < POS_TO_START_MOVING_CAM) {
+		Engine::GetInstance().render.get()->camera.y = (POS_TO_START_MOVING_CAM + CAM_EXTRA_DISPLACEMENT_Y - CAM_Y_OFFSET) * -Engine::GetInstance().window.get()->scale;
+	}
+	else if (player->position.getY() > POS_TO_STOP_MOVING_CAM) Engine::GetInstance().render.get()->camera.y = (POS_TO_STOP_MOVING_CAM + CAM_EXTRA_DISPLACEMENT_X) * -Engine::GetInstance().window.get()->scale;
+	else Engine::GetInstance().render.get()->camera.y = (player->position.getY() + CAM_EXTRA_DISPLACEMENT_Y - CAM_Y_OFFSET) * -Engine::GetInstance().window.get()->scale;
 
 	return true;
 }

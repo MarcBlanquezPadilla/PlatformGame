@@ -5,8 +5,15 @@
 #include "Box2D/Box2D.h"
 #include "Animation.h"
 
+#define GHOST_W 9
+
 
 struct SDL_Texture;
+
+enum direction {
+	LEFT,
+	RIGHT
+};
 
 class Player : public Entity
 {
@@ -43,7 +50,7 @@ public:
 
 	// L08 TODO 5: Add physics to the player - declare a Physics body
 	PhysBody* pbody;
-	float jumpForce = 1.2f; // The force to apply when jumping
+	float jumpForce = 0.5f; // The force to apply when jumping
 	bool isJumping = false; // Flag to check if the player is currently jumping
 
 	Animation idle;
@@ -53,5 +60,7 @@ public:
 	Animation hurt;
 	Animation death;
 	Animation* currentAnim = new Animation;
+
+	direction dir;
 	
 };

@@ -6,7 +6,8 @@
 #define POS_TO_START_MOVING_CAM 100
 #define POS_TO_STOP_MOVING_CAM 1500
 #define CAM_EXTRA_DISPLACEMENT_X -100
-
+#define CAM_EXTRA_DISPLACEMENT_Y -100
+#define CAM_Y_OFFSET 67
 struct SDL_Texture;
 
 class Scene : public Module

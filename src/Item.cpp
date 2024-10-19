@@ -26,7 +26,7 @@ bool Item::Start() {
 	
 	// L08 TODO 4: Add a physics to an item - initialize the physics body
 	Engine::GetInstance().textures.get()->GetSize(texture, texW, texH);
-	pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX() + texH / 2, (int)position.getY() + texH / 2, texH / 2, bodyType::DYNAMIC);
+	pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX() + (texW / 2), (int)position.getY() + (texH / 2), texW / 2, bodyType::STATIC);
 
 	// L08 TODO 7: Assign collider type
 	pbody->ctype = ColliderType::ITEM;
@@ -39,7 +39,7 @@ bool Item::Update(float dt)
 	// L08 TODO 4: Add a physics to an item - update the position of the object from the physics.  
 
 	b2Transform pbodyPos = pbody->body->GetTransform();
-	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - texH / 2);
+	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - texW / 2);
 	position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2);
 
 	Engine::GetInstance().render.get()->DrawTexture(texture, (int)position.getX(), (int)position.getY());
