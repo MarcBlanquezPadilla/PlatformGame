@@ -22,10 +22,11 @@ bool Item::Awake() {
 bool Item::Start() {
 
 	//initilize textures
-	texture = Engine::GetInstance().textures.get()->Load("Assets/Textures/candy items-BIGcorn.png");
+	candyTex = Engine::GetInstance().textures.get()->Load("Assets/Textures/Items/candy items-BIGcorn.png");
+
 	
 	// L08 TODO 4: Add a physics to an item - initialize the physics body
-	Engine::GetInstance().textures.get()->GetSize(texture, texW, texH);
+	Engine::GetInstance().textures.get()->GetSize(candyTex, texW, texH);
 	pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX() + (texW / 2), (int)position.getY() + (texH / 2), texW / 2, bodyType::STATIC);
 
 	// L08 TODO 7: Assign collider type
@@ -42,7 +43,7 @@ bool Item::Update(float dt)
 	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - texW / 2);
 	position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2);
 
-	Engine::GetInstance().render.get()->DrawTexture(texture, (int)position.getX(), (int)position.getY());
+	Engine::GetInstance().render.get()->DrawTexture(candyTex, (int)position.getX(), (int)position.getY());
 
 	return true;
 }

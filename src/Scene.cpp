@@ -32,12 +32,12 @@ bool Scene::Awake()
 	//L04: TODO 3b: Instantiate the player using the entity manager
 	player = (Player*)Engine::GetInstance().entityManager->CreateEntity(EntityType::PLAYER);
 
-
-
+	Item* lolly = (Item*) Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM);
+	lolly->position = Vector2D();
 	
 	//L08 Create a new item using the entity manager and set the position to (200, 672) to test
-	Item* item = (Item*) Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM);
-	item->position = Vector2D(385, 150);
+	Item* corn = (Item*) Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM);
+	corn->position = Vector2D(385, 150);
 	return ret;
 }
 
@@ -55,6 +55,8 @@ bool Scene::Start()
 	Engine::GetInstance().map->LoadParalax("Assets/Textures/Parallax/Cloud3.png", ParalaxType::Cloud3);
 	Engine::GetInstance().map->LoadParalax("Assets/Textures/Parallax/Sky.png", ParalaxType::Sky);
 
+
+	
 	return true;
 }
 

@@ -29,6 +29,8 @@ public:
 
 	bool Update(float dt);
 
+	bool PostUpdate(float dt);
+
 	bool CleanUp();
 
 	// L08 TODO 6: Define OnCollision function for the player. 
@@ -50,17 +52,18 @@ public:
 
 	// L08 TODO 5: Add physics to the player - declare a Physics body
 	PhysBody* pbody;
-	float jumpForce = 0.5f; // The force to apply when jumping
+	float jumpForce = 0.4f; // The force to apply when jumping
 	bool isJumping = false; // Flag to check if the player is currently jumping
+	bool destroyed = false;
+
+	Animation* currentAnim = nullptr;
 
 	Animation idle;
-	Animation walkRight;
-	Animation walkLeft;
+	Animation walk;
 	Animation jump;
 	Animation hurt;
 	Animation death;
-	Animation* currentAnim = new Animation;
 
-	direction dir;
+	direction dir = RIGHT;
 	
 };

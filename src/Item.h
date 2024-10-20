@@ -5,6 +5,21 @@
 
 struct SDL_Texture;
 
+enum CandyType {
+	LOLLY,
+	SWIRL,
+	CORN,
+	HEART,
+	SKULL,
+	TIME,
+	PINK,
+	ORANGE,
+	YELLOW,
+	PURPLE,
+	BLUE,
+	GREEN
+};
+
 class Item : public Entity
 {
 public:
@@ -26,7 +41,8 @@ public:
 
 private:
 
-	SDL_Texture* texture;
+	SDL_Texture* candyTex;
+
 	const char* texturePath;
 	int texW, texH;
 

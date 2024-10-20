@@ -11,6 +11,19 @@
 Player::Player() : Entity(EntityType::PLAYER)
 {
 	name = "Player";
+	//idle anim
+	idle.PushBack({ 0, 0, 48, 48 });
+	idle.PushBack({ 48, 0, 48, 48 });
+	idle.PushBack({ 96, 0, 48, 48 });
+	idle.PushBack({ 144, 0, 48, 48 });
+	idle.PushBack({ 192, 0, 48, 48 });
+	idle.PushBack({ 240, 0, 48, 48 });
+	idle.PushBack({ 288, 0, 48, 48 });
+	idle.PushBack({ 336, 0, 48, 48 });
+	idle.speed = 0.2f;
+	idle.loop = true;
+
+
 }
 
 Player::~Player() {
@@ -29,25 +42,8 @@ bool Player::Start() {
 	//L03: TODO 2: Initialize Player parameters
 	texture = Engine::GetInstance().textures.get()->Load("Assets/Textures/GhostCharacter/Ghost_Sheet.png");
 
-	dir = LEFT;
-
-	
-
-	//idle anim
-	idle.PushBack({ 0, 0, 48, 48 });
-	idle.PushBack({ 48, 0, 48, 48 });
-	idle.PushBack({ 96, 0, 48, 48 });
-	idle.PushBack({ 144, 0, 48, 48 });
-	idle.PushBack({ 192, 0, 48, 48 });
-	idle.PushBack({ 240, 0, 48, 48 });
-	idle.PushBack({ 288, 0, 48, 48 });
-	idle.PushBack({ 336, 0, 48, 48 });
-	idle.speed = 0.2f;
-	idle.loop = true;
-
-	*currentAnim = idle;
-	currentFrame = currentAnim->GetCurrentFrame();
-
+	destroyed = false;
+	currentAnim = &idle;
 
 	// L08 TODO 5: Add physics to the player - initialize physics body
 	/*Engine::GetInstance().textures.get()->GetSize(texture, currentFrame.w, currentFrame.h);*/
@@ -59,22 +55,12 @@ bool Player::Start() {
 	// L08 TODO 7: Assign collider type
 	pbody->ctype = ColliderType::PLAYER;
 
-	
-	
-
-	//walkRight Anim
-	/*walkRight.PushBack({ 0,48,48,48 });
-	walkRight.PushBack({ 0,48, });*/
-
-	
-
-
 	return true;
 }
 
 bool Player::Update(float dt)
 {
-	currentFrame = currentAnim->GetCurrentFrame();
+	
 	// L08 TODO 5: Add physics to the player - updated player position using physics
 	b2Vec2 velocity = b2Vec2(0, -GRAVITY_Y);
 
@@ -84,14 +70,14 @@ bool Player::Update(float dt)
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
 		velocity.x = -0.2 * dt;
 		isWalking = true;
-		dir = RIGHT;
+		dir = LEFT;
 	}
 
 	// Move right
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
 		velocity.x = 0.2 * dt;
 		isWalking = true;
-		dir = LEFT;
+		dir = RIGHT;
 		
 	}
 	
@@ -111,12 +97,15 @@ bool Player::Update(float dt)
 	// Apply the velocity to the player
 	pbody->body->SetLinearVelocity(velocity);
 
-
-
-	if (!isWalking && !isJumping) {
+	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_S == KEY_IDLE)
+		&& Engine::GetInstance().input->GetKey(SDL_SCANCODE_W == KEY_IDLE)
+		&& Engine::GetInstance().input->GetKey(SDL_SCANCODE_A == KEY_IDLE)
+		&& Engine::GetInstance().input->GetKey(SDL_SCANCODE_D == KEY_IDLE)) 
+	{
 		currentAnim = &idle;
 	}
-	
+		
+
 
 	b2Transform pbodyPos = pbody->body->GetTransform();
 	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - currentFrame.w / 2);
@@ -128,6 +117,27 @@ bool Player::Update(float dt)
 	else if (dir == RIGHT) {
 		Engine::GetInstance().render.get()->DrawTextureFlipped(texture, (int)position.getX(), (int)position.getY(), &currentFrame);
 	}
+	
+
+	currentAnim->Update();
+
+	if (!destroyed)
+	{
+		SDL_Rect rect = currentAnim->GetCurrentFrame();
+		if (dir == RIGHT) {
+			Engine::GetInstance().render.get()->DrawTexture(texture, position.getX() - rect.w / 2, position.getY() - rect.h / 2, &rect);
+		}
+		else if (dir == LEFT) {
+			Engine::GetInstance().render.get()->DrawTextureFlipped(texture, position.getX() - rect.w / 2, position.getY() - rect.h / 2, &rect);
+		}
+	}
+
+
+	return true;
+}
+
+bool Player::PostUpdate(float dt) {
+
 	
 	return true;
 }
