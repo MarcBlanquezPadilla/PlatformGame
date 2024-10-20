@@ -41,12 +41,13 @@ bool Map::Update(float dt)
         if (paralax->loaded)
         {
             int cameraX = Engine::GetInstance().render.get()->camera.x / Engine::GetInstance().window.get()->GetScale();
+            int cameraY = Engine::GetInstance().render.get()->camera.y / Engine::GetInstance().window.get()->GetScale();
             
 
             for (int numRep = 0; numRep < paralax->repeatNum; numRep++)
             {
-                if (numRep%2 != 0) Engine::GetInstance().render->DrawTexture(paralax->texture, -cameraX / paralax->slow + paralax->margin + paralax->width * (numRep), 0);
-                else Engine::GetInstance().render->DrawTextureFlipped(paralax->texture, -cameraX / paralax->slow + paralax->margin + paralax->width * (numRep), 0);
+                if (numRep%2 != 0) Engine::GetInstance().render->DrawTexture(paralax->texture, -cameraX / paralax->slowX + paralax->marginX + paralax->width * (numRep), -cameraY / paralax->slowY + paralax->marginY);
+                else Engine::GetInstance().render->DrawTextureFlipped(paralax->texture, -cameraX / paralax->slowX + paralax->marginX + paralax->width * (numRep), -cameraY / paralax->slowY + paralax->marginY);
             }
         }
     }
@@ -262,27 +263,28 @@ bool Map::LoadParalax(const char* path, ParalaxType type)
     }
 
     paralax->texture = texture;
-    paralax->margin = 0;
+    paralax->marginX = 0;
+    paralax->marginY = 0;
     paralax->spacing = 0;
     paralax->type = type;
-    paralax->width = 320;
-    paralax->height = 180;
+    paralax->width = 640;
+    paralax->height = 360;
 
     switch (paralax->type)
     {
-    case ParalaxType::Mountain1: paralax->slow = 20; paralax->repeatNum = 8; 
+    case ParalaxType::Mountain1: paralax->slowX = 20; paralax->repeatNum = 8; paralax->slowY = 20;
         break;
-    case ParalaxType::Mountain2: paralax->slow = 10; paralax->repeatNum = 8; 
+    case ParalaxType::Mountain2: paralax->slowX = 10; paralax->repeatNum = 8; paralax->slowY = 10;
         break;
-    case ParalaxType::Cloud1: paralax->slow = 5; paralax->repeatNum = 6; 
+    case ParalaxType::Cloud1: paralax->slowX = 5; paralax->repeatNum = 6; paralax->slowY = 1;
         break;
-    case ParalaxType::Cloud2: paralax->slow = 4; paralax->repeatNum = 6;
+    case ParalaxType::Cloud2: paralax->slowX = 4; paralax->repeatNum = 6; paralax->slowY = 1;
         break;
-    case ParalaxType::Cloud3: paralax->slow = 3; paralax->repeatNum = 6; 
+    case ParalaxType::Cloud3: paralax->slowX = 3; paralax->repeatNum = 6; paralax->slowY = 1;
         break;
-    case ParalaxType::Moon: paralax->slow = 2; paralax->margin = 480; paralax->repeatNum = 1; 
+    case ParalaxType::Moon: paralax->slowX = 2; paralax->marginX = 480; paralax->repeatNum = 1; paralax->slowY = 2;
         break;
-    case ParalaxType::Sky: paralax->slow = 1; paralax->repeatNum = 6; 
+    case ParalaxType::Sky: paralax->slowX = 1; paralax->repeatNum = 6; paralax->slowY = 1;
         break;
     default:
         LOG("Paralax type %i not recognised", (int)paralax->type);

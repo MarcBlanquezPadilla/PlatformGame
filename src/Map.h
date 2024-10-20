@@ -57,16 +57,18 @@ enum ParalaxType
     Cloud2,
     Cloud3,
     Moon,
-    Sky
+    Sky,
 };
 
 struct Paralax
 {
     int spacing;
-    int margin;
+    int marginX;
+    int marginY;
     int width;
     int height;
-    int slow;
+    int slowX;
+    int slowY;
     int repeatNum;
     bool loaded;
     ParalaxType type;

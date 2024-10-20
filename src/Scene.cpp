@@ -47,15 +47,14 @@ bool Scene::Start()
 	//L06 TODO 3: Call the function to load the map. 
 	
 	Engine::GetInstance().map->Load("Assets/Maps/", "Mapa.tmx");
-	Engine::GetInstance().map->LoadParalax("Assets/Textures/Parallax/Mountain1.png", ParalaxType::Mountain1);
-	Engine::GetInstance().map->LoadParalax("Assets/Textures/Parallax/Mountain2.png", ParalaxType::Mountain2);
-	Engine::GetInstance().map->LoadParalax("Assets/Textures/Parallax/Cloud1.png", ParalaxType::Cloud1);
-	Engine::GetInstance().map->LoadParalax("Assets/Textures/Parallax/Moon.png", ParalaxType::Moon);
-	Engine::GetInstance().map->LoadParalax("Assets/Textures/Parallax/Cloud2.png", ParalaxType::Cloud2);
-	Engine::GetInstance().map->LoadParalax("Assets/Textures/Parallax/Cloud3.png", ParalaxType::Cloud3);
-	Engine::GetInstance().map->LoadParalax("Assets/Textures/Parallax/Sky.png", ParalaxType::Sky);
-
-
+	Engine::GetInstance().map->LoadParalax("Assets/Textures/Parallax/Mountain1X2.png", ParalaxType::Mountain1);
+	Engine::GetInstance().map->LoadParalax("Assets/Textures/Parallax/Mountain2X2.png", ParalaxType::Mountain2);
+	Engine::GetInstance().map->LoadParalax("Assets/Textures/Parallax/Cloud1X2.png", ParalaxType::Cloud1);
+	Engine::GetInstance().map->LoadParalax("Assets/Textures/Parallax/MoonX2.png", ParalaxType::Moon);
+	Engine::GetInstance().map->LoadParalax("Assets/Textures/Parallax/Cloud2X2.png", ParalaxType::Cloud2);
+	Engine::GetInstance().map->LoadParalax("Assets/Textures/Parallax/Cloud3X2.png", ParalaxType::Cloud3);
+	Engine::GetInstance().map->LoadParalax("Assets/Textures/Parallax/SkyX2.png", ParalaxType::Sky);
+	
 	
 	return true;
 }
@@ -68,20 +67,19 @@ bool Scene::PreUpdate()
 
 // Called each loop iteration
 bool Scene::Update(float dt)
-{
-	
-	if (player->position.getX() < POS_TO_START_MOVING_CAM) {
-		Engine::GetInstance().render.get()->camera.x = (POS_TO_START_MOVING_CAM + CAM_EXTRA_DISPLACEMENT_X) * -Engine::GetInstance().window.get()->scale;
+{	
+	if (player->position.getX() < POS_TO_START_MOVING_CAMX) {
+		Engine::GetInstance().render.get()->camera.x = (POS_TO_START_MOVING_CAMX + CAM_EXTRA_DISPLACEMENT_X) * -Engine::GetInstance().window.get()->scale;
 	}
-	else if (player->position.getX() > POS_TO_STOP_MOVING_CAM) Engine::GetInstance().render.get()->camera.x = (POS_TO_STOP_MOVING_CAM + CAM_EXTRA_DISPLACEMENT_X) * -Engine::GetInstance().window.get()->scale;
+	else if (player->position.getX() > POS_TO_STOP_MOVING_CAMX) Engine::GetInstance().render.get()->camera.x = (POS_TO_STOP_MOVING_CAMX + CAM_EXTRA_DISPLACEMENT_X) * -Engine::GetInstance().window.get()->scale;
 	else Engine::GetInstance().render.get()->camera.x = (player->position.getX() + CAM_EXTRA_DISPLACEMENT_X) * -Engine::GetInstance().window.get()->scale;
 
 	//camera y
-	if (player->position.getY() < POS_TO_START_MOVING_CAM) {
-		Engine::GetInstance().render.get()->camera.y = (POS_TO_START_MOVING_CAM + CAM_EXTRA_DISPLACEMENT_Y - CAM_Y_OFFSET) * -Engine::GetInstance().window.get()->scale;
+	if (player->position.getY() > POS_TO_START_MOVING_CAMY) {
+		Engine::GetInstance().render.get()->camera.y = (POS_TO_START_MOVING_CAMY + CAM_EXTRA_DISPLACEMENT_Y) * -Engine::GetInstance().window.get()->scale;
 	}
-	else if (player->position.getY() > POS_TO_STOP_MOVING_CAM) Engine::GetInstance().render.get()->camera.y = (POS_TO_STOP_MOVING_CAM + CAM_EXTRA_DISPLACEMENT_X) * -Engine::GetInstance().window.get()->scale;
-	else Engine::GetInstance().render.get()->camera.y = (player->position.getY() + CAM_EXTRA_DISPLACEMENT_Y - CAM_Y_OFFSET) * -Engine::GetInstance().window.get()->scale;
+	else if (player->position.getY() < POS_TO_STOP_MOVING_CAMY) Engine::GetInstance().render.get()->camera.y = (POS_TO_STOP_MOVING_CAMY + CAM_EXTRA_DISPLACEMENT_X) * -Engine::GetInstance().window.get()->scale;
+	else Engine::GetInstance().render.get()->camera.y = (player->position.getY() + CAM_EXTRA_DISPLACEMENT_Y) * -Engine::GetInstance().window.get()->scale;
 
 	return true;
 }
