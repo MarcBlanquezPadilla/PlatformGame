@@ -103,6 +103,8 @@ bool Player::Update(float dt)
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F10) == KEY_DOWN)
 	{
 		godMode = !godMode;
+		pbody->body->SetGravityScale(godMode == true ? 0 : 1);
+		pbody->body->SetLinearVelocity(godMode == true ? b2Vec2_zero : pbody->body->GetLinearVelocity());
 		LOG("God mode = %d", (int)godMode);
 	}
 
@@ -126,7 +128,6 @@ bool Player::Update(float dt)
 		dir = RIGHT;
 		
 	}
-
 
 	if (godMode)
 	{
@@ -153,7 +154,12 @@ bool Player::Update(float dt)
 
 		
 		velocity = { velocity.x, pbody->body->GetLinearVelocity().y };
-		
+	}
+
+	if (isWalking && currentAnim != &walk) {
+		walk.Reset();
+		currentAnim = &walk;
+
 	}
 
 	pbody->body->SetLinearVelocity(velocity);

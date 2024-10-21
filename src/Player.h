@@ -19,7 +19,8 @@ enum state {
 	DEAD
 };
 
-enum direction {
+enum Direction {
+
 	LEFT,
 	RIGHT
 };
@@ -74,7 +75,8 @@ public:
 	Animation hurt;
 	Animation death;
 
+
 	state playerState;
-	direction dir = RIGHT;
-	
+
+	Direction dir = RIGHT;
 };
