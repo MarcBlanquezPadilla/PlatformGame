@@ -98,6 +98,7 @@ bool Player::Update(float dt)
 {
 	currentFrame = currentAnim->GetCurrentFrame();
 
+	playerState = IDLE;
 
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F10) == KEY_DOWN)
 	{
@@ -109,7 +110,7 @@ bool Player::Update(float dt)
 
 	
 	// L08 TODO 5: Add physics to the player - updated player position using physics
-	b2Vec2 velocity = b2Vec2(0, -GRAVITY_Y);
+	b2Vec2 velocity = b2Vec2(0, 0);
 
 	// Move left
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
@@ -144,63 +145,40 @@ bool Player::Update(float dt)
 	}
 	else
 	{
-		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN && isJumping == false) {
+		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN && playerState != JUMP && playerState != FALL) {
 			// Apply an initial upward force
 			pbody->body->ApplyLinearImpulseToCenter(b2Vec2(0, -jumpForce), true);
-			isJumping = true;
+			playerState = JUMP;
 		}
 
-		// If the player is jumpling, we don't want to apply gravity, we use the current velocity prduced by the jump
-		if (isJumping == true)
-		{
-			velocity = { velocity.x, pbody->body->GetLinearVelocity().y };
-		}
-	}
-	
-	//Jump
-	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN && isJumping == false) {
-		// Apply an initial upward force
-		pbody->body->ApplyLinearImpulseToCenter(b2Vec2(0, -jumpForce), true);
-		isJumping = true;
+		
+		velocity = { velocity.x, pbody->body->GetLinearVelocity().y };
+		
 	}
 
+	pbody->body->SetLinearVelocity(velocity);
 
-	if (velocity.y > 0 && playerState != FALL) {
+	if (pbody->body->GetLinearVelocity().y < 0 && playerState != JUMP)
+	{
+		jump.Reset();
+		playerState = JUMP;
+	}
+
+	LOG("VELOCITY Y: %f", velocity.y);
+
+	if (pbody->body->GetLinearVelocity().y > 0 && playerState != FALL) {
+		
 		playerState = FALL;
 		fall.Reset();
-
-
 	}
-	// If the player is jumpling, we don't want to apply gravity, we use the current velocity prduced by the jump
-	if (isJumping)
-	{
-		
-		if (velocity.y < 0 && playerState != JUMP)
-		{
-			jump.Reset();
-			playerState = JUMP;
-			isJumping = false;
 
-		}
-	}
 
 	
-
-
-	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_S == KEY_IDLE)
-		&& Engine::GetInstance().input->GetKey(SDL_SCANCODE_W == KEY_IDLE)
-		&& Engine::GetInstance().input->GetKey(SDL_SCANCODE_A == KEY_IDLE)
-		&& Engine::GetInstance().input->GetKey(SDL_SCANCODE_D == KEY_IDLE))
-	{
-
-		/*idle.Reset();
-		currentAnim = &idle;*/
-		playerState = IDLE;
-	}
+	
 
 	switch (playerState) {
 	case IDLE:
-		/*idle.Reset();*/
+		
 		currentAnim = &idle;
 		break;
 	case WALK:
@@ -225,7 +203,7 @@ bool Player::Update(float dt)
 	}
 
 	// Apply the velocity to the player
-	pbody->body->SetLinearVelocity(velocity);
+	
 	b2Transform pbodyPos = pbody->body->GetTransform();
 	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - currentFrame.w / 2);
 	position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - currentFrame.h / 2);
@@ -270,7 +248,6 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 	case ColliderType::PLATFORM:
 		LOG("Collision PLATFORM");
 		//reset the jump flag when touching the ground
-		isJumping = false;
 		playerState = IDLE;
 		idle.Reset();
 		break;
