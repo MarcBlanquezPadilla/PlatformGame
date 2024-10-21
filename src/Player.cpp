@@ -39,7 +39,7 @@ Player::Player() : Entity(EntityType::PLAYER)
 	fall.PushBack({ 0, 144, 48, 48 });
 	fall.PushBack({ 48, 144, 48, 48 });
 	fall.PushBack({ 96, 144, 48, 48 });
-	fall.speed = 0.1f;
+	fall.speed = 0.05f;
 	fall.loop = false;
 
 	hurt.PushBack({ 0, 192, 48, 48 });
@@ -96,12 +96,17 @@ bool Player::Start() {
 
 bool Player::Update(float dt)
 {
+	currentFrame = currentAnim->GetCurrentFrame();
+
 
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F10) == KEY_DOWN)
 	{
 		godMode = !godMode;
 		LOG("God mode = %d", (int)godMode);
 	}
+
+	
+
 	
 	// L08 TODO 5: Add physics to the player - updated player position using physics
 	b2Vec2 velocity = b2Vec2(0, -GRAVITY_Y);
@@ -109,18 +114,18 @@ bool Player::Update(float dt)
 	// Move left
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
 		velocity.x = -0.2 * dt;
-		isWalking = true;
+		playerState = WALK;
 		dir = LEFT;
 	}
 
 	// Move right
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
 		velocity.x = 0.2 * dt;
-		isWalking = true;
+		playerState = WALK;
 		dir = RIGHT;
 		
 	}
-<<<<<<< HEAD
+
 
 	if (godMode)
 	{
@@ -148,14 +153,8 @@ bool Player::Update(float dt)
 		// If the player is jumpling, we don't want to apply gravity, we use the current velocity prduced by the jump
 		if (isJumping == true)
 		{
-			velocity = { velocity.x, pbody->body->GetLinearVelocity().y};
+			velocity = { velocity.x, pbody->body->GetLinearVelocity().y };
 		}
-=======
-
-	if (isWalking && currentAnim != &walk) {
-		walk.Reset();
-		currentAnim = &walk;
-
 	}
 	
 	//Jump
@@ -165,39 +164,64 @@ bool Player::Update(float dt)
 		isJumping = true;
 	}
 
+
+	if (velocity.y > 0 && playerState != FALL) {
+		playerState = FALL;
+		fall.Reset();
+
+
+	}
 	// If the player is jumpling, we don't want to apply gravity, we use the current velocity prduced by the jump
-	if (isJumping == true && currentAnim != &jump)
+	if (isJumping)
 	{
-		velocity = { velocity.x, pbody->body->GetLinearVelocity().y };
-		if (velocity.y > 0) {
-			fall.Reset();
-			currentAnim = &fall;
-		}
-		else 
+		
+		if (velocity.y < 0 && playerState != JUMP)
 		{
 			jump.Reset();
-			currentAnim = &jump;
-		}
-		
+			playerState = JUMP;
+			isJumping = false;
 
->>>>>>> 736163413861874d09dbb9d53152ba75702723b3
+		}
 	}
 
-	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_A == KEY_UP) || Engine::GetInstance().input->GetKey(SDL_SCANCODE_D == KEY_UP)) {
-		if (isWalking && !isJumping) {
-			isWalking = false;
-			currentAnim = &idle;
-		}
-		
-	}
+	
+
 
 	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_S == KEY_IDLE)
 		&& Engine::GetInstance().input->GetKey(SDL_SCANCODE_W == KEY_IDLE)
 		&& Engine::GetInstance().input->GetKey(SDL_SCANCODE_A == KEY_IDLE)
 		&& Engine::GetInstance().input->GetKey(SDL_SCANCODE_D == KEY_IDLE))
 	{
-		idle.Reset();
+
+		/*idle.Reset();
+		currentAnim = &idle;*/
+		playerState = IDLE;
+	}
+
+	switch (playerState) {
+	case IDLE:
+		/*idle.Reset();*/
 		currentAnim = &idle;
+		break;
+	case WALK:
+		/*walk.Reset();*/
+		currentAnim = &walk;
+		break;
+	case JUMP:
+		/*jump.Reset();*/
+		currentAnim = &jump;
+		break;
+	case FALL:
+		currentAnim = &fall;
+		break;
+	case HURT:
+		/*hurt.Reset();*/
+		currentAnim = &hurt;
+		break;
+	case DEAD:
+		/*death.Reset();*/
+		currentAnim = &death;
+		break;
 	}
 
 	// Apply the velocity to the player
@@ -206,27 +230,21 @@ bool Player::Update(float dt)
 	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - currentFrame.w / 2);
 	position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - currentFrame.h / 2);
 	
-	if (dir == LEFT) {
-		Engine::GetInstance().render.get()->DrawTexture(texture, (int)position.getX(), (int)position.getY(), &currentFrame);
-	}
-	else if (dir == RIGHT) {
-		Engine::GetInstance().render.get()->DrawTextureFlipped(texture, (int)position.getX(), (int)position.getY(), &currentFrame);
-	}
 	
-
-	currentAnim->Update();
-
 	if (!destroyed)
 	{
-		SDL_Rect rect = currentAnim->GetCurrentFrame();
+		
 		if (dir == RIGHT) {
-			Engine::GetInstance().render.get()->DrawTexture(texture, position.getX() - rect.w / 2, position.getY() - rect.h / 2, &rect);
+			Engine::GetInstance().render.get()->DrawTexture(texture, position.getX(), position.getY(), &currentFrame);
 		}
 		else if (dir == LEFT) {
-			Engine::GetInstance().render.get()->DrawTextureFlipped(texture, position.getX() - rect.w / 2, position.getY() - rect.h / 2, &rect);
+			Engine::GetInstance().render.get()->DrawTextureFlipped(texture, position.getX(), position.getY(), &currentFrame);
 		}
 	}
 
+
+
+	currentAnim->Update();
 
 	return true;
 }
@@ -253,16 +271,15 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		LOG("Collision PLATFORM");
 		//reset the jump flag when touching the ground
 		isJumping = false;
+		playerState = IDLE;
+		idle.Reset();
 		break;
 	case ColliderType::ITEM:
 		LOG("Collision ITEM");
 		break;
 	case ColliderType::SPYKE:
 		LOG("Collision SPYKE");
-		if (currentAnim != &hurt) {
-			hurt.Reset();
-			currentAnim = &hurt;
-		}
+		playerState = HURT;
 	case ColliderType::UNKNOWN:
 		LOG("Collision UNKNOWN");
 		break;

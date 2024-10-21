@@ -213,6 +213,7 @@ bool Map::Load(std::string path, std::string fileName)
         //c3->ctype = ColliderType::PLATFORM;
 
         PhysBody* s1 = Engine::GetInstance().physics.get()->CreateRectangle(560 + 56, 256 + 8,  112, 16, STATIC);
+        s1->ctype = ColliderType::SPYKE;
 
         ret = true;
 

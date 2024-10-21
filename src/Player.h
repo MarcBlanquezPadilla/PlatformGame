@@ -10,6 +10,15 @@
 
 struct SDL_Texture;
 
+enum state {
+	IDLE,
+	WALK,
+	JUMP,
+	FALL,
+	HURT,
+	DEAD
+};
+
 enum direction {
 	LEFT,
 	RIGHT
@@ -42,7 +51,7 @@ public:
 
 	//Declare player parameters
 	float speed = 5.0f;
-	float isWalking = false;
+	float isWalking;
 	SDL_Texture* texture = NULL;
 	int texW, texH;
 	SDL_Rect currentFrame;
@@ -66,6 +75,7 @@ public:
 	Animation hurt;
 	Animation death;
 
+	state playerState;
 	direction dir = RIGHT;
 	
 };
