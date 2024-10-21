@@ -60,11 +60,15 @@ bool Player::Start() {
 
 bool Player::Update(float dt)
 {
+
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F10) == KEY_DOWN)
+	{
+		godMode = !godMode;
+		LOG("God mode = %d", (int)godMode);
+	}
 	
 	// L08 TODO 5: Add physics to the player - updated player position using physics
 	b2Vec2 velocity = b2Vec2(0, -GRAVITY_Y);
-
-	
 
 	// Move left
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
@@ -80,18 +84,35 @@ bool Player::Update(float dt)
 		dir = RIGHT;
 		
 	}
-	
-	//Jump
-	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN && isJumping == false) {
-		// Apply an initial upward force
-		pbody->body->ApplyLinearImpulseToCenter(b2Vec2(0, -jumpForce), true);
-		isJumping = true;
-	}
 
-	// If the player is jumpling, we don't want to apply gravity, we use the current velocity prduced by the jump
-	if (isJumping == true)
+	if (godMode)
 	{
-		velocity = { velocity.x, pbody->body->GetLinearVelocity().y };
+		velocity.y = 0;
+		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
+			velocity.y = -0.2 * dt;
+			isWalking = true;
+		}
+
+		// Move right
+		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
+			velocity.y = 0.2 * dt;
+			isWalking = true;
+
+		}
+	}
+	else
+	{
+		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN && isJumping == false) {
+			// Apply an initial upward force
+			pbody->body->ApplyLinearImpulseToCenter(b2Vec2(0, -jumpForce), true);
+			isJumping = true;
+		}
+
+		// If the player is jumpling, we don't want to apply gravity, we use the current velocity prduced by the jump
+		if (isJumping == true)
+		{
+			velocity = { velocity.x, pbody->body->GetLinearVelocity().y};
+		}
 	}
 
 	// Apply the velocity to the player

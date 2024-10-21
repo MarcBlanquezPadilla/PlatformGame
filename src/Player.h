@@ -55,6 +55,7 @@ public:
 	float jumpForce = 0.4f; // The force to apply when jumping
 	bool isJumping = false; // Flag to check if the player is currently jumping
 	bool destroyed = false;
+	bool godMode = false;
 
 	Animation* currentAnim = nullptr;
 

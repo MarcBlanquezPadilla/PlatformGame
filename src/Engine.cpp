@@ -131,6 +131,12 @@ bool Engine::Update() {
     if (input->GetWindowEvent(WE_QUIT) == true)
         ret = false;
 
+    if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F11) == KEY_DOWN)
+    {
+        maxFrameDuration = (maxFrameDuration == 32) ? 16 : 32;
+        LOG("FRAME CAP TO %d", maxFrameDuration);
+    }
+
     if (ret == true)
         ret = PreUpdate();
 
