@@ -7,6 +7,8 @@
 #include "PerfTimer.h"
 #include "pugixml.hpp"
 
+#define VALUE_NEAR_TO_0(x) (fabs(x) < 0.0001f)
+
 // Modules
 class Window;
 class Input;
@@ -69,6 +71,9 @@ private:
 	// Load config file
 	bool LoadConfig();
 
+	//Check if value it's near to other
+	
+
 	std::list<std::shared_ptr<Module>> moduleList;
 
 public:
@@ -125,4 +130,6 @@ private:
 
 	//L05 TODO 2: Declare a xml_document to load the config file
 	pugi::xml_document configFile;
+
+	
 };

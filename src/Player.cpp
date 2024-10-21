@@ -109,8 +109,6 @@ bool Player::Update(float dt)
 	}
 
 	
-
-	
 	// L08 TODO 5: Add physics to the player - updated player position using physics
 	b2Vec2 velocity = b2Vec2(0, 0);
 
@@ -134,76 +132,59 @@ bool Player::Update(float dt)
 		velocity.y = 0;
 		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
 			velocity.y = -0.2 * dt;
-			isWalking = true;
+			playerState = WALK;
 		}
 
 		// Move right
 		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
 			velocity.y = 0.2 * dt;
-			isWalking = true;
-
+			playerState = WALK;
 		}
 	}
 	else
 	{
-		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN && pbody->body->GetLinearVelocity().y == 0/*playerState != JUMP && playerState != FALL*/) {
+		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN && VALUE_NEAR_TO_0(pbody->body->GetLinearVelocity().y)) {
 			// Apply an initial upward force
 			pbody->body->ApplyLinearImpulseToCenter(b2Vec2(0, -jumpForce), true);
-			/*playerState = JUMP;*/
 		}
 
-		
 		velocity = { velocity.x, pbody->body->GetLinearVelocity().y };
-	}
-
-	if (isWalking && currentAnim != &walk) {
-		walk.Reset();
-		currentAnim = &walk;
-
 	}
 
 	pbody->body->SetLinearVelocity(velocity);
 
-	if (pbody->body->GetLinearVelocity().y < 0 && playerState != JUMP && playerState != FALL)
+	if (pbody->body->GetLinearVelocity().y < -0.0001 && playerState != JUMP)
 	{
 		jump.Reset();
 		playerState = JUMP;
 	}
 
-	LOG("VELOCITY Y: %f", velocity.y);
 
-	if (pbody->body->GetLinearVelocity().y > 0 && playerState != FALL) {
-		
-		playerState = FALL;
+	if (pbody->body->GetLinearVelocity().y > 0.0001 && playerState != FALL)
+	{
+
 		fall.Reset();
+		playerState = FALL;
 	}
 
 
-	
-	
-
 	switch (playerState) {
 	case IDLE:
-		
 		currentAnim = &idle;
 		break;
 	case WALK:
-		/*walk.Reset();*/
 		currentAnim = &walk;
 		break;
 	case JUMP:
-		/*jump.Reset();*/
 		currentAnim = &jump;
 		break;
 	case FALL:
 		currentAnim = &fall;
 		break;
 	case HURT:
-		/*hurt.Reset();*/
 		currentAnim = &hurt;
 		break;
 	case DEAD:
-		/*death.Reset();*/
 		currentAnim = &death;
 		break;
 	}
