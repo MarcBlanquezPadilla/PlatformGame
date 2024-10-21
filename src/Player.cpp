@@ -23,6 +23,26 @@ Player::Player() : Entity(EntityType::PLAYER)
 	idle.speed = 0.2f;
 	idle.loop = true;
 
+	walk.PushBack({ 0, 48, 48, 48 });
+	walk.PushBack({ 48, 48, 48, 48 });
+	walk.PushBack({ 96, 48, 48, 48 });
+	walk.PushBack({ 144, 48, 48, 48 });
+	walk.speed = 0.1f;
+	walk.loop = true;
+
+	jump.PushBack({ 0, 96, 48, 48 });
+	jump.PushBack({ 48, 96, 48, 48 });
+	jump.PushBack({ 96, 96, 48, 48 });
+	jump.speed = 0.1f;
+	jump.loop = false;
+
+	fall.PushBack({ 0, 144, 48, 48 });
+	fall.PushBack({ 48, 144, 48, 48 });
+	fall.PushBack({ 96, 144, 48, 48 });
+	fall.speed = 0.1f;
+	fall.loop = false;
+	
+
 
 }
 
@@ -80,6 +100,12 @@ bool Player::Update(float dt)
 		dir = RIGHT;
 		
 	}
+
+	if (isWalking && currentAnim != &walk) {
+		walk.Reset();
+		currentAnim = &walk;
+
+	}
 	
 	//Jump
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN && isJumping == false) {
@@ -89,24 +115,34 @@ bool Player::Update(float dt)
 	}
 
 	// If the player is jumpling, we don't want to apply gravity, we use the current velocity prduced by the jump
-	if (isJumping == true)
+	if (isJumping == true && currentAnim != &jump)
 	{
 		velocity = { velocity.x, pbody->body->GetLinearVelocity().y };
+		if (velocity.y > 0) {
+			fall.Reset();
+			currentAnim = &fall;
+		}
+		else 
+		{
+			jump.Reset();
+			currentAnim = &jump;
+		}
+		
+
 	}
 
-	// Apply the velocity to the player
-	pbody->body->SetLinearVelocity(velocity);
 
 	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_S == KEY_IDLE)
 		&& Engine::GetInstance().input->GetKey(SDL_SCANCODE_W == KEY_IDLE)
 		&& Engine::GetInstance().input->GetKey(SDL_SCANCODE_A == KEY_IDLE)
-		&& Engine::GetInstance().input->GetKey(SDL_SCANCODE_D == KEY_IDLE)) 
+		&& Engine::GetInstance().input->GetKey(SDL_SCANCODE_D == KEY_IDLE))
 	{
+		idle.Reset();
 		currentAnim = &idle;
 	}
-		
 
-
+	// Apply the velocity to the player
+	pbody->body->SetLinearVelocity(velocity);
 	b2Transform pbodyPos = pbody->body->GetTransform();
 	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - currentFrame.w / 2);
 	position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - currentFrame.h / 2);

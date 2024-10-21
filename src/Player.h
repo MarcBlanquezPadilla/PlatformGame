@@ -61,6 +61,7 @@ public:
 	Animation idle;
 	Animation walk;
 	Animation jump;
+	Animation fall;
 	Animation hurt;
 	Animation death;
 
