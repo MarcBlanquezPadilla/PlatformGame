@@ -76,7 +76,8 @@ public:
 	Animation death;
 
 
-	state playerState;
+	state playerState = IDLE; 
+	state previousState = IDLE;
 
 	Direction dir = RIGHT;
 };

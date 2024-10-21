@@ -33,13 +33,13 @@ Player::Player() : Entity(EntityType::PLAYER)
 	jump.PushBack({ 0, 96, 48, 48 });
 	jump.PushBack({ 48, 96, 48, 48 });
 	jump.PushBack({ 96, 96, 48, 48 });
-	jump.speed = 0.1f;
+	jump.speed = 0.2f;
 	jump.loop = false;
 
-	fall.PushBack({ 0, 144, 48, 48 });
 	fall.PushBack({ 48, 144, 48, 48 });
 	fall.PushBack({ 96, 144, 48, 48 });
-	fall.speed = 0.05f;
+	fall.PushBack({ 0, 144, 48, 48 });
+	fall.speed = 0.2f;
 	fall.loop = false;
 
 	hurt.PushBack({ 0, 192, 48, 48 });
@@ -98,8 +98,6 @@ bool Player::Update(float dt)
 {
 	currentFrame = currentAnim->GetCurrentFrame();
 
-	playerState = IDLE;
-
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F10) == KEY_DOWN)
 	{
 		godMode = !godMode;
@@ -108,7 +106,8 @@ bool Player::Update(float dt)
 		LOG("God mode = %d", (int)godMode);
 	}
 
-	
+	playerState = IDLE;
+
 	// L08 TODO 5: Add physics to the player - updated player position using physics
 	b2Vec2 velocity = b2Vec2(0, 0);
 
@@ -152,42 +151,47 @@ bool Player::Update(float dt)
 	}
 
 	pbody->body->SetLinearVelocity(velocity);
-
-	if (pbody->body->GetLinearVelocity().y < -0.0001 && playerState != JUMP)
+	
+	if (pbody->body->GetLinearVelocity().y < -0.0001)
 	{
-		jump.Reset();
 		playerState = JUMP;
 	}
-
-
-	if (pbody->body->GetLinearVelocity().y > 0.0001 && playerState != FALL)
+	
+	if (pbody->body->GetLinearVelocity().y > 0.0001)
 	{
-
-		fall.Reset();
 		playerState = FALL;
 	}
 
-
-	switch (playerState) {
-	case IDLE:
-		currentAnim = &idle;
-		break;
-	case WALK:
-		currentAnim = &walk;
-		break;
-	case JUMP:
-		currentAnim = &jump;
-		break;
-	case FALL:
-		currentAnim = &fall;
-		break;
-	case HURT:
-		currentAnim = &hurt;
-		break;
-	case DEAD:
-		currentAnim = &death;
-		break;
+	if (playerState != previousState) {
+		switch (playerState) {
+		case IDLE:
+			idle.Reset();
+			currentAnim = &idle;
+			break;
+		case WALK:
+			walk.Reset();
+			currentAnim = &walk;
+			break;
+		case JUMP:
+			jump.Reset();  // Solo resetear si cambió el estado
+			currentAnim = &jump;
+			break;
+		case FALL:
+			fall.Reset();  // Solo resetear si cambió el estado
+			currentAnim = &fall;
+			break;
+		case HURT:
+			hurt.Reset();
+			currentAnim = &hurt;
+			break;
+		case DEAD:
+			death.Reset();
+			currentAnim = &death;
+			break;
+		}
 	}
+
+	previousState = playerState;
 
 	// Apply the velocity to the player
 	
