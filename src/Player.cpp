@@ -41,6 +41,22 @@ Player::Player() : Entity(EntityType::PLAYER)
 	fall.PushBack({ 96, 144, 48, 48 });
 	fall.speed = 0.1f;
 	fall.loop = false;
+
+	hurt.PushBack({ 0, 192, 48, 48 });
+	hurt.PushBack({ 48, 192, 48, 48 });
+	hurt.PushBack({ 96, 192, 48, 48 });
+	hurt.PushBack({ 144,192, 48, 48 });
+	hurt.speed = 0.2f;
+	hurt.loop = false;
+
+	death.PushBack({ 0, 240, 48, 48 });
+	death.PushBack({ 48, 240, 48, 48 });
+	death.PushBack({ 96, 240, 48, 48 });
+	death.PushBack({ 144, 240, 48, 48 });
+	death.PushBack({ 192, 240, 48, 48 });
+	death.PushBack({ 240, 240, 48, 48 });
+	death.speed = 0.1f;
+	death.loop = false;
 	
 
 
@@ -131,6 +147,13 @@ bool Player::Update(float dt)
 
 	}
 
+	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_A == KEY_UP) || Engine::GetInstance().input->GetKey(SDL_SCANCODE_D == KEY_UP)) {
+		if (isWalking && !isJumping) {
+			isWalking = false;
+			currentAnim = &idle;
+		}
+		
+	}
 
 	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_S == KEY_IDLE)
 		&& Engine::GetInstance().input->GetKey(SDL_SCANCODE_W == KEY_IDLE)
@@ -198,9 +221,16 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 	case ColliderType::ITEM:
 		LOG("Collision ITEM");
 		break;
+	case ColliderType::SPYKE:
+		LOG("Collision SPYKE");
+		if (currentAnim != &hurt) {
+			hurt.Reset();
+			currentAnim = &hurt;
+		}
 	case ColliderType::UNKNOWN:
 		LOG("Collision UNKNOWN");
 		break;
+	
 	default:
 		break;
 	}
