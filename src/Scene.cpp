@@ -32,8 +32,8 @@ bool Scene::Awake()
 	//L04: TODO 3b: Instantiate the player using the entity manager
 	player = (Player*)Engine::GetInstance().entityManager->CreateEntity(EntityType::PLAYER);
 
-	Item* lolly = (Item*) Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM);
-	lolly->position = Vector2D();
+	/*Item* lolly = (Item*) Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM);
+	lolly->position = Vector2D();*/
 	
 	//L08 Create a new item using the entity manager and set the position to (200, 672) to test
 	Item* corn = (Item*) Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM);

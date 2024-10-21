@@ -23,6 +23,42 @@ Player::Player() : Entity(EntityType::PLAYER)
 	idle.speed = 0.2f;
 	idle.loop = true;
 
+	walk.PushBack({ 0, 48, 48, 48 });
+	walk.PushBack({ 48, 48, 48, 48 });
+	walk.PushBack({ 96, 48, 48, 48 });
+	walk.PushBack({ 144, 48, 48, 48 });
+	walk.speed = 0.1f;
+	walk.loop = true;
+
+	jump.PushBack({ 0, 96, 48, 48 });
+	jump.PushBack({ 48, 96, 48, 48 });
+	jump.PushBack({ 96, 96, 48, 48 });
+	jump.speed = 0.1f;
+	jump.loop = false;
+
+	fall.PushBack({ 0, 144, 48, 48 });
+	fall.PushBack({ 48, 144, 48, 48 });
+	fall.PushBack({ 96, 144, 48, 48 });
+	fall.speed = 0.1f;
+	fall.loop = false;
+
+	hurt.PushBack({ 0, 192, 48, 48 });
+	hurt.PushBack({ 48, 192, 48, 48 });
+	hurt.PushBack({ 96, 192, 48, 48 });
+	hurt.PushBack({ 144,192, 48, 48 });
+	hurt.speed = 0.2f;
+	hurt.loop = false;
+
+	death.PushBack({ 0, 240, 48, 48 });
+	death.PushBack({ 48, 240, 48, 48 });
+	death.PushBack({ 96, 240, 48, 48 });
+	death.PushBack({ 144, 240, 48, 48 });
+	death.PushBack({ 192, 240, 48, 48 });
+	death.PushBack({ 240, 240, 48, 48 });
+	death.speed = 0.1f;
+	death.loop = false;
+	
+
 
 }
 
@@ -84,6 +120,7 @@ bool Player::Update(float dt)
 		dir = RIGHT;
 		
 	}
+<<<<<<< HEAD
 
 	if (godMode)
 	{
@@ -113,21 +150,58 @@ bool Player::Update(float dt)
 		{
 			velocity = { velocity.x, pbody->body->GetLinearVelocity().y};
 		}
+=======
+
+	if (isWalking && currentAnim != &walk) {
+		walk.Reset();
+		currentAnim = &walk;
+
+	}
+	
+	//Jump
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN && isJumping == false) {
+		// Apply an initial upward force
+		pbody->body->ApplyLinearImpulseToCenter(b2Vec2(0, -jumpForce), true);
+		isJumping = true;
 	}
 
-	// Apply the velocity to the player
-	pbody->body->SetLinearVelocity(velocity);
+	// If the player is jumpling, we don't want to apply gravity, we use the current velocity prduced by the jump
+	if (isJumping == true && currentAnim != &jump)
+	{
+		velocity = { velocity.x, pbody->body->GetLinearVelocity().y };
+		if (velocity.y > 0) {
+			fall.Reset();
+			currentAnim = &fall;
+		}
+		else 
+		{
+			jump.Reset();
+			currentAnim = &jump;
+		}
+		
+
+>>>>>>> 736163413861874d09dbb9d53152ba75702723b3
+	}
+
+	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_A == KEY_UP) || Engine::GetInstance().input->GetKey(SDL_SCANCODE_D == KEY_UP)) {
+		if (isWalking && !isJumping) {
+			isWalking = false;
+			currentAnim = &idle;
+		}
+		
+	}
 
 	if (Engine::GetInstance().input->GetKey(SDL_SCANCODE_S == KEY_IDLE)
 		&& Engine::GetInstance().input->GetKey(SDL_SCANCODE_W == KEY_IDLE)
 		&& Engine::GetInstance().input->GetKey(SDL_SCANCODE_A == KEY_IDLE)
-		&& Engine::GetInstance().input->GetKey(SDL_SCANCODE_D == KEY_IDLE)) 
+		&& Engine::GetInstance().input->GetKey(SDL_SCANCODE_D == KEY_IDLE))
 	{
+		idle.Reset();
 		currentAnim = &idle;
 	}
-		
 
-
+	// Apply the velocity to the player
+	pbody->body->SetLinearVelocity(velocity);
 	b2Transform pbodyPos = pbody->body->GetTransform();
 	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - currentFrame.w / 2);
 	position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - currentFrame.h / 2);
@@ -183,9 +257,16 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 	case ColliderType::ITEM:
 		LOG("Collision ITEM");
 		break;
+	case ColliderType::SPYKE:
+		LOG("Collision SPYKE");
+		if (currentAnim != &hurt) {
+			hurt.Reset();
+			currentAnim = &hurt;
+		}
 	case ColliderType::UNKNOWN:
 		LOG("Collision UNKNOWN");
 		break;
+	
 	default:
 		break;
 	}
