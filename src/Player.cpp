@@ -146,10 +146,10 @@ bool Player::Update(float dt)
 	}
 	else
 	{
-		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN && playerState != JUMP && playerState != FALL) {
+		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN && pbody->body->GetLinearVelocity().y == 0/*playerState != JUMP && playerState != FALL*/) {
 			// Apply an initial upward force
 			pbody->body->ApplyLinearImpulseToCenter(b2Vec2(0, -jumpForce), true);
-			playerState = JUMP;
+			/*playerState = JUMP;*/
 		}
 
 		
@@ -164,7 +164,7 @@ bool Player::Update(float dt)
 
 	pbody->body->SetLinearVelocity(velocity);
 
-	if (pbody->body->GetLinearVelocity().y < 0 && playerState != JUMP)
+	if (pbody->body->GetLinearVelocity().y < 0 && playerState != JUMP && playerState != FALL)
 	{
 		jump.Reset();
 		playerState = JUMP;
