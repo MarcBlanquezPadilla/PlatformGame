@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="100" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="11" nextobjectid="79">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="100" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="11" nextobjectid="91">
  <tileset firstgid="1" name="Ground_Tiles" tilewidth="16" tileheight="16" tilecount="110" columns="11">
   <image source="Ground_Tiles.png" width="176" height="160"/>
   <wangsets>
@@ -3012,11 +3012,11 @@
    <tile gid="57"/>
    <tile gid="57"/>
    <tile gid="57"/>
-   <tile gid="57"/>
    <tile gid="58"/>
    <tile/>
+   <tile/>
+   <tile/>
    <tile gid="56"/>
-   <tile gid="57"/>
    <tile gid="57"/>
    <tile gid="58"/>
    <tile/>
@@ -3112,11 +3112,11 @@
    <tile gid="79"/>
    <tile gid="79"/>
    <tile gid="73"/>
-   <tile gid="72"/>
-   <tile gid="80"/>
+   <tile gid="105"/>
+   <tile gid="91"/>
    <tile/>
-   <tile gid="78"/>
-   <tile gid="73"/>
+   <tile/>
+   <tile gid="67"/>
    <tile gid="72"/>
    <tile gid="80"/>
    <tile/>
@@ -3314,9 +3314,9 @@
    <tile gid="67"/>
    <tile gid="69"/>
    <tile/>
-   <tile gid="92"/>
    <tile/>
-   <tile gid="67"/>
+   <tile gid="89"/>
+   <tile gid="84"/>
    <tile gid="69"/>
    <tile/>
    <tile gid="89"/>
@@ -6077,13 +6077,13 @@
   <object id="54" x="976" y="208" width="48" height="32"/>
   <object id="56" x="1024" y="224" width="16" height="16"/>
   <object id="57" x="992" y="176" width="32" height="32"/>
-  <object id="58" x="880" y="144" width="160" height="32"/>
+  <object id="58" x="880" y="144" width="144" height="32"/>
   <object id="59" x="896" y="288" width="16" height="16"/>
   <object id="60" x="960" y="272" width="16" height="16"/>
   <object id="61" x="1024" y="288" width="16" height="16"/>
   <object id="62" x="1056" y="256" width="16" height="16"/>
-  <object id="63" x="1040" y="192" width="16" height="16"/>
-  <object id="64" x="1056" y="144" width="64" height="32"/>
+  <object id="63" x="1056.8" y="192" width="16" height="16"/>
+  <object id="64" x="1072.25" y="144" width="47.75" height="32"/>
   <object id="65" x="1072" y="176" width="32" height="144"/>
   <object id="66" x="1120" y="192" width="64" height="16"/>
   <object id="67" x="1200" y="240" width="32" height="32"/>
@@ -6098,5 +6098,6 @@
   <object id="76" x="1424" y="240" width="32" height="32"/>
   <object id="77" x="1424" y="144" width="80" height="32"/>
   <object id="78" x="1504" y="144" width="96" height="176"/>
+  <object id="88" x="1024" y="160" width="16" height="16.25"/>
  </objectgroup>
 </map>
