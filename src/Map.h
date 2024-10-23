@@ -47,6 +47,24 @@ struct MapLayer
     }
 };
 
+struct Object
+{
+    int id;
+    int x;
+    int y;
+    int width;
+    int height;
+};
+
+struct ObjectGroup
+{
+    int id;
+    std::string name;
+    std::vector<Object*> object;
+};
+
+
+
 // L06: TODO 2: Create a struct to hold information for a TileSet
 // Ignore Terrain Types and Tile Types for now, but we want the image!
 enum ParalaxType
@@ -114,6 +132,7 @@ struct MapData
 
     // L07: TODO 2: Add the info to the MapLayer Struct
     std::list<MapLayer*> layers;
+    std::list<ObjectGroup*> objectsGroups;
 };
 
 class Map : public Module

@@ -203,14 +203,36 @@ bool Map::Load(std::string path, std::string fileName)
         // L08 TODO 3: Create colliders
         // L08 TODO 7: Assign collider type
         // Later you can create a function here to load and create the colliders from the map
-        PhysBody* c1 = Engine::GetInstance().physics.get()->CreateRectangle(0 + 40, 208 + 24, 80, 48, STATIC);
-        c1->ctype = ColliderType::PLATFORM;
+        for (pugi::xml_node objectGroupNode = mapFileXML.child("map").child("objectgroup"); objectGroupNode != NULL; objectGroupNode = objectGroupNode.next_sibling("objectgroup")) {
 
-        PhysBody* c2 = Engine::GetInstance().physics.get()->CreateRectangle(0 + 376, 272 + 24, 725, 48, STATIC);
-        c2->ctype = ColliderType::PLATFORM;
+            ObjectGroup* objectGroup = new ObjectGroup();
+            objectGroup->id = objectGroupNode.attribute("id").as_int();
+            objectGroup->name = objectGroupNode.attribute("name").as_string();
+            for (pugi::xml_node objectNode = objectGroupNode.child("object"); objectNode != NULL; objectNode = objectNode.next_sibling("object")) {
+                Object* object = new Object();
+                LOG("WORKS");
+                object->id = objectNode.attribute("id").as_int();
+                object->x = objectNode.attribute("x").as_int();
+                object->y = objectNode.attribute("y").as_int();
+                object->width = objectNode.attribute("width").as_int();
+                object->height = objectNode.attribute("height").as_int();
+                objectGroup->object.push_back(object);
+            }
+            mapData.objectsGroups.push_back(objectGroup);
+        }
 
-        //PhysBody* c3 = Engine::GetInstance().physics.get()->CreateRectangle(256, 704 + 32, 576, 64, STATIC);
-        //c3->ctype = ColliderType::PLATFORM;
+        for (ObjectGroup* objectGroup : mapData.objectsGroups)
+        {
+            if (objectGroup->name == "Collisions")
+            {
+                for (Object* object : objectGroup->object)
+                {
+                    PhysBody* c = Engine::GetInstance().physics.get()->CreateRectangle(object->x + object->width/2, object->y + object->height / 2, object->width, object->height, STATIC);
+                    c->ctype = ColliderType::PLATFORM;
+                }
+            }
+        }
+        
 
         PhysBody* s1 = Engine::GetInstance().physics.get()->CreateRectangle(560 + 56, 256 + 8,  112, 16, STATIC);
         s1->ctype = ColliderType::SPYKE;
@@ -285,7 +307,7 @@ bool Map::LoadParalax(const char* path, ParalaxType type)
         break;
     case ParalaxType::Cloud3: paralax->slowX = 3; paralax->repeatNum = 6; paralax->slowY = 1;
         break;
-    case ParalaxType::Moon: paralax->slowX = 2; paralax->marginX = 480; paralax->repeatNum = 1; paralax->slowY = 2;
+    case ParalaxType::Moon: paralax->slowX = 2; paralax->marginX = 480; paralax->repeatNum = 1; paralax->slowY = 1;
         break;
     case ParalaxType::Sky: paralax->slowX = 1; paralax->repeatNum = 6; paralax->slowY = 1;
         break;
@@ -338,4 +360,3 @@ Properties::Property* Properties::GetProperty(const char* name)
 
     return nullptr;
 }
-
