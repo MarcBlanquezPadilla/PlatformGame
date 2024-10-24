@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="100" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="13" nextobjectid="112">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="100" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="13" nextobjectid="135">
  <tileset firstgid="1" name="Ground_Tiles" tilewidth="16" tileheight="16" tilecount="110" columns="11">
   <image source="Ground_Tiles.png" width="176" height="160"/>
   <wangsets>
@@ -6100,5 +6100,26 @@
   <object id="78" x="1504" y="144" width="96" height="176"/>
   <object id="88" x="1024" y="160" width="16" height="16.25"/>
  </objectgroup>
- <objectgroup id="12" name="Spikes"/>
+ <objectgroup id="12" name="Spikes">
+  <object id="112" x="560" y="256" width="16" height="16"/>
+  <object id="113" x="576" y="256" width="16" height="16"/>
+  <object id="114" x="592" y="256" width="16" height="16"/>
+  <object id="116" x="608" y="256" width="16" height="16"/>
+  <object id="117" x="624" y="256" width="16" height="16"/>
+  <object id="118" x="640" y="256" width="16" height="16"/>
+  <object id="119" x="656" y="256" width="16" height="16"/>
+  <object id="120" x="768" y="272" width="4" height="16"/>
+  <object id="121" x="768" y="288" width="4" height="16"/>
+  <object id="122" x="796" y="176" width="4" height="16"/>
+  <object id="123" x="796" y="192" width="4" height="16"/>
+  <object id="124" x="832" y="176" width="4" height="16"/>
+  <object id="126" x="832" y="192" width="4" height="16"/>
+  <object id="127" x="988" y="176" width="4" height="16"/>
+  <object id="128" x="988" y="192" width="4" height="16"/>
+  <object id="129" x="896" y="176" width="16" height="4"/>
+  <object id="130" x="912" y="176" width="16" height="4"/>
+  <object id="131" x="928" y="176" width="16" height="4"/>
+  <object id="133" x="944" y="176" width="16" height="4"/>
+  <object id="134" x="960" y="176" width="16" height="4"/>
+ </objectgroup>
 </map>

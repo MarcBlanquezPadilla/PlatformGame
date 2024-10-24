@@ -127,7 +127,7 @@ bool Player::Update(float dt)
 	}
 	else if (playerState==HURT)
 	{
-		if (hurtTimer.ReadMSec() >= hurtTime) playerState = IDLE;
+		if (hurtTimer.ReadSec() >= hurtTime) playerState = IDLE;
 	}
 
 	
@@ -217,12 +217,11 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		if (!godMode)
 		{
 			playerState = HURT;
-			b2Vec2 pushDir = b2Vec2_zero;
 			hurtTimer.Start();
+			b2Vec2 pushDir = b2Vec2_zero;
 			pushDir.x = physA->body->GetPosition().x - physB->body->GetPosition().x;
 			pushDir.y = physA->body->GetPosition().y - physB->body->GetPosition().y;
 			pushDir.Normalize();
-			LOG("%f, %f",pushDir.x , pushDir.y);
 			physA->body->ApplyLinearImpulseToCenter(b2Vec2(pushForce * pushDir.x, pushForce * pushDir.y), true);
 		}
 		LOG("Collision SPYKE");

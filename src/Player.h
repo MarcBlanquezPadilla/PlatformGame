@@ -67,7 +67,7 @@ public:
 	// L08 TODO 5: Add physics to the player - declare a Physics body
 	PhysBody* pbody;
 	float jumpForce = 0.4f; // The force to apply when jumping
-	float pushForce = 1.0f; // The force to apply when getting pushed;
+	float pushForce = 0.4f; // The force to apply when getting pushed;
 	bool destroyed = false;
 	bool godMode = false;
 
