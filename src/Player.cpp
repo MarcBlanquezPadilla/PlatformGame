@@ -20,7 +20,11 @@ Player::~Player() {
 bool Player::Awake() {
 
 	//L03: TODO 2: Initialize Player parameters
-	position = initPos;
+	initPos = b2Vec2_zero;
+	initPos.x = parameters.attribute("x").as_float();
+	initPos.y = parameters.attribute("y").as_float();
+	position = Vector2D(initPos.x, initPos.y);
+
 	return true;
 }
 
@@ -60,6 +64,13 @@ bool Player::Update(float dt)
 {
 	currentFrame = currentAnim->GetCurrentFrame();
 
+	if (tpToStart)
+	{
+		b2Vec2 initPosInMeters = { PIXEL_TO_METERS(initPos.x), PIXEL_TO_METERS(initPos.y) };
+		pbody->body->SetTransform(initPosInMeters, 0.0f);
+		tpToStart = false;
+	}
+
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F10) == KEY_DOWN)
 	{
 		godMode = !godMode;
@@ -68,12 +79,14 @@ bool Player::Update(float dt)
 		LOG("God mode = %d", (int)godMode);
 	}
 
+
+	b2Vec2 velocity = b2Vec2_zero;
+
 	if (playerState !=HURT )
 	{
 		playerState = IDLE;
 
 		// L08 TODO 5: Add physics to the player - updated player position using physics
-		b2Vec2 velocity = b2Vec2(0, 0);
 
 		// Move left
 		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
@@ -125,9 +138,9 @@ bool Player::Update(float dt)
 			playerState = FALL;
 		}
 	}
-	else if (playerState==HURT)
+	else if (playerState==HURT )
 	{
-		if (hurtTimer.ReadSec() >= hurtTime) playerState = IDLE;
+		if (hurtTimer.ReadSec() >= hurtTime || VALUE_NEAR_TO_0(pbody->body->GetLinearVelocity().y)) playerState = IDLE;
 	}
 
 	
@@ -171,7 +184,6 @@ bool Player::Update(float dt)
 	
 	if (!destroyed)
 	{
-		
 		if (dir == RIGHT) {
 			Engine::GetInstance().render.get()->DrawTexture(texture, position.getX(), position.getY(), &currentFrame);
 		}
@@ -188,7 +200,6 @@ bool Player::Update(float dt)
 }
 
 bool Player::PostUpdate(float dt) {
-
 	
 	return true;
 }
@@ -207,14 +218,12 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 	{
 	case ColliderType::PLATFORM:
 		LOG("Collision PLATFORM");
-		//reset the jump flag when touching the ground
-		playerState = IDLE;
 		break;
 	case ColliderType::ITEM:
 		LOG("Collision ITEM");
 		break;
 	case ColliderType::SPYKE:
-		if (!godMode)
+		if (!godMode && playerState!=HURT)
 		{
 			playerState = HURT;
 			hurtTimer.Start();
@@ -228,7 +237,14 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		break;
 
 	case ColliderType::ABYSS:
-		/*pbody->body-> = initPos;*/
+	{
+		playerState = HURT;
+		hurtTimer.Start();
+		tpToStart = true;
+		LOG("Collision ABYSS");
+		break;
+	}
+		
 	case ColliderType::UNKNOWN:
 		LOG("Collision UNKNOWN");
 		break;

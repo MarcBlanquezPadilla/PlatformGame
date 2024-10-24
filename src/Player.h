@@ -70,11 +70,12 @@ public:
 	float pushForce = 0.4f; // The force to apply when getting pushed;
 	bool destroyed = false;
 	bool godMode = false;
+	bool tpToStart = false;
 
 	Timer hurtTimer;
 	float hurtTime = 1;
 
-	Vector2D initPos = { 16, 16 };
+	b2Vec2 initPos;
 	pugi::xml_node parameters;
 
 
