@@ -20,7 +20,7 @@ Player::~Player() {
 bool Player::Awake() {
 
 	//L03: TODO 2: Initialize Player parameters
-	position = Vector2D(16, 16);
+	position = initPos;
 	return true;
 }
 
@@ -226,6 +226,9 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		}
 		LOG("Collision SPYKE");
 		break;
+
+	case ColliderType::ABYSS:
+		/*pbody->body-> = initPos;*/
 	case ColliderType::UNKNOWN:
 		LOG("Collision UNKNOWN");
 		break;

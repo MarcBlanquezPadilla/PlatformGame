@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="100" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="13" nextobjectid="135">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="100" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="15" nextobjectid="139">
  <tileset firstgid="1" name="Ground_Tiles" tilewidth="16" tileheight="16" tilecount="110" columns="11">
   <image source="Ground_Tiles.png" width="176" height="160"/>
   <wangsets>
@@ -6121,5 +6121,12 @@
   <object id="131" x="928" y="176" width="16" height="4"/>
   <object id="133" x="944" y="176" width="16" height="4"/>
   <object id="134" x="960" y="176" width="16" height="4"/>
+ </objectgroup>
+ <objectgroup id="13" name="Abyss">
+  <object id="136" x="0" y="356" width="1600" height="116"/>
+ </objectgroup>
+ <objectgroup id="14" name="MapLimits">
+  <object id="137" x="1600" y="-88" width="128" height="560"/>
+  <object id="138" x="-156" y="-76" width="156" height="544"/>
  </objectgroup>
 </map>

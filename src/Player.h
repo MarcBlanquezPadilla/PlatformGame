@@ -74,6 +74,7 @@ public:
 	Timer hurtTimer;
 	float hurtTime = 1;
 
+	Vector2D initPos = { 16, 16 };
 	pugi::xml_node parameters;
 
 
