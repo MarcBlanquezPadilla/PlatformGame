@@ -20,7 +20,10 @@ Player::~Player() {
 bool Player::Awake() {
 
 	//L03: TODO 2: Initialize Player parameters
+	initPos = { parameters.child("entities").child("player").attribute("x").as_float(), parameters.child("entities").child("player").attribute("x").as_float() };
 	position = initPos;
+	spawnPos = b2Vec2(PIXEL_TO_METERS(initPos.getX()), PIXEL_TO_METERS(initPos.getY()));
+
 	return true;
 }
 
@@ -228,7 +231,12 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		break;
 
 	case ColliderType::ABYSS:
-		/*pbody->body-> = initPos;*/
+		LOG("Collision ABYSS");
+		/*SetParameters(parameters);*/
+		pbody->body->SetTransform(b2Vec2(initPos.getX(), initPos.getY()), 0.0f);
+
+		break;
+		
 	case ColliderType::UNKNOWN:
 		LOG("Collision UNKNOWN");
 		break;

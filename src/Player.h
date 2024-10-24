@@ -52,6 +52,8 @@ public:
 		this->parameters = parameters;
 	}
 
+	
+
 public:
 
 	//Declare player parameters
@@ -61,6 +63,7 @@ public:
 	int texW, texH;
 	SDL_Rect currentFrame;
 
+	b2Vec2 spawnPos;
 	//Audio fx
 	int pickCoinFxId;
 
@@ -74,7 +77,7 @@ public:
 	Timer hurtTimer;
 	float hurtTime = 1;
 
-	Vector2D initPos = { 16, 16 };
+	Vector2D initPos;
 	pugi::xml_node parameters;
 
 

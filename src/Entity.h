@@ -54,7 +54,9 @@ public:
 			active = false;
 			CleanUp();
 		}
-	}
+	};
+
+
 
 	virtual void OnCollision(PhysBody* physA, PhysBody* physB) {
 
@@ -78,6 +80,10 @@ public:
 	Vector2D GetPosition()
 	{
 		return position;
+	}
+
+	void SetPosition(float _x, float _y) {
+		position = { _x, _y };
 	}
 
 };
