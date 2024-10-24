@@ -56,9 +56,9 @@
             <frame x = "96" y ="96" w = "48" h = "48"/>
           </jump>
           <fall loop = "false" speed =" 0.2f">
-            <frame x = "0" y ="144" w = "48" h = "48"/>
             <frame x = "48" y ="144" w = "48" h = "48"/>
             <frame x = "96" y ="144" w = "48" h = "48"/>
+			<frame x = "0" y ="144" w = "48" h = "48"/>
           </fall>
           <hurt loop = "false" speed = "0.2f">
             <frame x = "0" y ="192" w = "48" h = "48"/>

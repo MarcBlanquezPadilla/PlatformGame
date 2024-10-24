@@ -51,6 +51,8 @@ bool Player::Start() {
 	// L08 TODO 7: Assign collider type
 	pbody->ctype = ColliderType::PLAYER;
 
+	hurtTimer = Timer();
+
 	return true;
 }
 
@@ -66,61 +68,69 @@ bool Player::Update(float dt)
 		LOG("God mode = %d", (int)godMode);
 	}
 
-	playerState = IDLE;
-
-	// L08 TODO 5: Add physics to the player - updated player position using physics
-	b2Vec2 velocity = b2Vec2(0, 0);
-
-	// Move left
-	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
-		velocity.x = -0.2 * dt;
-		playerState = WALK;
-		dir = LEFT;
-	}
-
-	// Move right
-	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
-		velocity.x = 0.2 * dt;
-		playerState = WALK;
-		dir = RIGHT;
-		
-	}
-
-	if (godMode)
+	if (playerState !=HURT )
 	{
-		velocity.y = 0;
-		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
-			velocity.y = -0.2 * dt;
+		playerState = IDLE;
+
+		// L08 TODO 5: Add physics to the player - updated player position using physics
+		b2Vec2 velocity = b2Vec2(0, 0);
+
+		// Move left
+		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
+			velocity.x = -0.2 * dt;
 			playerState = WALK;
+			dir = LEFT;
 		}
 
 		// Move right
-		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
-			velocity.y = 0.2 * dt;
+		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
+			velocity.x = 0.2 * dt;
 			playerState = WALK;
-		}
-	}
-	else
-	{
-		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN && VALUE_NEAR_TO_0(pbody->body->GetLinearVelocity().y)) {
-			// Apply an initial upward force
-			pbody->body->ApplyLinearImpulseToCenter(b2Vec2(0, -jumpForce), true);
+			dir = RIGHT;
 		}
 
-		velocity = { velocity.x, pbody->body->GetLinearVelocity().y };
+		if (godMode)
+		{
+			velocity.y = 0;
+			if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
+				velocity.y = -0.2 * dt;
+				playerState = WALK;
+			}
+
+			// Move right
+			if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
+				velocity.y = 0.2 * dt;
+				playerState = WALK;
+			}
+		}
+		else
+		{
+			if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN && VALUE_NEAR_TO_0(pbody->body->GetLinearVelocity().y)) {
+				// Apply an initial upward force
+				pbody->body->ApplyLinearImpulseToCenter(b2Vec2(0, -jumpForce), true);
+			}
+
+			velocity = { velocity.x, pbody->body->GetLinearVelocity().y };
+		}
+
+		pbody->body->SetLinearVelocity(velocity);
+
+		if (pbody->body->GetLinearVelocity().y < -0.0001)
+		{
+			playerState = JUMP;
+		}
+
+		if (pbody->body->GetLinearVelocity().y > 0.0001)
+		{
+			playerState = FALL;
+		}
+	}
+	else if (playerState==HURT)
+	{
+		if (hurtTimer.ReadMSec() >= hurtTime) playerState = IDLE;
 	}
 
-	pbody->body->SetLinearVelocity(velocity);
 	
-	if (pbody->body->GetLinearVelocity().y < -0.0001)
-	{
-		playerState = JUMP;
-	}
-	
-	if (pbody->body->GetLinearVelocity().y > 0.0001)
-	{
-		playerState = FALL;
-	}
 
 	if (playerState != previousState) {
 		switch (playerState) {
@@ -153,7 +163,6 @@ bool Player::Update(float dt)
 
 	previousState = playerState;
 
-	// Apply the velocity to the player
 	
 	b2Transform pbodyPos = pbody->body->GetTransform();
 	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - currentFrame.w / 2);
@@ -200,14 +209,24 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		LOG("Collision PLATFORM");
 		//reset the jump flag when touching the ground
 		playerState = IDLE;
-		idle.Reset();
 		break;
 	case ColliderType::ITEM:
 		LOG("Collision ITEM");
 		break;
 	case ColliderType::SPYKE:
+		if (!godMode)
+		{
+			playerState = HURT;
+			b2Vec2 pushDir = b2Vec2_zero;
+			hurtTimer.Start();
+			pushDir.x = physA->body->GetPosition().x - physB->body->GetPosition().x;
+			pushDir.y = physA->body->GetPosition().y - physB->body->GetPosition().y;
+			pushDir.Normalize();
+			LOG("%f, %f",pushDir.x , pushDir.y);
+			physA->body->ApplyLinearImpulseToCenter(b2Vec2(pushForce * pushDir.x, pushForce * pushDir.y), true);
+		}
 		LOG("Collision SPYKE");
-		playerState = HURT;
+		break;
 	case ColliderType::UNKNOWN:
 		LOG("Collision UNKNOWN");
 		break;

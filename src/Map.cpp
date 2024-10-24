@@ -212,7 +212,6 @@ bool Map::Load(std::string path, std::string fileName)
             objectGroup->name = objectGroupNode.attribute("name").as_string();
             for (pugi::xml_node objectNode = objectGroupNode.child("object"); objectNode != NULL; objectNode = objectNode.next_sibling("object")) {
                 Object* object = new Object();
-                LOG("WORKS");
                 object->id = objectNode.attribute("id").as_int();
                 object->x = objectNode.attribute("x").as_int();
                 object->y = objectNode.attribute("y").as_int();
@@ -231,6 +230,14 @@ bool Map::Load(std::string path, std::string fileName)
                 {
                     PhysBody* c = Engine::GetInstance().physics.get()->CreateRectangle(object->x + object->width/2, object->y + object->height / 2, object->width, object->height, STATIC);
                     c->ctype = ColliderType::PLATFORM;
+                }
+            }
+            if (objectGroup->name == "Spikes")
+            {
+                for (Object* object : objectGroup->object)
+                {
+                    PhysBody* c = Engine::GetInstance().physics.get()->CreateRectangle(object->x + object->width / 2, object->y + object->height / 2, object->width, object->height, STATIC);
+                    c->ctype = ColliderType::SPYKE;
                 }
             }
         }
@@ -299,9 +306,9 @@ bool Map::LoadParalax(const char* path, ParalaxType type)
 
     switch (paralax->type)
     {
-    case ParalaxType::Mountain1: paralax->slowX = 20; paralax->repeatNum = 8; paralax->slowY = 20;
+    case ParalaxType::Mountain1: paralax->slowX = 20; paralax->repeatNum = 8; paralax->slowY = 30;
         break;
-    case ParalaxType::Mountain2: paralax->slowX = 10; paralax->repeatNum = 8; paralax->slowY = 10;
+    case ParalaxType::Mountain2: paralax->slowX = 10; paralax->repeatNum = 8; paralax->slowY = 5;
         break;
     case ParalaxType::Cloud1: paralax->slowX = 5; paralax->repeatNum = 6; paralax->slowY = 1;
         break;

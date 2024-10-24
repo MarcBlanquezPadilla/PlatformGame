@@ -4,9 +4,9 @@
 #include "SDL2/SDL.h"
 #include "Box2D/Box2D.h"
 #include "Animation.h"
+#include "Timer.h"
 
 #define GHOST_W 9
-
 
 struct SDL_Texture;
 
@@ -67,8 +67,12 @@ public:
 	// L08 TODO 5: Add physics to the player - declare a Physics body
 	PhysBody* pbody;
 	float jumpForce = 0.4f; // The force to apply when jumping
+	float pushForce = 1.0f; // The force to apply when getting pushed;
 	bool destroyed = false;
 	bool godMode = false;
+
+	Timer hurtTimer;
+	float hurtTime = 1;
 
 	pugi::xml_node parameters;
 
