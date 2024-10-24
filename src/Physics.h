@@ -45,7 +45,7 @@ public:
 
 	void GetPosition(int& x, int& y) const;
 	float GetRotation() const;
-	void SetPosition(const b2Vec2& position);
+	/*void SetPosition(const b2Vec2& position);*/
 	bool Contains(int x, int y) const;
 	int RayCast(int x1, int y1, int x2, int y2, float& normal_x, float& normal_y) const;
 

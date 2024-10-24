@@ -387,9 +387,9 @@ void PhysBody::GetPosition(int& x, int& y) const
 	y = METERS_TO_PIXELS(pos.y) - (height);
 }
 
-void PhysBody::SetPosition(const b2Vec2& v) {
-	body->SetPosition(v);
-}
+//void PhysBody::SetPosition(const b2Vec2& v) {
+//	body->SetPosition(v);
+//}
 
 
 float PhysBody::GetRotation() const

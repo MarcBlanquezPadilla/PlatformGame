@@ -233,12 +233,7 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 	case ColliderType::ABYSS:
 		LOG("Collision ABYSS");
 		/*SetParameters(parameters);*/
-		
-		/*position.setX(initPos.getX());
-		position.setY(initPos.getY());*/
-		/*pbody->body->SetTransform(spawnPos, 0.0f);*/ //crashes at runtime
-		/*pbody->body->SetTransform(b2Vec2(initPos.getX(), initPos.getY()), 0.0f);*/
-		pbody->body->SetPosition(b2Vec2(initPos.getX(), initPos.getY()));
+		pbody->body->SetTransform(b2Vec2(initPos.getX(), initPos.getY()), 0.0f);
 
 		break;
 		
