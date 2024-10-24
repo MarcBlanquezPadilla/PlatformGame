@@ -138,9 +138,9 @@ bool Player::Update(float dt)
 			playerState = FALL;
 		}
 	}
-	else if (playerState==HURT )
+	else if (playerState == HURT )
 	{
-		if (hurtTimer.ReadSec() >= hurtTime || VALUE_NEAR_TO_0(pbody->body->GetLinearVelocity().y)) playerState = IDLE;
+		if (hurtTimer.ReadSec() >= hurtTime && hurt.HasFinished()) playerState = IDLE;
 	}
 
 	
@@ -164,6 +164,9 @@ bool Player::Update(float dt)
 			currentAnim = &fall;
 			break;
 		case HURT:
+			if (playerState == previousState) {
+
+			}
 			hurt.Reset();
 			currentAnim = &hurt;
 			break;
@@ -230,6 +233,15 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			b2Vec2 pushDir = b2Vec2_zero;
 			pushDir.x = physA->body->GetPosition().x - physB->body->GetPosition().x;
 			pushDir.y = physA->body->GetPosition().y - physB->body->GetPosition().y;
+			/*pushDir.y = physA->body->GetPosition().y - physB->body->GetPosition().y;
+			if (dir == LEFT) {
+				pushDir.x = (-pushForce, pushDir.y);
+			}
+			else if (dir == RIGHT) {
+				pushDir.x = (pushForce, pushDir.y);
+			}*/
+			
+			
 			pushDir.Normalize();
 			physA->body->ApplyLinearImpulseToCenter(b2Vec2(pushForce * pushDir.x, pushForce * pushDir.y), true);
 		}
@@ -238,8 +250,8 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 
 	case ColliderType::ABYSS:
 	{
-		playerState = HURT;
-		hurtTimer.Start();
+		/*playerState = HURT;
+		hurtTimer.Start();*/
 		tpToStart = true;
 		LOG("Collision ABYSS");
 		break;
