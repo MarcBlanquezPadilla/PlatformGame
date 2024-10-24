@@ -11,55 +11,6 @@
 Player::Player() : Entity(EntityType::PLAYER)
 {
 	name = "Player";
-	//idle anim
-	idle.PushBack({ 0, 0, 48, 48 });
-	idle.PushBack({ 48, 0, 48, 48 });
-	idle.PushBack({ 96, 0, 48, 48 });
-	idle.PushBack({ 144, 0, 48, 48 });
-	idle.PushBack({ 192, 0, 48, 48 });
-	idle.PushBack({ 240, 0, 48, 48 });
-	idle.PushBack({ 288, 0, 48, 48 });
-	idle.PushBack({ 336, 0, 48, 48 });
-	idle.speed = 0.2f;
-	idle.loop = true;
-
-	walk.PushBack({ 0, 48, 48, 48 });
-	walk.PushBack({ 48, 48, 48, 48 });
-	walk.PushBack({ 96, 48, 48, 48 });
-	walk.PushBack({ 144, 48, 48, 48 });
-	walk.speed = 0.1f;
-	walk.loop = true;
-
-	jump.PushBack({ 0, 96, 48, 48 });
-	jump.PushBack({ 48, 96, 48, 48 });
-	jump.PushBack({ 96, 96, 48, 48 });
-	jump.speed = 0.2f;
-	jump.loop = false;
-
-	fall.PushBack({ 48, 144, 48, 48 });
-	fall.PushBack({ 96, 144, 48, 48 });
-	fall.PushBack({ 0, 144, 48, 48 });
-	fall.speed = 0.2f;
-	fall.loop = false;
-
-	hurt.PushBack({ 0, 192, 48, 48 });
-	hurt.PushBack({ 48, 192, 48, 48 });
-	hurt.PushBack({ 96, 192, 48, 48 });
-	hurt.PushBack({ 144,192, 48, 48 });
-	hurt.speed = 0.2f;
-	hurt.loop = false;
-
-	death.PushBack({ 0, 240, 48, 48 });
-	death.PushBack({ 48, 240, 48, 48 });
-	death.PushBack({ 96, 240, 48, 48 });
-	death.PushBack({ 144, 240, 48, 48 });
-	death.PushBack({ 192, 240, 48, 48 });
-	death.PushBack({ 240, 240, 48, 48 });
-	death.speed = 0.1f;
-	death.loop = false;
-	
-
-
 }
 
 Player::~Player() {
@@ -76,9 +27,18 @@ bool Player::Awake() {
 bool Player::Start() {
 
 	//L03: TODO 2: Initialize Player parameters
-	texture = Engine::GetInstance().textures.get()->Load("Assets/Textures/GhostCharacter/Ghost_Sheet.png");
+	texture = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture").as_string());
+	/*get()->Load("Assets/Textures/GhostCharacter/Ghost_Sheet.png");*/
 
 	destroyed = false;
+
+	idle.LoadAnimations(parameters.child("animations").child("idle"));
+	walk.LoadAnimations(parameters.child("animations").child("walk"));
+	jump.LoadAnimations(parameters.child("animations").child("jump"));
+	fall.LoadAnimations(parameters.child("animations").child("fall"));
+	hurt.LoadAnimations(parameters.child("animations").child("hurt"));
+	death.LoadAnimations(parameters.child("animations").child("death"));
+	
 	currentAnim = &idle;
 
 	// L08 TODO 5: Add physics to the player - initialize physics body

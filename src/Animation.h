@@ -12,7 +12,6 @@ public:
 	// Allows the animation to keep going back and forth
 	bool pingpong = false;
 
-private:
 	float currentFrame = 0.0f;
 	int totalFrames = 0;
 	int loopCount = 0;
@@ -55,5 +54,22 @@ public:
 			actualFrame = totalFrames - currentFrame;
 
 		return frames[actualFrame];
+	}
+
+	void LoadAnimations(pugi::xml_node animationNode)
+	{
+		speed = animationNode.attribute("speed").as_float();
+		loop = animationNode.attribute("loop").as_bool();
+
+		for (pugi::xml_node animation = animationNode.child("frame"); animation; animation = animation.next_sibling("frame"))
+		{
+			PushBack({ 
+				animation.attribute("x").as_int(),
+				animation.attribute("y").as_int(),
+				animation.attribute("w").as_int(),
+				animation.attribute("h").as_int() 
+			});
+		}
+
 	}
 };

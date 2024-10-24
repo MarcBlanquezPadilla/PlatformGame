@@ -69,13 +69,13 @@ struct ObjectGroup
 // Ignore Terrain Types and Tile Types for now, but we want the image!
 enum ParalaxType
 {
-    Mountain1,
-    Mountain2,
-    Cloud1,
-    Cloud2,
-    Cloud3,
-    Moon,
-    Sky,
+    Mountain1 = 0,
+    Mountain2 = 1,
+    Cloud1 = 2,
+    Cloud2 = 3,
+    Cloud3 = 4,
+    Moon = 5,
+    Sky = 6,
 };
 
 struct Paralax
@@ -169,6 +169,10 @@ public:
     bool LoadProperties(pugi::xml_node& node, Properties& properties);
 
     bool LoadParalax(const char* path, ParalaxType type);
+    /*void LoadParalaxLayers(std::list<Paralax*> paralaxs);*/
+    void SetParameters(pugi::xml_node parameters) {
+        this->mapParameters = parameters;
+    }
 
 public: 
     std::string mapFileName;
@@ -178,4 +182,7 @@ private:
     bool mapLoaded;
     // L06: DONE 1: Declare a variable data of the struct MapData
     MapData mapData;
+    /*Paralax* paralaxLayers;*/
+    pugi::xml_node mapParameters;
+    
 };

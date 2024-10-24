@@ -16,5 +16,67 @@
     <resizable value="false"/>
     <fullscreen_window value="false"/>
   </window>
-	
+
+  <scene>
+    <map path ="Assets/Maps/" name = "Mapa.tmx">
+      <parallax>
+        <mountain1 path = "Assets/Textures/Parallax/Mountain1X2.png" type ="Mountain1"/>
+        <mountain2 path = "Assets/Textures/Parallax/Mountain2X2.png" type ="Mountain2"/>
+        <cloud1 path = "Assets/Textures/Parallax/Cloud1X2.png" type ="Cloud1"/>
+        <moon path = "Assets/Textures/Parallax/MoonX2.png" type ="Moon"/>
+        <cloud2 path = "Assets/Textures/Parallax/Cloud2X2.png" type ="Cloud2"/>
+        <cloud3 path = "Assets/Textures/Parallax/Cloud3X2.png" type ="Cloud3"/>
+        <sky path = "Assets/Textures/Parallax/SkyX2.png" type ="Sky"/>
+  
+      </parallax>
+    </map>
+    
+    <entities>
+      <player x ="16" y = "16" w ="48" h = "48" texture = "Assets/Textures/GhostCharacter/Ghost_Sheet.png">
+        <animations>
+          <idle loop = "true" speed ="0.2f">
+            <frame x = "0" y ="0" w = "48" h = "48"/>
+            <frame x = "48" y ="0" w = "48" h = "48"/>
+            <frame x = "96" y ="0" w = "48" h = "48"/>
+            <frame x = "144" y ="0" w = "48" h = "48"/>
+            <frame x = "192" y ="0" w = "48" h = "48"/>
+            <frame x = "240" y ="0" w = "48" h = "48"/>
+            <frame x = "288" y ="0" w = "48" h = "48"/>
+            <frame x = "336" y ="0" w = "48" h = "48"/>
+          </idle>
+          <walk loop = "true" speed = "0.1f">
+            <frame x = "0" y ="48" w = "48" h = "48"/>
+            <frame x = "48" y ="48" w = "48" h = "48"/>
+            <frame x = "96" y ="48" w = "48" h = "48"/>
+            <frame x = "144" y ="48" w = "48" h = "48"/>
+          </walk>
+          <jump loop ="false" speed ="0.2f">
+            <frame x = "0" y ="96" w = "48" h = "48"/>
+            <frame x = "48" y ="96" w = "48" h = "48"/>
+            <frame x = "96" y ="96" w = "48" h = "48"/>
+          </jump>
+          <fall loop = "false" speed =" 0.2f">
+            <frame x = "0" y ="144" w = "48" h = "48"/>
+            <frame x = "48" y ="144" w = "48" h = "48"/>
+            <frame x = "96" y ="144" w = "48" h = "48"/>
+          </fall>
+          <hurt loop = "false" speed = "0.2f">
+            <frame x = "0" y ="192" w = "48" h = "48"/>
+            <frame x = "48" y ="192" w = "48" h = "48"/>
+            <frame x = "96" y ="192" w = "48" h = "48"/>
+            <frame x = "144" y ="192" w = "48" h = "48"/>
+          </hurt>
+          <death loop = "false" speed = "0.2f">
+            <frame x = "0" y ="240" w = "48" h = "48"/>
+            <frame x = "48" y ="240" w = "48" h = "48"/>
+            <frame x = "96" y ="240" w = "48" h = "48"/>
+            <frame x = "144" y ="240" w = "48" h = "48"/>
+            <frame x = "192" y ="240" w = "48" h = "48"/>
+            <frame x = "240" y ="240" w = "48" h = "48"/>
+          </death>
+
+        </animations>
+      </player>
+    </entities>
+  </scene>
 </config>

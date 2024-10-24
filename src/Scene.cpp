@@ -31,13 +31,10 @@ bool Scene::Awake()
 
 	//L04: TODO 3b: Instantiate the player using the entity manager
 	player = (Player*)Engine::GetInstance().entityManager->CreateEntity(EntityType::PLAYER);
-
-	/*Item* lolly = (Item*) Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM);
-	lolly->position = Vector2D();*/
-	
-	//L08 Create a new item using the entity manager and set the position to (200, 672) to test
-	Item* corn = (Item*) Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM);
-	corn->position = Vector2D(385, 150);
+	player->SetParameters(configParameters.child("entities").child("player"));
+	Engine::GetInstance().map.get()->SetParameters(configParameters.child("entities").child("map"));
+	/*Item* corn = (Item*) Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM);*/
+	/*corn->position = Vector2D(385, 150);*/
 	return ret;
 }
 
@@ -46,14 +43,18 @@ bool Scene::Start()
 {
 	//L06 TODO 3: Call the function to load the map. 
 	
-	Engine::GetInstance().map->Load("Assets/Maps/", "Mapa.tmx");
-	Engine::GetInstance().map->LoadParalax("Assets/Textures/Parallax/Mountain1X2.png", ParalaxType::Mountain1);
-	Engine::GetInstance().map->LoadParalax("Assets/Textures/Parallax/Mountain2X2.png", ParalaxType::Mountain2);
-	Engine::GetInstance().map->LoadParalax("Assets/Textures/Parallax/Cloud1X2.png", ParalaxType::Cloud1);
-	Engine::GetInstance().map->LoadParalax("Assets/Textures/Parallax/MoonX2.png", ParalaxType::Moon);
-	Engine::GetInstance().map->LoadParalax("Assets/Textures/Parallax/Cloud2X2.png", ParalaxType::Cloud2);
-	Engine::GetInstance().map->LoadParalax("Assets/Textures/Parallax/Cloud3X2.png", ParalaxType::Cloud3);
-	Engine::GetInstance().map->LoadParalax("Assets/Textures/Parallax/SkyX2.png", ParalaxType::Sky);
+	/*Engine::GetInstance().map->Load("Assets/Maps/", "Mapa.tmx");*/
+	//instead of passing both path and name strings directly, you pass the variable in config storing these values
+	Engine::GetInstance().map->Load(configParameters.child("map").attribute("path").as_string(), configParameters.child("map").attribute("name").as_string());
+
+	//Load Parallax -> TODO: Pass parallax to config
+	Engine::GetInstance().map->LoadParalax(configParameters.child("map").child("parallax").child("mountain1").attribute("path").as_string(), ParalaxType::Mountain1);/*(configParameters.child("map").child("parallax").child("mountain1").attribute("path").as_string()))*/
+	Engine::GetInstance().map->LoadParalax(configParameters.child("map").child("parallax").child("mountain2").attribute("path").as_string(), ParalaxType::Mountain2);
+	Engine::GetInstance().map->LoadParalax(configParameters.child("map").child("parallax").child("cloud1").attribute("path").as_string(), ParalaxType::Cloud1);
+	Engine::GetInstance().map->LoadParalax(configParameters.child("map").child("parallax").child("moon").attribute("path").as_string(), ParalaxType::Moon);
+	Engine::GetInstance().map->LoadParalax(configParameters.child("map").child("parallax").child("cloud2").attribute("path").as_string(), ParalaxType::Cloud2);
+	Engine::GetInstance().map->LoadParalax(configParameters.child("map").child("parallax").child("cloud3").attribute("path").as_string(), ParalaxType::Cloud3);
+	Engine::GetInstance().map->LoadParalax(configParameters.child("map").child("parallax").child("sky").attribute("path").as_string(), ParalaxType::Sky);
 	
 	
 	return true;

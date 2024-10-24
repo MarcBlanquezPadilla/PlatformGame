@@ -9,6 +9,8 @@
 
 #include <math.h>
 
+
+
 Map::Map() : Module(), mapLoaded(false)
 {
     name = "map";
@@ -320,6 +322,12 @@ bool Map::LoadParalax(const char* path, ParalaxType type)
 
     return paralax->loaded;
 }
+
+//void LoadParalaxLayers(std::list<Paralax*> paralaxLayers) {
+//    for (Paralax* l : paralaxLayers) {
+//        /*LoadParalax(mapParameters.child("parallax").child("layer").attribute("path").as_string(), ParalaxType : (mapParameters.child("parallax").child("layer").attribute("type").as_string));*/
+//    }
+//}
 
 // L07: TODO 8: Create a method that translates x,y coordinates from map positions to world positions
 Vector2D Map::MapToWorld(int x, int y) const

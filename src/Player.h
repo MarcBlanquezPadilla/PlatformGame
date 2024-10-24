@@ -48,12 +48,16 @@ public:
 
 	void OnCollisionEnd(PhysBody* physA, PhysBody* physB);
 
+	void SetParameters(pugi::xml_node parameters) {
+		this->parameters = parameters;
+	}
+
 public:
 
 	//Declare player parameters
 	float speed = 5.0f;
 	float isWalking;
-	SDL_Texture* texture = NULL;
+	SDL_Texture* texture;
 	int texW, texH;
 	SDL_Rect currentFrame;
 
@@ -65,6 +69,9 @@ public:
 	float jumpForce = 0.4f; // The force to apply when jumping
 	bool destroyed = false;
 	bool godMode = false;
+
+	pugi::xml_node parameters;
+
 
 	Animation* currentAnim = nullptr;
 
