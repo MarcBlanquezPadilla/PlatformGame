@@ -32,7 +32,7 @@
     </map>
     
     <entities>
-      <player x ="25" y = "190" w ="48" h = "48" texture = "Assets/Textures/GhostCharacter/Ghost_Sheet.png">
+      <player x ="25" y = "190" w ="48" h = "48" lives ="3" texture = "Assets/Textures/GhostCharacter/Ghost_Sheet.png" > 
         <animations>
           <idle loop = "true" speed ="0.2f">
             <frame x = "0" y ="0" w = "48" h = "48"/>
@@ -60,7 +60,7 @@
             <frame x = "96" y ="144" w = "48" h = "48"/>
 			      <frame x = "0" y ="144" w = "48" h = "48"/>
           </fall>
-          <hurt loop = "false" speed = "0.15f">
+          <hurt loop = "false" speed = "0.15sf">
             <frame x = "0" y ="192" w = "48" h = "48"/>
             <frame x = "48" y ="192" w = "48" h = "48"/>
             <frame x = "96" y ="192" w = "48" h = "48"/>

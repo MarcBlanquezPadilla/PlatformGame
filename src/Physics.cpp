@@ -14,7 +14,7 @@ Physics::Physics() : Module()
 {
 	// Initialise all the internal class variables, at least to NULL pointer
 	world = NULL;
-	debug = true;
+	debug = false;
 }
 
 // Destructor
@@ -29,6 +29,7 @@ bool Physics::Start()
 
 	// Create a new World
 	world = new b2World(b2Vec2(GRAVITY_X, -GRAVITY_Y));
+	
 
 	// Set this module as a listener for contacts
 	world->SetContactListener(this);

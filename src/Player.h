@@ -67,17 +67,24 @@ public:
 	// L08 TODO 5: Add physics to the player - declare a Physics body
 	PhysBody* pbody;
 	float jumpForce = 0.4f; // The force to apply when jumping
-	float pushForce = 0.4f; // The force to apply when getting pushed;
+	float pushForce = 0.25f; // The force to apply when getting pushed;
 	bool destroyed = false;
 	bool godMode = false;
 	bool tpToStart = false;
 
 	Timer hurtTimer;
 	float hurtTime = 1;
+	
+	Timer respawnTimer;
+	float respawnTime = 2.0f;
 
 	b2Vec2 initPos;
+	b2Vec2 pushDir;
+
 	pugi::xml_node parameters;
 
+
+	int lives;
 
 	Animation* currentAnim = nullptr;
 
@@ -93,4 +100,5 @@ public:
 	state previousState = IDLE;
 
 	Direction dir = RIGHT;
+	
 };

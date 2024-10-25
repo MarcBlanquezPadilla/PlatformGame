@@ -49,13 +49,12 @@ bool Player::Start() {
 	/*Engine::GetInstance().textures.get()->GetSize(texture, currentFrame.w, currentFrame.h);*/
 	pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX(), (int)position.getY(), GHOST_W, bodyType::DYNAMIC);
 
-	// L08 TODO 6: Assign player class (using "this") to the listener of the pbody. This makes the Physics module to call the OnCollision method
 	pbody->listener = this;
-
-	// L08 TODO 7: Assign collider type
 	pbody->ctype = ColliderType::PLAYER;
 
+	lives = parameters.attribute("lives").as_int();
 	hurtTimer = Timer();
+	respawnTimer = Timer();
 
 	return true;
 }
@@ -69,6 +68,10 @@ bool Player::Update(float dt)
 		b2Vec2 initPosInMeters = { PIXEL_TO_METERS(initPos.x), PIXEL_TO_METERS(initPos.y) };
 		pbody->body->SetTransform(initPosInMeters, 0.0f);
 		tpToStart = false;
+		if (lives <= 0) {
+			lives = parameters.attribute("lives").as_int();
+		}
+		LOG("Lives: %i", lives);
 	}
 
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F10) == KEY_DOWN)
@@ -82,11 +85,9 @@ bool Player::Update(float dt)
 
 	b2Vec2 velocity = b2Vec2_zero;
 
-	if (playerState !=HURT )
+	if (playerState !=HURT && playerState != DEAD)
 	{
 		playerState = IDLE;
-
-		// L08 TODO 5: Add physics to the player - updated player position using physics
 
 		// Move left
 		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
@@ -118,13 +119,15 @@ bool Player::Update(float dt)
 		}
 		else
 		{
+			
 			if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN && VALUE_NEAR_TO_0(pbody->body->GetLinearVelocity().y)) {
 				// Apply an initial upward force
 				pbody->body->ApplyLinearImpulseToCenter(b2Vec2(0, -jumpForce), true);
 			}
-
+			
 			velocity = { velocity.x, pbody->body->GetLinearVelocity().y };
 		}
+
 
 		pbody->body->SetLinearVelocity(velocity);
 
@@ -137,10 +140,34 @@ bool Player::Update(float dt)
 		{
 			playerState = FALL;
 		}
+
+		
+
+	} else if (playerState == HURT) {
+		
+
+		
+		if (lives <= 0) {
+			playerState = DEAD;
+			respawnTimer.Start();
+		}
+		else {
+			if (hurtTimer.ReadSec() >= hurtTime && hurt.HasFinished()) playerState = IDLE;
+		}
 	}
-	else if (playerState == HURT )
-	{
-		if (hurtTimer.ReadSec() >= hurtTime && hurt.HasFinished()) playerState = IDLE;
+	else if (playerState == DEAD) {
+
+		
+		if (respawnTimer.ReadSec() >= respawnTime && death.HasFinished()) 
+		{
+
+			playerState = IDLE;
+			lives = parameters.child("entity").child("player").attribute("lives").as_int();
+			
+			tpToStart = true;
+		}
+
+	
 	}
 
 	
@@ -164,9 +191,6 @@ bool Player::Update(float dt)
 			currentAnim = &fall;
 			break;
 		case HURT:
-			if (playerState == previousState) {
-
-			}
 			hurt.Reset();
 			currentAnim = &hurt;
 			break;
@@ -185,15 +209,14 @@ bool Player::Update(float dt)
 	position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - currentFrame.h / 2);
 	
 	
-	if (!destroyed)
-	{
-		if (dir == RIGHT) {
-			Engine::GetInstance().render.get()->DrawTexture(texture, position.getX(), position.getY(), &currentFrame);
-		}
-		else if (dir == LEFT) {
-			Engine::GetInstance().render.get()->DrawTextureFlipped(texture, position.getX(), position.getY(), &currentFrame);
-		}
+	
+	if (dir == RIGHT) {
+		Engine::GetInstance().render.get()->DrawTexture(texture, position.getX(), position.getY(), &currentFrame);
 	}
+	else if (dir == LEFT) {
+		Engine::GetInstance().render.get()->DrawTextureFlipped(texture, position.getX(), position.getY(), &currentFrame);
+	}
+	
 
 
 
@@ -226,33 +249,37 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		LOG("Collision ITEM");
 		break;
 	case ColliderType::SPYKE:
-		if (!godMode && playerState!=HURT)
-		{
-			playerState = HURT;
-			hurtTimer.Start();
-			b2Vec2 pushDir = b2Vec2_zero;
+
+		if (playerState != DEAD) {
+			if (!godMode && playerState != HURT)
+			{
+				lives--;
+				LOG("Lives: %i", lives);
+				hurtTimer.Start();
+				playerState = HURT;
+
+
+			}
+			pushDir = b2Vec2_zero;
 			pushDir.x = physA->body->GetPosition().x - physB->body->GetPosition().x;
 			pushDir.y = physA->body->GetPosition().y - physB->body->GetPosition().y;
-			/*pushDir.y = physA->body->GetPosition().y - physB->body->GetPosition().y;
-			if (dir == LEFT) {
-				pushDir.x = (-pushForce, pushDir.y);
-			}
-			else if (dir == RIGHT) {
-				pushDir.x = (pushForce, pushDir.y);
-			}*/
-			
-			
+
 			pushDir.Normalize();
 			physA->body->ApplyLinearImpulseToCenter(b2Vec2(pushForce * pushDir.x, pushForce * pushDir.y), true);
+			LOG("Collision SPYKE");
 		}
-		LOG("Collision SPYKE");
+		
 		break;
 
 	case ColliderType::ABYSS:
-	{
-		/*playerState = HURT;
-		hurtTimer.Start();*/
-		tpToStart = true;
+	{ 
+		if (!godMode && playerState != HURT) {
+			playerState = HURT;
+			tpToStart = true;
+		}
+		
+		
+		
 		LOG("Collision ABYSS");
 		break;
 	}
