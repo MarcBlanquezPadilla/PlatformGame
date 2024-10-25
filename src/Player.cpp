@@ -51,6 +51,8 @@ bool Player::Start() {
 
 	pbody->listener = this;
 	pbody->ctype = ColliderType::PLAYER;
+	pbody->body->SetLinearDamping(friction);
+	pbody->body->SetGravityScale(gravity);
 
 	lives = parameters.attribute("lives").as_int();
 	hurtTimer = Timer();
@@ -67,23 +69,20 @@ bool Player::Update(float dt)
 	{
 		b2Vec2 initPosInMeters = { PIXEL_TO_METERS(initPos.x), PIXEL_TO_METERS(initPos.y) };
 		pbody->body->SetTransform(initPosInMeters, 0.0f);
+		pbody->body->SetAwake(true);
 		tpToStart = false;
-		if (lives <= 0) {
-			lives = parameters.attribute("lives").as_int();
-		}
-		LOG("Lives: %i", lives);
 	}
 
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F10) == KEY_DOWN)
 	{
 		godMode = !godMode;
-		pbody->body->SetGravityScale(godMode == true ? 0 : 1);
+		pbody->body->SetGravityScale(godMode == true ? 0 : gravity);
 		pbody->body->SetLinearVelocity(godMode == true ? b2Vec2_zero : pbody->body->GetLinearVelocity());
 		LOG("God mode = %d", (int)godMode);
 	}
 
 
-	b2Vec2 velocity = b2Vec2_zero;
+	velocity = b2Vec2_zero;
 
 	if (playerState !=HURT && playerState != DEAD)
 	{
@@ -91,14 +90,14 @@ bool Player::Update(float dt)
 
 		// Move left
 		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
-			velocity.x = -0.2 * dt;
+			velocity.x = -moveSpeed * dt;
 			playerState = WALK;
 			dir = LEFT;
 		}
 
 		// Move right
 		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
-			velocity.x = 0.2 * dt;
+			velocity.x = moveSpeed * dt;
 			playerState = WALK;
 			dir = RIGHT;
 		}
@@ -107,13 +106,13 @@ bool Player::Update(float dt)
 		{
 			velocity.y = 0;
 			if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
-				velocity.y = -0.2 * dt;
+				velocity.y = -moveSpeed * dt;
 				playerState = WALK;
 			}
 
 			// Move right
 			if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
-				velocity.y = 0.2 * dt;
+				velocity.y = moveSpeed * dt;
 				playerState = WALK;
 			}
 		}
@@ -145,32 +144,27 @@ bool Player::Update(float dt)
 
 	} else if (playerState == HURT) {
 		
-
-		
-		if (lives <= 0) {
-			playerState = DEAD;
-			respawnTimer.Start();
-		}
-		else {
-			if (hurtTimer.ReadSec() >= hurtTime && hurt.HasFinished()) playerState = IDLE;
+		if (hurtTimer.ReadSec() >= hurtTime && hurt.HasFinished()) playerState = IDLE;
+		else
+		{
+			velocity = pbody->body->GetLinearVelocity();
+			pbody->body->SetLinearVelocity(velocity);
 		}
 	}
 	else if (playerState == DEAD) {
 
-		
+		pbody->body->SetLinearVelocity(b2Vec2_zero);
 		if (respawnTimer.ReadSec() >= respawnTime && death.HasFinished()) 
 		{
+			tpToStart = true;
 
 			playerState = IDLE;
-			lives = parameters.child("entity").child("player").attribute("lives").as_int();
-			
-			tpToStart = true;
+			if (lives <= 0) {
+				lives = parameters.attribute("lives").as_int();
+			}
+			LOG("Lives: %i", lives);
 		}
-
-	
 	}
-
-	
 
 	if (playerState != previousState) {
 		switch (playerState) {
@@ -251,21 +245,27 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 	case ColliderType::SPYKE:
 
 		if (playerState != DEAD) {
+			
 			if (!godMode && playerState != HURT)
 			{
 				lives--;
-				LOG("Lives: %i", lives);
-				hurtTimer.Start();
-				playerState = HURT;
-
-
+				if (lives <= 0) {
+					playerState = DEAD;
+					respawnTimer.Start();
+				}
+				else
+				{
+					hurtTimer.Start();
+					playerState = HURT;
+					pushDir = b2Vec2_zero;
+					pushDir.x = physA->body->GetPosition().x - physB->body->GetPosition().x;
+					pushDir.y = physA->body->GetPosition().y - physB->body->GetPosition().y;
+					pushDir.Normalize();
+					physA->body->SetLinearVelocity(b2Vec2_zero);
+					physA->body->ApplyLinearImpulseToCenter(b2Vec2(pushForce * pushDir.x, pushForce * pushDir.y), true);
+				}
 			}
-			pushDir = b2Vec2_zero;
-			pushDir.x = physA->body->GetPosition().x - physB->body->GetPosition().x;
-			pushDir.y = physA->body->GetPosition().y - physB->body->GetPosition().y;
-
-			pushDir.Normalize();
-			physA->body->ApplyLinearImpulseToCenter(b2Vec2(pushForce * pushDir.x, pushForce * pushDir.y), true);
+			
 			LOG("Collision SPYKE");
 		}
 		

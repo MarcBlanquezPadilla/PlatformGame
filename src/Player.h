@@ -55,7 +55,6 @@ public:
 public:
 
 	//Declare player parameters
-	float speed = 5.0f;
 	float isWalking;
 	SDL_Texture* texture;
 	int texW, texH;
@@ -66,8 +65,13 @@ public:
 
 	// L08 TODO 5: Add physics to the player - declare a Physics body
 	PhysBody* pbody;
-	float jumpForce = 0.4f; // The force to apply when jumping
-	float pushForce = 0.25f; // The force to apply when getting pushed;
+	float jumpForce = 0.6f; // The force to apply when jumping
+	float pushForce = 0.5f; // The force to apply when getting pushed;
+	float moveSpeed = 0.2f;
+	float friction = 2.0f;
+	float gravity = 1.2f;
+
+	
 	bool destroyed = false;
 	bool godMode = false;
 	bool tpToStart = false;
@@ -78,6 +82,7 @@ public:
 	Timer respawnTimer;
 	float respawnTime = 2.0f;
 
+	b2Vec2 velocity = b2Vec2_zero;
 	b2Vec2 initPos;
 	b2Vec2 pushDir;
 
