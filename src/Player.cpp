@@ -231,14 +231,14 @@ bool Player::Update(float dt)
 	cameraW = Engine::GetInstance().render.get()->camera.w;
 	cameraH = Engine::GetInstance().render.get()->camera.h;
 	helpMenuX = cameraX + cameraW / 2 - helpMenuW / 2;
-	helpMenuY = cameraY + cameraH/2 - helpMenuH / 2;
+	helpMenuY = cameraY + cameraH / 2 - helpMenuH / 2;
 
 	
 
 	if (menu) {
 		/*LOG("Player Position: %f, %f", , );*/
 		LOG("Help Menu Position: %f, %f", helpMenuX, helpMenuY);
-		Engine::GetInstance().render.get()->DrawTexture(helpMenu, position.getX(), position.getY());
+		Engine::GetInstance().render.get()->DrawTexture(helpMenu, helpMenuX, helpMenuY);
 	}
 
 
