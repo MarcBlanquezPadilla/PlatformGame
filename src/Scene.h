@@ -4,12 +4,12 @@
 #include "Player.h"
 
 #define POS_TO_START_MOVING_CAMX 100
-#define POS_TO_STOP_MOVING_CAMX 1050
+#define POS_TO_STOP_MOVING_CAMX 1850
 #define CAM_EXTRA_DISPLACEMENT_X -100
 
-#define POS_TO_START_MOVING_CAMY 198
-#define POS_TO_STOP_MOVING_CAMY -200
-#define CAM_EXTRA_DISPLACEMENT_Y -200
+#define POS_TO_START_MOVING_CAMY 248
+#define POS_TO_STOP_MOVING_CAMY -230
+#define CAM_EXTRA_DISPLACEMENT_Y -100
 
 struct SDL_Texture;
 
@@ -40,8 +40,16 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
+	
+	SDL_Texture* helpMenu;
+
 private:
-	SDL_Texture* img;
+	bool menu;
+	
+	int helpMenuX;
+	int helpMenuY;
+	int helpMenuW;
+	int helpMenuH;
 
 	//L03: TODO 3b: Declare a Player attribute
 	Player* player;

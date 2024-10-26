@@ -16,7 +16,7 @@
 Scene::Scene() : Module()
 {
 	name = "scene";
-	img = nullptr;
+	helpMenu = nullptr;
 }
 
 // Destructor
@@ -56,7 +56,8 @@ bool Scene::Start()
 	Engine::GetInstance().map->LoadParalax(configParameters.child("map").child("parallax").child("cloud3").attribute("path").as_string(), ParalaxType::Cloud3);
 	Engine::GetInstance().map->LoadParalax(configParameters.child("map").child("parallax").child("sky").attribute("path").as_string(), ParalaxType::Sky);
 	
-	
+	helpMenu = Engine::GetInstance().textures.get()->Load("Assets/Textures/UI/Help Menu-resized.png");
+	menu = false;
 	return true;
 }
 
@@ -69,6 +70,26 @@ bool Scene::PreUpdate()
 // Called each loop iteration
 bool Scene::Update(float dt)
 {	
+	//help menu --> RENDER IN PLAYER(?
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_H) == KEY_DOWN) {
+		menu = !menu;
+	}
+
+
+	Engine::GetInstance().textures.get()->GetSize(helpMenu, helpMenuW, helpMenuH);
+	int windowW, windowH;
+	// Calculate the help menu's position relative to the player and the camera
+	Engine::GetInstance().window.get()->GetWindowSize(windowW, windowH);
+	helpMenuX = windowW / 2 + helpMenuW / 2;
+	helpMenuY = windowW / 2 + helpMenuW / 2;
+
+	if (menu) {
+
+
+		Engine::GetInstance().render.get()->DrawTexture(helpMenu, helpMenuW, helpMenuW, NULL);
+	}
+
+
 	if (player->position.getX() < POS_TO_START_MOVING_CAMX) {
 		Engine::GetInstance().render.get()->camera.x = (POS_TO_START_MOVING_CAMX + CAM_EXTRA_DISPLACEMENT_X) * -Engine::GetInstance().window.get()->scale;
 	}
@@ -81,6 +102,8 @@ bool Scene::Update(float dt)
 	}
 	else if (player->position.getY() < POS_TO_STOP_MOVING_CAMY) Engine::GetInstance().render.get()->camera.y = (POS_TO_STOP_MOVING_CAMY + CAM_EXTRA_DISPLACEMENT_X) * -Engine::GetInstance().window.get()->scale;
 	else Engine::GetInstance().render.get()->camera.y = (player->position.getY() + CAM_EXTRA_DISPLACEMENT_Y) * -Engine::GetInstance().window.get()->scale;
+
+	
 
 	return true;
 }
@@ -101,7 +124,7 @@ bool Scene::CleanUp()
 {
 	LOG("Freeing scene");
 
-	SDL_DestroyTexture(img);
+	SDL_DestroyTexture(helpMenu);
 
 	return true;
 }

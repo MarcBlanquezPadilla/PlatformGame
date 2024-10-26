@@ -63,13 +63,14 @@ bool Player::Start() {
 
 bool Player::Update(float dt)
 {
+	pbody->body->SetAwake(true);
 	currentFrame = currentAnim->GetCurrentFrame();
 
 	if (tpToStart)
 	{
 		b2Vec2 initPosInMeters = { PIXEL_TO_METERS(initPos.x), PIXEL_TO_METERS(initPos.y) };
 		pbody->body->SetTransform(initPosInMeters, 0.0f);
-		pbody->body->SetAwake(true);
+		
 		tpToStart = false;
 	}
 
@@ -102,7 +103,7 @@ bool Player::Update(float dt)
 			dir = RIGHT;
 		}
 
-		if (godMode)
+		if (godMode || canClimb)
 		{
 			velocity.y = 0;
 			if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
@@ -273,17 +274,17 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 
 	case ColliderType::ABYSS:
 	{ 
-		if (!godMode && playerState != HURT) {
-			playerState = HURT;
+		if (!godMode) {
+			lives = parameters.attribute("lives").as_int();
 			tpToStart = true;
 		}
-		
-		
-		
 		LOG("Collision ABYSS");
 		break;
 	}
-		
+	case ColliderType::LADDER:
+		canClimb = true;
+		LOG("Collision LADDER");
+		break;
 	case ColliderType::UNKNOWN:
 		LOG("Collision UNKNOWN");
 		break;
@@ -302,6 +303,10 @@ void Player::OnCollisionEnd(PhysBody* physA, PhysBody* physB)
 		break;
 	case ColliderType::ITEM:
 		LOG("End Collision ITEM");
+		break;
+	case ColliderType::LADDER:
+		LOG("End Collision LADDER");
+		canClimb = false;
 		break;
 	case ColliderType::UNKNOWN:
 		LOG("End Collision UNKNOWN");

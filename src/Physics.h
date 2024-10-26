@@ -29,6 +29,7 @@ enum class ColliderType {
 	SPYKE,
 	ABYSS,
 	MAPLIMITS,
+	LADDER,
 	UNKNOWN
 	// ..
 };

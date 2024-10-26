@@ -75,6 +75,7 @@ public:
 	bool destroyed = false;
 	bool godMode = false;
 	bool tpToStart = false;
+	bool canClimb = false;
 
 	Timer hurtTimer;
 	float hurtTime = 1;

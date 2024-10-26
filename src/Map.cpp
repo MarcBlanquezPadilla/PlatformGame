@@ -256,11 +256,19 @@ bool Map::Load(std::string path, std::string fileName)
                     c->ctype = ColliderType::MAPLIMITS;
                 }
             }
+            if (objectGroup->name == "Ladder") {
+                for (Object* object : objectGroup->object)
+                {
+                    PhysBody* c = Engine::GetInstance().physics.get()->CreateRectangleSensor(object->x + object->width / 2, object->y + object->height / 2, object->width, object->height, STATIC);
+   
+                    c->ctype = ColliderType::LADDER;
+                }
+            }
         }
         
 
-        PhysBody* s1 = Engine::GetInstance().physics.get()->CreateRectangle(560 + 56, 256 + 8,  112, 16, STATIC);
-        s1->ctype = ColliderType::SPYKE;
+        /*PhysBody* s1 = Engine::GetInstance().physics.get()->CreateRectangle(560 + 56, 256 + 8,  112, 16, STATIC);
+        s1->ctype = ColliderType::SPYKE;*/
 
         ret = true;
 
