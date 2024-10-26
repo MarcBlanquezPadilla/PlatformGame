@@ -7,10 +7,12 @@
 #include "Scene.h"
 #include "Log.h"
 #include "Physics.h"
+ 
 
 Player::Player() : Entity(EntityType::PLAYER)
 {
 	name = "Player";
+	
 }
 
 Player::~Player() {
@@ -33,6 +35,8 @@ bool Player::Start() {
 	//L03: TODO 2: Initialize Player parameters
 	texture = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture").as_string());
 	/*get()->Load("Assets/Textures/GhostCharacter/Ghost_Sheet.png");*/
+	helpMenu = Engine::GetInstance().textures.get()->Load("Assets/Textures/UI/Help Menu 2.png");
+	menu = false;
 
 	destroyed = false;
 
@@ -213,6 +217,31 @@ bool Player::Update(float dt)
 	}
 	
 
+	//help menu --> RENDER IN PLAYER(?
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_H) == KEY_DOWN) {
+		menu = !menu;
+	}
+
+
+	Engine::GetInstance().textures.get()->GetSize(helpMenu, helpMenuW, helpMenuH);
+	
+	// Calculate the help menu's position relative to the player and the camera
+	cameraX = Engine::GetInstance().render.get()->camera.x;
+	cameraY = Engine::GetInstance().render.get()->camera.y;
+	cameraW = Engine::GetInstance().render.get()->camera.w;
+	cameraH = Engine::GetInstance().render.get()->camera.h;
+	helpMenuX = cameraX + cameraW / 2 - helpMenuW / 2;
+	helpMenuY = cameraY + cameraH/2 - helpMenuH / 2;
+
+	
+
+	if (menu) {
+		/*LOG("Player Position: %f, %f", , );*/
+		LOG("Help Menu Position: %f, %f", helpMenuX, helpMenuY);
+		Engine::GetInstance().render.get()->DrawTexture(helpMenu, position.getX(), position.getY());
+	}
+
+
 
 
 	currentAnim->Update();
@@ -229,6 +258,7 @@ bool Player::CleanUp()
 {
 	LOG("Cleanup player");
 	Engine::GetInstance().textures.get()->UnLoad(texture);
+	SDL_DestroyTexture(helpMenu);
 	
 	return true;
 }

@@ -16,7 +16,7 @@
 Scene::Scene() : Module()
 {
 	name = "scene";
-	helpMenu = nullptr;
+	
 }
 
 // Destructor
@@ -43,7 +43,7 @@ bool Scene::Start()
 {
 	//L06 TODO 3: Call the function to load the map. 
 	
-	/*Engine::GetInstance().map->Load("Assets/Maps/", "Mapa.tmx");*/
+	
 	//instead of passing both path and name strings directly, you pass the variable in config storing these values
 	Engine::GetInstance().map->Load(configParameters.child("map").attribute("path").as_string(), configParameters.child("map").attribute("name").as_string());
 
@@ -56,8 +56,7 @@ bool Scene::Start()
 	Engine::GetInstance().map->LoadParalax(configParameters.child("map").child("parallax").child("cloud3").attribute("path").as_string(), ParalaxType::Cloud3);
 	Engine::GetInstance().map->LoadParalax(configParameters.child("map").child("parallax").child("sky").attribute("path").as_string(), ParalaxType::Sky);
 	
-	helpMenu = Engine::GetInstance().textures.get()->Load("Assets/Textures/UI/Help Menu-resized.png");
-	menu = false;
+	
 	return true;
 }
 
@@ -70,24 +69,6 @@ bool Scene::PreUpdate()
 // Called each loop iteration
 bool Scene::Update(float dt)
 {	
-	//help menu --> RENDER IN PLAYER(?
-	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_H) == KEY_DOWN) {
-		menu = !menu;
-	}
-
-
-	Engine::GetInstance().textures.get()->GetSize(helpMenu, helpMenuW, helpMenuH);
-	int windowW, windowH;
-	// Calculate the help menu's position relative to the player and the camera
-	Engine::GetInstance().window.get()->GetWindowSize(windowW, windowH);
-	helpMenuX = windowW / 2 + helpMenuW / 2;
-	helpMenuY = windowW / 2 + helpMenuW / 2;
-
-	if (menu) {
-
-
-		Engine::GetInstance().render.get()->DrawTexture(helpMenu, helpMenuW, helpMenuW, NULL);
-	}
 
 
 	if (player->position.getX() < POS_TO_START_MOVING_CAMX) {
@@ -124,7 +105,7 @@ bool Scene::CleanUp()
 {
 	LOG("Freeing scene");
 
-	SDL_DestroyTexture(helpMenu);
+	
 
 	return true;
 }

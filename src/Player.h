@@ -60,6 +60,12 @@ public:
 	int texW, texH;
 	SDL_Rect currentFrame;
 
+
+	bool menu;
+	SDL_Texture* helpMenu;
+	int helpMenuX, helpMenuY, helpMenuW, helpMenuH;
+	int cameraX, cameraY, cameraW, cameraH;
+
 	//Audio fx
 	int pickCoinFxId;
 

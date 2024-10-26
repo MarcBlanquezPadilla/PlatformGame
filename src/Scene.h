@@ -41,15 +41,12 @@ public:
 	bool CleanUp();
 
 	
-	SDL_Texture* helpMenu;
+	
 
 private:
-	bool menu;
 	
-	int helpMenuX;
-	int helpMenuY;
-	int helpMenuW;
-	int helpMenuH;
+	
+
 
 	//L03: TODO 3b: Declare a Player attribute
 	Player* player;
