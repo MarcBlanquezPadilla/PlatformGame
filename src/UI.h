@@ -1,26 +1,18 @@
 #pragma once
-
 #include "Module.h"
 #include "Player.h"
 
-#define POS_TO_START_MOVING_CAMX 100
-#define POS_TO_STOP_MOVING_CAMX 2180
-#define CAM_EXTRA_DISPLACEMENT_X -100
+#define HELP_MENU_X_DISPLACMENT 125
+#define HELP_MENU_Y_DISPLACMENT 10
 
-#define POS_TO_START_MOVING_CAMY 248
-#define POS_TO_STOP_MOVING_CAMY -190
-#define CAM_EXTRA_DISPLACEMENT_Y -100
-
-struct SDL_Texture;
-
-class Scene : public Module
+class UI : public Module
 {
 public:
 
-	Scene();
+	UI();
 
 	// Destructor
-	virtual ~Scene();
+	virtual ~UI();
 
 	// Called before render is available
 	bool Awake();
@@ -40,12 +32,13 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
-	
-	
+
+
 
 private:
-	
+
 	//L03: TODO 3b: Declare a Player attribute
-	Player* player;
+	SDL_Texture* helpMenu;
+	bool help;
 
 };

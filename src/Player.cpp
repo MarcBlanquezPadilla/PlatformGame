@@ -35,8 +35,6 @@ bool Player::Start() {
 	//L03: TODO 2: Initialize Player parameters
 	texture = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture").as_string());
 	/*get()->Load("Assets/Textures/GhostCharacter/Ghost_Sheet.png");*/
-	helpMenu = Engine::GetInstance().textures.get()->Load("Assets/Textures/UI/Help Menu 2.png");
-	menu = false;
 
 	destroyed = false;
 
@@ -81,7 +79,7 @@ bool Player::Update(float dt)
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F10) == KEY_DOWN)
 	{
 		godMode = !godMode;
-		pbody->body->SetGravityScale(godMode == true ? 0 : gravity);
+		pbody->body->SetGravityScale(godMode == true || canClimb == true ? 0 : gravity);
 		pbody->body->SetLinearVelocity(godMode == true ? b2Vec2_zero : pbody->body->GetLinearVelocity());
 		LOG("God mode = %d", (int)godMode);
 	}
@@ -219,27 +217,8 @@ bool Player::Update(float dt)
 
 	//help menu --> RENDER IN PLAYER(?
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_H) == KEY_DOWN) {
-		menu = !menu;
 	}
 
-
-	Engine::GetInstance().textures.get()->GetSize(helpMenu, helpMenuW, helpMenuH);
-	
-	// Calculate the help menu's position relative to the player and the camera
-	cameraX = Engine::GetInstance().render.get()->camera.x;
-	cameraY = Engine::GetInstance().render.get()->camera.y;
-	cameraW = Engine::GetInstance().render.get()->camera.w;
-	cameraH = Engine::GetInstance().render.get()->camera.h;
-	helpMenuX = cameraX + cameraW / 2 - helpMenuW / 2;
-	helpMenuY = cameraY + cameraH / 2 - helpMenuH / 2;
-
-	
-
-	if (menu) {
-		/*LOG("Player Position: %f, %f", , );*/
-		LOG("Help Menu Position: %f, %f", helpMenuX, helpMenuY);
-		Engine::GetInstance().render.get()->DrawTexture(helpMenu, helpMenuX, helpMenuY);
-	}
 
 
 
@@ -258,7 +237,6 @@ bool Player::CleanUp()
 {
 	LOG("Cleanup player");
 	Engine::GetInstance().textures.get()->UnLoad(texture);
-	SDL_DestroyTexture(helpMenu);
 	
 	return true;
 }
@@ -313,6 +291,7 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 	}
 	case ColliderType::LADDER:
 		canClimb = true;
+		pbody->body->SetGravityScale(0);
 		LOG("Collision LADDER");
 		break;
 	case ColliderType::UNKNOWN:
@@ -337,6 +316,7 @@ void Player::OnCollisionEnd(PhysBody* physA, PhysBody* physB)
 	case ColliderType::LADDER:
 		LOG("End Collision LADDER");
 		canClimb = false;
+		if (!godMode) pbody->body->SetGravityScale(gravity);
 		break;
 	case ColliderType::UNKNOWN:
 		LOG("End Collision UNKNOWN");

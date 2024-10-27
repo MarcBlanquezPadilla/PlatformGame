@@ -56,7 +56,6 @@ bool Scene::Start()
 	Engine::GetInstance().map->LoadParalax(configParameters.child("map").child("parallax").child("cloud3").attribute("path").as_string(), ParalaxType::Cloud3);
 	Engine::GetInstance().map->LoadParalax(configParameters.child("map").child("parallax").child("sky").attribute("path").as_string(), ParalaxType::Sky);
 	
-	
 	return true;
 }
 
@@ -83,8 +82,6 @@ bool Scene::Update(float dt)
 	}
 	else if (player->position.getY() < POS_TO_STOP_MOVING_CAMY) Engine::GetInstance().render.get()->camera.y = (POS_TO_STOP_MOVING_CAMY + CAM_EXTRA_DISPLACEMENT_X) * -Engine::GetInstance().window.get()->scale;
 	else Engine::GetInstance().render.get()->camera.y = (player->position.getY() + CAM_EXTRA_DISPLACEMENT_Y) * -Engine::GetInstance().window.get()->scale;
-
-	
 
 	return true;
 }
