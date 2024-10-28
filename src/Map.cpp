@@ -44,11 +44,11 @@ bool Map::Update(float dt)
         {
             int cameraX = Engine::GetInstance().render.get()->camera.x / Engine::GetInstance().window.get()->GetScale();
             int cameraY = Engine::GetInstance().render.get()->camera.y / Engine::GetInstance().window.get()->GetScale();
-            
+
 
             for (int numRep = 0; numRep < paralax->repeatNum; numRep++)
             {
-                if (numRep%2 != 0) Engine::GetInstance().render->DrawTexture(paralax->texture, -cameraX / paralax->slowX + paralax->marginX + paralax->width * (numRep), -cameraY / paralax->slowY + paralax->marginY);
+                if (numRep % 2 != 0) Engine::GetInstance().render->DrawTexture(paralax->texture, -cameraX / paralax->slowX + paralax->marginX + paralax->width * (numRep), -cameraY / paralax->slowY + paralax->marginY);
                 else Engine::GetInstance().render->DrawTextureFlipped(paralax->texture, -cameraX / paralax->slowX + paralax->marginX + paralax->width * (numRep), -cameraY / paralax->slowY + paralax->marginY);
             }
         }
@@ -94,13 +94,13 @@ bool Map::Update(float dt)
 // L09: TODO 2: Implement function to the Tileset based on a tile id
 TileSet* Map::GetTilesetFromTileId(int gid) const
 {
-	TileSet* set = nullptr;
+    TileSet* set = nullptr;
 
     for (const auto& tileset : mapData.tilesets) {
-    	if (gid >= tileset->firstGid && gid < (tileset->firstGid + tileset->tileCount)) {
-			set = tileset;
-			break;
-		}
+        if (gid >= tileset->firstGid && gid < (tileset->firstGid + tileset->tileCount)) {
+            set = tileset;
+            break;
+        }
     }
 
     return set;
@@ -142,10 +142,10 @@ bool Map::Load(std::string path, std::string fileName)
     pugi::xml_document mapFileXML;
     pugi::xml_parse_result result = mapFileXML.load_file(mapPathName.c_str());
 
-    if(result == NULL)
-	{
-		LOG("Could not load map xml file %s. pugi error: %s", mapPathName.c_str(), result.description());
-		ret = false;
+    if (result == NULL)
+    {
+        LOG("Could not load map xml file %s. pugi error: %s", mapPathName.c_str(), result.description());
+        ret = false;
     }
     else {
 
@@ -157,12 +157,12 @@ bool Map::Load(std::string path, std::string fileName)
         mapData.tileHeight = mapFileXML.child("map").attribute("tileheight").as_int();
 
         // L06: TODO 4: Implement the LoadTileSet function to load the tileset properties
-       
+
         //Iterate the Tileset
-        for(pugi::xml_node tilesetNode = mapFileXML.child("map").child("tileset"); tilesetNode!=NULL; tilesetNode = tilesetNode.next_sibling("tileset"))
-		{
+        for (pugi::xml_node tilesetNode = mapFileXML.child("map").child("tileset"); tilesetNode != NULL; tilesetNode = tilesetNode.next_sibling("tileset"))
+        {
             //Load Tileset attributes
-			TileSet* tileSet = new TileSet();
+            TileSet* tileSet = new TileSet();
             tileSet->firstGid = tilesetNode.attribute("firstgid").as_int();
             tileSet->name = tilesetNode.attribute("name").as_string();
             tileSet->tileWidth = tilesetNode.attribute("tilewidth").as_int();
@@ -172,12 +172,12 @@ bool Map::Load(std::string path, std::string fileName)
             tileSet->tileCount = tilesetNode.attribute("tilecount").as_int();
             tileSet->columns = tilesetNode.attribute("columns").as_int();
 
-			//Load the tileset image
-			std::string imgName = tilesetNode.child("image").attribute("source").as_string();
-            tileSet->texture = Engine::GetInstance().textures->Load((mapPath+imgName).c_str());
+            //Load the tileset image
+            std::string imgName = tilesetNode.child("image").attribute("source").as_string();
+            tileSet->texture = Engine::GetInstance().textures->Load((mapPath + imgName).c_str());
 
-			mapData.tilesets.push_back(tileSet);
-		}
+            mapData.tilesets.push_back(tileSet);
+        }
 
         // L07: TODO 3: Iterate all layers in the TMX and load each of them
         for (pugi::xml_node layerNode = mapFileXML.child("map").child("layer"); layerNode != NULL; layerNode = layerNode.next_sibling("layer")) {
@@ -228,7 +228,7 @@ bool Map::Load(std::string path, std::string fileName)
             {
                 for (Object* object : objectGroup->object)
                 {
-                    PhysBody* c = Engine::GetInstance().physics.get()->CreateRectangle(object->x + object->width/2, object->y + object->height / 2, object->width, object->height, STATIC);
+                    PhysBody* c = Engine::GetInstance().physics.get()->CreateRectangle(object->x + object->width / 2, object->y + object->height / 2, object->width, object->height, STATIC);
                     c->ctype = ColliderType::PLATFORM;
                 }
             }
@@ -260,12 +260,12 @@ bool Map::Load(std::string path, std::string fileName)
                 for (Object* object : objectGroup->object)
                 {
                     PhysBody* c = Engine::GetInstance().physics.get()->CreateRectangleSensor(object->x + object->width / 2, object->y + object->height / 2, object->width, object->height, STATIC);
-   
+
                     c->ctype = ColliderType::LADDER;
                 }
             }
         }
-        
+
 
         /*PhysBody* s1 = Engine::GetInstance().physics.get()->CreateRectangle(560 + 56, 256 + 8,  112, 16, STATIC);
         s1->ctype = ColliderType::SPYKE;*/
@@ -287,13 +287,13 @@ bool Map::Load(std::string path, std::string fileName)
                 LOG("tile width : %d tile height : %d", tileset->tileWidth, tileset->tileHeight);
                 LOG("spacing : %d margin : %d", tileset->spacing, tileset->margin);
             }
-            			
+
             LOG("Layers----");
 
             for (const auto& layer : mapData.layers) {
                 LOG("id : %d name : %s", layer->id, layer->name.c_str());
-				LOG("Layer width : %d Layer height : %d", layer->width, layer->height);
-            }   
+                LOG("Layer width : %d Layer height : %d", layer->width, layer->height);
+            }
         }
         else {
             LOG("Error while parsing map file: %s", mapPathName.c_str());
@@ -307,51 +307,47 @@ bool Map::Load(std::string path, std::string fileName)
     return ret;
 }
 
-bool Map::LoadParalax(const char* path, ParalaxType type)
+bool Map::LoadParalax(pugi::xml_node paralaxLayerNode)
 {
+    bool AllLoaded = true;
+    for (pugi::xml_node layer = paralaxLayerNode.child("layer"); layer != NULL; layer = layer.next_sibling("layer")) {
+        Paralax* paralax = new Paralax();
+        paralax->loaded = true;
+        SDL_Texture* texture = Engine::GetInstance().textures.get()->Load(layer.attribute("path").as_string());
 
-    Paralax* paralax = new Paralax();
-    paralax->loaded = true;
-    SDL_Texture* texture = Engine::GetInstance().textures.get()->Load(path);
+        if (texture == nullptr)
+        {
+            LOG("Could not load paralax texture from path %s", layer.attribute("path").as_string());
+            paralax->loaded = false;
+            AllLoaded = false;
+        }
+        else
+        {
+            paralax->texture = texture;
+            paralax->name = layer.attribute("name").as_string();
 
-    if (texture == nullptr)
-    {
-        LOG("Could not load paralax texture from path %s", path);
-        paralax->loaded = false;
+            paralax->marginX = layer.attribute("marginX").as_int();
+            paralax->marginY = layer.attribute("marginY").as_int();
+            paralax->spacing = layer.attribute("spacing").as_int();
+            paralax->width = layer.attribute("width").as_int();
+            paralax->height = layer.attribute("height").as_int();
+            paralax->slowX = layer.attribute("slowX").as_int();
+            paralax->slowY = layer.attribute("slowY").as_int();
+            paralax->repeatNum = layer.attribute("repeatNum").as_int();
+            LOG("name: %s", paralax->name);
+            LOG("marginX: %i", paralax->marginX);
+            LOG("marginY: %i", paralax->marginY);
+            LOG("width: %i", paralax->width);
+            LOG("height: %i", paralax->height);
+            LOG("slowX: %i", paralax->slowX);
+            LOG("slowY: %i", paralax->slowY);
+            LOG("repeat: %i", paralax->repeatNum);
+            mapData.paralaxs.push_front(paralax);
+        }
     }
 
-    paralax->texture = texture;
-    paralax->marginX = 0;
-    paralax->marginY = 0;
-    paralax->spacing = 0;
-    paralax->type = type;
-    paralax->width = 640;
-    paralax->height = 360;
-
-    switch (paralax->type)
-    {
-    case ParalaxType::Mountain1: paralax->slowX = 20; paralax->repeatNum = 8; paralax->slowY = 30;
-        break;
-    case ParalaxType::Mountain2: paralax->slowX = 10; paralax->repeatNum = 8; paralax->slowY = 5;
-        break;
-    case ParalaxType::Cloud1: paralax->slowX = 5; paralax->repeatNum = 6; paralax->slowY = 1;
-        break;
-    case ParalaxType::Cloud2: paralax->slowX = 4; paralax->repeatNum = 6; paralax->slowY = 1;
-        break;
-    case ParalaxType::Cloud3: paralax->slowX = 3; paralax->repeatNum = 6; paralax->slowY = 1;
-        break;
-    case ParalaxType::Moon: paralax->slowX = 2; paralax->marginX = 480; paralax->repeatNum = 1; paralax->slowY = 1;
-        break;
-    case ParalaxType::Sky: paralax->slowX = 1; paralax->repeatNum = 6; paralax->slowY = 1;
-        break;
-    default:
-        LOG("Paralax type %i not recognised", (int)paralax->type);
-        break;
-    }
-
-    mapData.paralaxs.push_front(paralax);
-
-    return paralax->loaded;
+    LOG("%d", (int)AllLoaded);
+    return AllLoaded;
 }
 
 //void LoadParalaxLayers(std::list<Paralax*> paralaxLayers) {
@@ -393,8 +389,8 @@ Properties::Property* Properties::GetProperty(const char* name)
 {
     for (const auto& property : propertyList) {
         if (property->name == name) {
-			return property;
-		}
+            return property;
+        }
     }
 
     return nullptr;

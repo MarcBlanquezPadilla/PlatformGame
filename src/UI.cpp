@@ -78,7 +78,7 @@ bool UI::PostUpdate()
 bool UI::CleanUp()
 {
 	LOG("Freeing UI");
-
+	Engine::GetInstance().textures.get()->UnLoad(helpMenu);
 
 
 	return true;

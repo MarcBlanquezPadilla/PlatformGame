@@ -32,8 +32,8 @@ bool Scene::Awake()
 	//L04: TODO 3b: Instantiate the player using the entity manager
 	player = (Player*)Engine::GetInstance().entityManager->CreateEntity(EntityType::PLAYER);
 	player->SetParameters(configParameters.child("entities").child("player"));
-	Engine::GetInstance().map.get()->SetParameters(configParameters.child("entities").child("map"));
-	
+	Engine::GetInstance().map.get()->SetParameters(configParameters.child("scene").child("map"));
+
 	return ret;
 }
 
@@ -47,13 +47,8 @@ bool Scene::Start()
 	Engine::GetInstance().map->Load(configParameters.child("map").attribute("path").as_string(), configParameters.child("map").attribute("name").as_string());
 
 	//Load Parallax -> TODO: Pass parallax to config
-	Engine::GetInstance().map->LoadParalax(configParameters.child("map").child("parallax").child("mountain1").attribute("path").as_string(), ParalaxType::Mountain1);/*(configParameters.child("map").child("parallax").child("mountain1").attribute("path").as_string()))*/
-	Engine::GetInstance().map->LoadParalax(configParameters.child("map").child("parallax").child("mountain2").attribute("path").as_string(), ParalaxType::Mountain2);
-	Engine::GetInstance().map->LoadParalax(configParameters.child("map").child("parallax").child("cloud1").attribute("path").as_string(), ParalaxType::Cloud1);
-	Engine::GetInstance().map->LoadParalax(configParameters.child("map").child("parallax").child("moon").attribute("path").as_string(), ParalaxType::Moon);
-	Engine::GetInstance().map->LoadParalax(configParameters.child("map").child("parallax").child("cloud2").attribute("path").as_string(), ParalaxType::Cloud2);
-	Engine::GetInstance().map->LoadParalax(configParameters.child("map").child("parallax").child("cloud3").attribute("path").as_string(), ParalaxType::Cloud3);
-	Engine::GetInstance().map->LoadParalax(configParameters.child("map").child("parallax").child("sky").attribute("path").as_string(), ParalaxType::Sky);
+	Engine::GetInstance().map->LoadParalax(configParameters.child("map").child("parallax"));
+	
 	
 	return true;
 }

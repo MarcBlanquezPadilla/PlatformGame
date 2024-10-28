@@ -65,21 +65,9 @@ struct ObjectGroup
 
 
 
-// L06: TODO 2: Create a struct to hold information for a TileSet
-// Ignore Terrain Types and Tile Types for now, but we want the image!
-enum ParalaxType
-{
-    Mountain1 = 0,
-    Mountain2 = 1,
-    Cloud1 = 2,
-    Cloud2 = 3,
-    Cloud3 = 4,
-    Moon = 5,
-    Sky = 6,
-};
-
 struct Paralax
 {
+    std::string name;
     int spacing;
     int marginX;
     int marginY;
@@ -89,7 +77,6 @@ struct Paralax
     int slowY;
     int repeatNum;
     bool loaded;
-    ParalaxType type;
     SDL_Texture* texture;
 };
 
@@ -168,7 +155,7 @@ public:
     // L09: TODO 6: Load a group of properties 
     bool LoadProperties(pugi::xml_node& node, Properties& properties);
 
-    bool LoadParalax(const char* path, ParalaxType type);
+    bool LoadParalax(pugi::xml_node node);
     /*void LoadParalaxLayers(std::list<Paralax*> paralaxs);*/
     void SetParameters(pugi::xml_node parameters) {
         this->mapParameters = parameters;

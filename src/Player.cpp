@@ -44,6 +44,22 @@ bool Player::Start() {
 	fall.LoadAnimations(parameters.child("animations").child("fall"));
 	hurt.LoadAnimations(parameters.child("animations").child("hurt"));
 	death.LoadAnimations(parameters.child("animations").child("death"));
+
+	jumpForce = parameters.child("propierties").attribute("jumpForce").as_float();
+	pushForce = parameters.child("propierties").attribute("pushForce").as_float();
+	moveSpeed = parameters.child("propierties").attribute("moveSpeed").as_float();
+	friction = parameters.child("propierties").attribute("friction").as_float();
+	gravity = parameters.child("propierties").attribute("gravity").as_float();
+	hurtTime = parameters.child("propierties").attribute("hurtTime").as_float();
+	respawnTime = parameters.child("propierties").attribute("respawnTime").as_float();
+	playerState = (state)parameters.child("propierties").attribute("playerState").as_int();
+	dir = (Direction)parameters.child("propierties").attribute("direction").as_int();
+
+	destroyed = false;
+	godMode = false;
+	tpToStart = false;
+	canClimb = false;
+
 	
 	currentAnim = &idle;
 
@@ -79,7 +95,7 @@ bool Player::Update(float dt)
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F10) == KEY_DOWN)
 	{
 		godMode = !godMode;
-		pbody->body->SetGravityScale(godMode == true || canClimb == true ? 0 : gravity);
+		pbody->body->SetGravityScale(godMode == true || canClimb == true || playerState == DEAD ? 0 : gravity);
 		pbody->body->SetLinearVelocity(godMode == true ? b2Vec2_zero : pbody->body->GetLinearVelocity());
 		LOG("God mode = %d", (int)godMode);
 	}
@@ -160,6 +176,7 @@ bool Player::Update(float dt)
 		if (respawnTimer.ReadSec() >= respawnTime && death.HasFinished()) 
 		{
 			tpToStart = true;
+			pbody->body->SetGravityScale(godMode == true || canClimb == true || playerState == DEAD ? 0 : gravity);
 
 			playerState = IDLE;
 			if (lives <= 0) {
@@ -260,6 +277,7 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 				lives--;
 				if (lives <= 0) {
 					playerState = DEAD;
+					pbody->body->SetGravityScale(0);
 					respawnTimer.Start();
 				}
 				else
@@ -316,7 +334,7 @@ void Player::OnCollisionEnd(PhysBody* physA, PhysBody* physB)
 	case ColliderType::LADDER:
 		LOG("End Collision LADDER");
 		canClimb = false;
-		if (!godMode) pbody->body->SetGravityScale(gravity);
+		pbody->body->SetGravityScale(godMode == true || canClimb == true || playerState == DEAD ? 0 : gravity);
 		break;
 	case ColliderType::UNKNOWN:
 		LOG("End Collision UNKNOWN");

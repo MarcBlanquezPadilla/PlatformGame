@@ -20,19 +20,19 @@
   <scene>
     <map path ="Assets/Maps/" name = "Mapa.tmx">
       <parallax>
-        <mountain1 path = "Assets/Textures/Parallax/Mountain1OFF.png" type ="Mountain1"/>
-        <mountain2 path = "Assets/Textures/Parallax/Mountain2OFF.png" type ="Mountain2"/>
-        <cloud1 path = "Assets/Textures/Parallax/Cloud1X2.png" type ="Cloud1"/>
-        <moon path = "Assets/Textures/Parallax/MoonX2.png" type ="Moon"/>
-        <cloud2 path = "Assets/Textures/Parallax/Cloud2X2.png" type ="Cloud2"/>
-        <cloud3 path = "Assets/Textures/Parallax/Cloud3X2.png" type ="Cloud3"/>
-        <sky path = "Assets/Textures/Parallax/SkyX2.png" type ="Sky"/>
-  
+        <layer name="mountain1" path = "Assets/Textures/Parallax/Mountain1OFF.png" marginX ="0" marginY ="0" spacing ="0" width ="640" height="360" slowX ="20"  repeatNum="8" slowY ="30"/>
+        <layer name="mountain2" path = "Assets/Textures/Parallax/Mountain2OFF.png" marginX ="0" marginY ="0" spacing ="0" width ="640" height="360" slowX ="10"  repeatNum="8" slowY ="5"/>
+        <layer name="cloud1" path = "Assets/Textures/Parallax/Cloud1X2.png" marginX ="0" marginY ="0" spacing ="0" width ="640" height="360" slowX ="5"  repeatNum="6" slowY ="1"/>
+		<layer name="moon" path = "Assets/Textures/Parallax/MoonX2.png" marginX ="480" marginY ="0" spacing ="0" width ="640" height="360" slowX ="2"  repeatNum="1" slowY ="1"/>
+        <layer name="cloud2" path = "Assets/Textures/Parallax/Cloud2X2.png" marginX ="0" marginY ="0" spacing ="0" width ="640" height="360" slowX ="4"  repeatNum="6" slowY ="1"/>
+        <layer name="cloud3" path = "Assets/Textures/Parallax/Cloud3X2.png" marginX ="0" marginY ="0" spacing ="0" width ="640" height="360" slowX ="3"  repeatNum="6" slowY ="1"/>
+        <layer name="sky" path = "Assets/Textures/Parallax/SkyX2.png" marginX ="0" marginY ="0" spacing ="0" width ="640" height="360" slowX ="1"  repeatNum="6" slowY ="1"/>
       </parallax>
     </map>
     
     <entities>
-      <player x ="25" y = "350" w ="48" h = "48" lives ="3" texture = "Assets/Textures/GhostCharacter/Ghost_Sheet.png" > 
+      <player x ="25" y = "350" w ="48" h = "48" lives ="3" texture = "Assets/Textures/GhostCharacter/Ghost_Sheet.png" >
+		<propierties jumpForce = "0.6f" pushForce = "0.5f"  moveSpeed = "0.2f" friction = "2.0f" gravity = "1.2f" hurtTime ="1.0f" respawnTime =" 2.0f" playerState ="0" direction ="1"/>
         <animations>
           <idle loop = "true" speed ="0.2f">
             <frame x = "0" y ="0" w = "48" h = "48"/>

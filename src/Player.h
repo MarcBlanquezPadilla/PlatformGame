@@ -62,23 +62,22 @@ public:
 
 	// L08 TODO 5: Add physics to the player - declare a Physics body
 	PhysBody* pbody;
-	float jumpForce = 0.6f; // The force to apply when jumping
-	float pushForce = 0.5f; // The force to apply when getting pushed;
-	float moveSpeed = 0.2f;
-	float friction = 2.0f;
-	float gravity = 1.2f;
+	float jumpForce; // The force to apply when jumping
+	float pushForce; // The force to apply when getting pushed;
+	float moveSpeed;
+	float friction;
+	float gravity;
 
-	
-	bool destroyed = false;
-	bool godMode = false;
-	bool tpToStart = false;
-	bool canClimb = false;
+	bool destroyed;
+	bool godMode;
+	bool tpToStart;
+	bool canClimb;
 
 	Timer hurtTimer;
-	float hurtTime = 1.0f;
+	float hurtTime;
 	
 	Timer respawnTimer;
-	float respawnTime = 2.0f;
+	float respawnTime;
 
 	b2Vec2 velocity = b2Vec2_zero;
 	b2Vec2 initPos;
@@ -99,9 +98,9 @@ public:
 	Animation death;
 
 
-	state playerState = IDLE; 
-	state previousState = IDLE;
+	state playerState; 
+	state previousState;
 
-	Direction dir = RIGHT;
+	Direction dir;
 	
 };
