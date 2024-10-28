@@ -2,8 +2,8 @@
 #include "Module.h"
 #include "Player.h"
 
-#define HELP_MENU_X_DISPLACMENT 125
-#define HELP_MENU_Y_DISPLACMENT 10
+#define HELP_MENU_X_DISPLACEMENT 125
+#define HELP_MENU_Y_DISPLACEMENT 10
 
 class UI : public Module
 {
@@ -37,8 +37,10 @@ public:
 
 private:
 
-	//L03: TODO 3b: Declare a Player attribute
+
 	SDL_Texture* helpMenu;
+	
 	bool help;
+	pugi::xml_node parameters;
 
 };

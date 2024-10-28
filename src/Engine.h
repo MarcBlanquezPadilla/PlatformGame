@@ -43,6 +43,10 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
+	float GetDt() const {
+		return dt;
+	}
+
 private:
 
 	// Private constructor to prevent instantiation
@@ -70,6 +74,8 @@ private:
 
 	// Load config file
 	bool LoadConfig();
+
+	
 
 	//Check if value it's near to other
 	

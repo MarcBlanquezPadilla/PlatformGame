@@ -79,4 +79,6 @@
       </player>
     </entities>
   </scene>
+  <ui path ="Assets/Textures/UI/HelpMenu2.png"/>
+  
 </config>

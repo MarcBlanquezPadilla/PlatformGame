@@ -22,15 +22,15 @@ bool Item::Awake() {
 bool Item::Start() {
 
 	//initilize textures
-	candyTex = Engine::GetInstance().textures.get()->Load("Assets/Textures/Items/candy items-BIGcorn.png");
+	/*candyTex = Engine::GetInstance().textures.get()->Load("Assets/Textures/Items/candy items-BIGcorn.png");*/
 
 	
 	// L08 TODO 4: Add a physics to an item - initialize the physics body
-	Engine::GetInstance().textures.get()->GetSize(candyTex, texW, texH);
-	pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX() + (texW / 2), (int)position.getY() + (texH / 2), texW / 2, bodyType::STATIC);
+	//Engine::GetInstance().textures.get()->GetSize(candyTex, texW, texH);
+	//pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX() + (texW / 2), (int)position.getY() + (texH / 2), texW / 2, bodyType::STATIC);
 
-	// L08 TODO 7: Assign collider type
-	pbody->ctype = ColliderType::ITEM;
+	//// L08 TODO 7: Assign collider type
+	//pbody->ctype = ColliderType::ITEM;
 
 	return true;
 }

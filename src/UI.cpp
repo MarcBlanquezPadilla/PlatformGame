@@ -33,6 +33,7 @@ bool UI::Start()
 	bool ret = true;
 	helpMenu = Engine::GetInstance().textures.get()->Load("Assets/Textures/UI/HelpMenu2.png");
 
+
 	if (helpMenu == nullptr)
 	{
 		LOG("Failed to load texture: Assets/Textures/UI/HelpMenu2.png");
@@ -60,7 +61,7 @@ bool UI::Update(float dt)
 	{
 		Render* render = Engine::GetInstance().render.get();
 		Window* window = Engine::GetInstance().window.get();
-		render->DrawTexture(helpMenu,-render->camera.x/window->scale + HELP_MENU_X_DISPLACMENT, -render->camera.y/ window->scale + HELP_MENU_Y_DISPLACMENT);
+		render->DrawTexture(helpMenu,-render->camera.x/window->scale + HELP_MENU_X_DISPLACEMENT, -render->camera.y/ window->scale + HELP_MENU_Y_DISPLACEMENT);
 	}
 
 

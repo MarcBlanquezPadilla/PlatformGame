@@ -93,14 +93,14 @@ bool Player::Update(float dt)
 
 		// Move left
 		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
-			velocity.x = -moveSpeed * dt;
+			velocity.x = -moveSpeed * 16;
 			playerState = WALK;
 			dir = LEFT;
 		}
 
 		// Move right
 		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
-			velocity.x = moveSpeed * dt;
+			velocity.x = moveSpeed * 16;
 			playerState = WALK;
 			dir = RIGHT;
 		}
@@ -109,13 +109,13 @@ bool Player::Update(float dt)
 		{
 			velocity.y = 0;
 			if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
-				velocity.y = -moveSpeed * dt;
+				velocity.y = -moveSpeed * 16;
 				playerState = WALK;
 			}
 
 			// Move right
 			if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
-				velocity.y = moveSpeed * dt;
+				velocity.y = moveSpeed * 16;
 				playerState = WALK;
 			}
 		}
