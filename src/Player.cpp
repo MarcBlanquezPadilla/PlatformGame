@@ -81,6 +81,7 @@ bool Player::Start() {
 
 bool Player::Update(float dt)
 {
+	
 	pbody->body->SetAwake(true);
 	currentFrame = currentAnim->GetCurrentFrame();
 
@@ -106,6 +107,7 @@ bool Player::Update(float dt)
 	if (playerState !=HURT && playerState != DEAD)
 	{
 		playerState = IDLE;
+		
 
 		// Move left
 		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
@@ -176,9 +178,11 @@ bool Player::Update(float dt)
 		if (respawnTimer.ReadSec() >= respawnTime && death.HasFinished()) 
 		{
 			tpToStart = true;
-			pbody->body->SetGravityScale(godMode == true || canClimb == true || playerState == DEAD ? 0 : gravity);
-
 			playerState = IDLE;
+			dir = RIGHT;
+			
+			pbody->body->SetGravityScale(godMode == true || canClimb == true || playerState == DEAD ? 0 : gravity);
+			
 			if (lives <= 0) {
 				lives = parameters.attribute("lives").as_int();
 			}
@@ -223,7 +227,7 @@ bool Player::Update(float dt)
 	position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - currentFrame.h / 2);
 	
 	
-	
+	//flip player texture according to direction
 	if (dir == RIGHT) {
 		Engine::GetInstance().render.get()->DrawTexture(texture, position.getX(), position.getY(), &currentFrame);
 	}
@@ -231,14 +235,6 @@ bool Player::Update(float dt)
 		Engine::GetInstance().render.get()->DrawTextureFlipped(texture, position.getX(), position.getY(), &currentFrame);
 	}
 	
-
-	//help menu --> RENDER IN PLAYER(?
-	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_H) == KEY_DOWN) {
-	}
-
-
-
-
 
 	currentAnim->Update();
 
