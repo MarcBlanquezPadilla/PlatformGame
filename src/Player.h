@@ -55,16 +55,10 @@ public:
 public:
 
 	//Declare player parameters
-	float isWalking;
+	
 	SDL_Texture* texture;
 	int texW, texH;
 	SDL_Rect currentFrame;
-
-	int helpMenuX, helpMenuY, helpMenuW, helpMenuH;
-	int cameraX, cameraY, cameraW, cameraH;
-
-	//Audio fx
-	int pickCoinFxId;
 
 	// L08 TODO 5: Add physics to the player - declare a Physics body
 	PhysBody* pbody;
@@ -81,7 +75,7 @@ public:
 	bool canClimb = false;
 
 	Timer hurtTimer;
-	float hurtTime = 1;
+	float hurtTime = 1.0f;
 	
 	Timer respawnTimer;
 	float respawnTime = 2.0f;

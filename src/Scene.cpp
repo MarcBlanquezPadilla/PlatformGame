@@ -33,8 +33,7 @@ bool Scene::Awake()
 	player = (Player*)Engine::GetInstance().entityManager->CreateEntity(EntityType::PLAYER);
 	player->SetParameters(configParameters.child("entities").child("player"));
 	Engine::GetInstance().map.get()->SetParameters(configParameters.child("entities").child("map"));
-	/*Item* corn = (Item*) Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM);*/
-	/*corn->position = Vector2D(385, 150);*/
+	
 	return ret;
 }
 
