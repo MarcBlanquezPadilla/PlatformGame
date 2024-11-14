@@ -9,12 +9,6 @@
 
 #include <math.h>
 
-// L10: TODO 2: Define a property to store the Map Orientation and Load it from the map
-enum MapOrientation
-{
-    ORTOGRAPHIC = 0,
-    ISOMETRIC
-};
 
 
 Map::Map() : Module(), mapLoaded(false)

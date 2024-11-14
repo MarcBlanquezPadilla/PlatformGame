@@ -4,6 +4,14 @@
 #include <list>
 #include <vector>
 
+// L10: TODO 2: Define a property to store the Map Orientation and Load it from the map
+enum MapOrientation
+{
+    ORTOGRAPHIC = 0,
+    ISOMETRIC
+};
+
+
 // L09: TODO 5: Add attributes to the property structure
 struct Properties
 {
