@@ -9,6 +9,12 @@
 
 #include <math.h>
 
+// L10: TODO 2: Define a property to store the Map Orientation and Load it from the map
+enum MapOrientation
+{
+    ORTOGRAPHIC = 0,
+    ISOMETRIC
+};
 
 
 Map::Map() : Module(), mapLoaded(false)
@@ -157,6 +163,8 @@ bool Map::Load(std::string path, std::string fileName)
         mapData.tileHeight = mapFileXML.child("map").attribute("tileheight").as_int();
 
         // L06: TODO 4: Implement the LoadTileSet function to load the tileset properties
+       
+
 
         //Iterate the Tileset
         for (pugi::xml_node tilesetNode = mapFileXML.child("map").child("tileset"); tilesetNode != NULL; tilesetNode = tilesetNode.next_sibling("tileset"))
@@ -363,6 +371,27 @@ Vector2D Map::MapToWorld(int x, int y) const
 
     ret.setX(x * mapData.tileWidth);
     ret.setY(y * mapData.tileHeight);
+
+    return ret;
+}
+
+
+// L10: TODO 5: Add method WorldToMap to obtain  map coordinates from screen coordinates 
+Vector2D Map::WorldToMap(int x, int y) {
+
+    Vector2D ret(0, 0);
+
+    if (mapData.orientation == MapOrientation::ORTOGRAPHIC) {
+        ret.setX(x / mapData.tileWidth);
+        ret.setY(y / mapData.tileHeight);
+    }
+
+    if (mapData.orientation == MapOrientation::ISOMETRIC) {
+        float half_width = mapData.tileWidth / 2;
+        float half_height = mapData.tileHeight / 2;
+        ret.setX(int((x / half_width + y / half_height) / 2));
+        ret.setY(int((y / half_height - (x / half_width)) / 2));
+    }
 
     return ret;
 }
