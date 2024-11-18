@@ -53,6 +53,7 @@ bool Enemy::Start() {
 
 bool Enemy::Update(float dt)
 {
+
 	// Pathfinding testing inputs
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_R) == KEY_DOWN) {
 		Vector2D pos = GetPosition();

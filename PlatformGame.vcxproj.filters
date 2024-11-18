@@ -17,6 +17,9 @@
     <Filter Include="Source Files\Game">
       <UniqueIdentifier>{eaf9226b-488a-4c6a-9d1a-2222fdb48e0d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Game\Enemies">
+      <UniqueIdentifier>{e069a71e-d03a-438a-b227-44c78393a3ca}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="vcpkg.json">
@@ -86,6 +89,9 @@
     </ClCompile>
     <ClCompile Include="src\Pathfinding.cpp">
       <Filter>Source Files\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SkullWolf.cpp">
+      <Filter>Source Files\Game\Enemies</Filter>
     </ClCompile>
     <ClCompile Include="src\Enemy.cpp">
       <Filter>Source Files\Game</Filter>
@@ -157,6 +163,9 @@
     </ClInclude>
     <ClInclude Include="src\Enemy.h">
       <Filter>Source Files\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SkullWolf.h">
+      <Filter>Source Files\Game\Enemies</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

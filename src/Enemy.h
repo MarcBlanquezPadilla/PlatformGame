@@ -1,5 +1,5 @@
 #pragma once
-#pragma once
+
 
 #include "Entity.h"
 #include "SDL2/SDL.h"
@@ -17,9 +17,9 @@ public:
 
 	bool Awake();
 
-	bool Start();
+	virtual bool Start();
 
-	bool Update(float dt);
+	virtual bool Update(float dt);
 
 	bool CleanUp();
 
@@ -35,7 +35,7 @@ public:
 
 public:
 
-private:
+//protected:
 
 	SDL_Texture* texture;
 	const char* texturePath;
