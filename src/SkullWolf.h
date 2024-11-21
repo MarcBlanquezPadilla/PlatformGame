@@ -21,8 +21,9 @@ public:
 
 	
 
-public:
+private:
 
-	
+	int drawOffsetX;
+	int drawOffsetY;
 };
 

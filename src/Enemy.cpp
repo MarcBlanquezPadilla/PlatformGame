@@ -145,3 +145,11 @@ void Enemy::ResetPath() {
 	Vector2D tilePos = Engine::GetInstance().map.get()->WorldToMap(pos.getX(), pos.getY());
 	pathfinding->ResetPath(tilePos);
 }
+
+void Enemy::AddAnimation(Animation& anim, int startPosY, int frameSize, int numFrames)
+{
+	for (int i = 0; i < numFrames; i++)
+	{
+		anim.PushBack({ i*frameSize,startPosY,frameSize,frameSize });
+	}
+}

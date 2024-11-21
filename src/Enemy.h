@@ -33,6 +33,8 @@ public:
 
 	void ResetPath();
 
+	void AddAnimation(Animation& anim, int startPosY, int frameSize, int numFrames);
+
 public:
 
 //protected:
