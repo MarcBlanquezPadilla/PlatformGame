@@ -336,14 +336,6 @@ bool Map::LoadParalax(pugi::xml_node paralaxLayerNode)
             paralax->slowX = layer.attribute("slowX").as_int();
             paralax->slowY = layer.attribute("slowY").as_int();
             paralax->repeatNum = layer.attribute("repeatNum").as_int();
-            LOG("name: %s", paralax->name);
-            LOG("marginX: %i", paralax->marginX);
-            LOG("marginY: %i", paralax->marginY);
-            LOG("width: %i", paralax->width);
-            LOG("height: %i", paralax->height);
-            LOG("slowX: %i", paralax->slowX);
-            LOG("slowY: %i", paralax->slowY);
-            LOG("repeat: %i", paralax->repeatNum);
             mapData.paralaxs.push_front(paralax);
         }
     }
@@ -412,9 +404,9 @@ MapLayer* Map::GetNavigationLayer() {
         if (layer->properties.GetProperty("Navigation") != NULL &&
             layer->properties.GetProperty("Navigation")->value) {
             return layer;
+
         }
     }
-
     return nullptr;
 }
 

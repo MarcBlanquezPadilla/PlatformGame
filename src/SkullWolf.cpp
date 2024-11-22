@@ -56,8 +56,18 @@ bool SkullWolf::Update(float dt) {
 	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - texW / 2 + drawOffsetX);
 	position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2 + drawOffsetY);
 	Engine::GetInstance().render.get()->DrawTexture(texture, (int)position.getX(), (int)position.getY(), &currentAnimation->GetCurrentFrame());
-	
-	//pathfinding->PropagateAStar(SQUARED, { 500,500 });
+	Engine::GetInstance().render.get()->DrawCircle(200, 200, 10, 255, 255, 255, 255);
+
+
+	pathfinding->PropagateAStar(SQUARED, {200,200});
+	pathfinding->PropagateAStar(SQUARED, {200,200});
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_R) == KEY_DOWN) {
+		Vector2D pos = GetPosition();
+		Vector2D tilePos = Engine::GetInstance().map.get()->WorldToMap(pos.getX(), pos.getY());
+		pathfinding->ResetPath(tilePos);
+	}
+
+	pathfinding->DrawPath();
 
 	return true;
 }

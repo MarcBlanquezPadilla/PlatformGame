@@ -53,7 +53,6 @@ bool Enemy::Start() {
 
 bool Enemy::Update(float dt)
 {
-
 	// Pathfinding testing inputs
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_R) == KEY_DOWN) {
 		Vector2D pos = GetPosition();
@@ -82,30 +81,30 @@ bool Enemy::Update(float dt)
 	// L13: TODO 3:	Add the key inputs to propagate the A* algorithm with different heuristics (Manhattan, Euclidean, Squared)
 
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_B) == KEY_DOWN) {
-		pathfinding->PropagateAStar(MANHATTAN);
+		pathfinding->PropagateAStar(MANHATTAN, position);
 	}
 
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_B) == KEY_REPEAT &&
 		Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT) {
-		pathfinding->PropagateAStar(MANHATTAN);
+		pathfinding->PropagateAStar(MANHATTAN, position);
 	}
 
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_N) == KEY_DOWN) {
-		pathfinding->PropagateAStar(EUCLIDEAN);
+		pathfinding->PropagateAStar(EUCLIDEAN, position);
 	}
 
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_N) == KEY_REPEAT &&
 		Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT) {
-		pathfinding->PropagateAStar(EUCLIDEAN);
+		pathfinding->PropagateAStar(EUCLIDEAN, position);
 	}
 
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_M) == KEY_DOWN) {
-		pathfinding->PropagateAStar(SQUARED);
+		pathfinding->PropagateAStar(SQUARED, position);
 	}
 
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_M) == KEY_REPEAT &&
 		Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT) {
-		pathfinding->PropagateAStar(SQUARED);
+		pathfinding->PropagateAStar(SQUARED, position);
 	}
 
 	// L08 TODO 4: Add a physics to an item - update the position of the object from the physics.  
