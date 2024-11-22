@@ -78,8 +78,8 @@ Entity* EntityManager::CreateEntity(EntityType type)
 	case EntityType::ENEMY:
 		entity = new Enemy();
 		break;
-	case EntityType::SKULLWOLF:
-		entity = new SkullWolf();
+	case EntityType::BAT_ENEMY:
+		entity = new BatEnemy();
 	default:
 
 		break;

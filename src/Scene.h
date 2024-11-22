@@ -2,7 +2,7 @@
 
 #include "Module.h"
 #include "Player.h"
-#include "SkullWolf.h"
+#include "BatEnemy.h"
 
 #define POS_TO_START_MOVING_CAMX 100
 #define POS_TO_STOP_MOVING_CAMX 2180
@@ -49,6 +49,6 @@ private:
 	
 	//L03: TODO 3b: Declare a Player attribute
 	Player* player;
-	SkullWolf* skullWolf;
+	BatEnemy* batEnemy;
 
 };

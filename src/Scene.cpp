@@ -50,8 +50,7 @@ bool Scene::Start()
 	Engine::GetInstance().map->LoadParalax(configParameters.child("map").child("parallax"));
 	
 	//Load SkullWolf Enemy
-	skullWolf = (SkullWolf*)Engine::GetInstance().entityManager->CreateEntity(EntityType::SKULLWOLF);
-	/*skullWolf->SetParameters();*/
+	batEnemy = (BatEnemy*)Engine::GetInstance().entityManager->CreateEntity(EntityType::BAT_ENEMY);
 	
 	return true;
 }

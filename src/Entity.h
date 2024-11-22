@@ -8,7 +8,7 @@ enum class EntityType
 	PLAYER,
 	ITEM,
 	ENEMY,
-	SKULLWOLF,
+	BAT_ENEMY,
 	UNKNOWN
 };
 

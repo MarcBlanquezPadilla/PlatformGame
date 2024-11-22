@@ -7,12 +7,12 @@
 
 struct SDL_Texture;
 
-class SkullWolf : public Enemy
+class BatEnemy : public Enemy
 {
 public:
 
-	SkullWolf();
-	~SkullWolf();
+	BatEnemy();
+	~BatEnemy();
 
 	
 	bool Start() override;
@@ -23,7 +23,9 @@ public:
 
 private:
 
-	int drawOffsetX;
-	int drawOffsetY;
+	int drawOffsetX=0;
+	int drawOffsetY=0;
+
+	float speed;
 };
 

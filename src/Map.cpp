@@ -361,6 +361,16 @@ Vector2D Map::MapToWorld(int x, int y) const
     return ret;
 }
 
+Vector2D Map::MapToWorldCentered(int x, int y)
+{
+    Vector2D ret;
+
+    ret.setX(x * mapData.tileWidth + mapData.tileWidth/2);
+    ret.setY(y * mapData.tileHeight + mapData.tileWidth / 2);
+
+    return ret;
+}
+
 
 // L10: TODO 5: Add method WorldToMap to obtain  map coordinates from screen coordinates 
 Vector2D Map::WorldToMap(int x, int y) {

@@ -160,6 +160,8 @@ public:
     // L07: TODO 8: Create a method that translates x,y coordinates from map positions to world positions
     Vector2D MapToWorld(int x, int y) const;
 
+    Vector2D MapToWorldCentered(int x, int y);
+
     // L10: TODO 5: Add method WorldToMap to obtain  map coordinates from screen coordinates 
     Vector2D WorldToMap(int x, int y);
 
