@@ -54,6 +54,13 @@ bool Player::Start() {
 	respawnTime = parameters.child("propierties").attribute("respawnTime").as_float();
 	playerState = (state)parameters.child("propierties").attribute("playerState").as_int();
 	dir = (Direction)parameters.child("propierties").attribute("direction").as_int();
+	lives = parameters.attribute("lives").as_int();
+
+	if (parameters.child("savedData").attribute("saved").as_bool() == true)
+	{
+		position = { parameters.child("savedData").attribute("x").as_float(), parameters.child("savedData").attribute("x").as_float() };
+		parameters.child("savedData").attribute("lives").as_int();
+	}
 
 	destroyed = false;
 	godMode = false;
@@ -72,7 +79,7 @@ bool Player::Start() {
 	pbody->body->SetLinearDamping(friction);
 	pbody->body->SetGravityScale(gravity);
 
-	lives = parameters.attribute("lives").as_int();
+	
 	hurtTimer = Timer();
 	respawnTimer = Timer();
 
@@ -81,7 +88,7 @@ bool Player::Start() {
 
 bool Player::Update(float dt)
 {
-	
+
 	pbody->body->SetAwake(true);
 	currentFrame = currentAnim->GetCurrentFrame();
 
