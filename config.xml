@@ -1,84 +1,79 @@
-<!-- Config file for the engine -->
+<?xml version="1.0"?>
 <config>
-  <engine>
-    <title>My platformer game</title>
-    <maxFrameDuration value="16"/>
-  </engine>
-
-  <render>
-    <vsync value="false"/>
-  </render>
-
-  <window>
-    <resolution width="1280" height="640" scale="2"/>
-    <fullscreen value="false"/>
-    <borderless value="false"/>
-    <resizable value="false"/>
-    <fullscreen_window value="false"/>
-  </window>
-
-  <scene>
-    <map path ="Assets/Maps/" name = "Mapa.tmx">
-      <parallax>
-        <layer name="mountain1" path = "Assets/Textures/Parallax/Mountain1OFF.png" marginX ="0" marginY ="0" spacing ="0" width ="640" height="360" slowX ="20"  repeatNum="8" slowY ="30"/>
-        <layer name="mountain2" path = "Assets/Textures/Parallax/Mountain2OFF.png" marginX ="0" marginY ="0" spacing ="0" width ="640" height="360" slowX ="10"  repeatNum="8" slowY ="5"/>
-        <layer name="cloud1" path = "Assets/Textures/Parallax/Cloud1X2.png" marginX ="0" marginY ="0" spacing ="0" width ="640" height="360" slowX ="5"  repeatNum="6" slowY ="1"/>
-		<layer name="moon" path = "Assets/Textures/Parallax/MoonX2.png" marginX ="480" marginY ="0" spacing ="0" width ="640" height="360" slowX ="2"  repeatNum="1" slowY ="1"/>
-        <layer name="cloud2" path = "Assets/Textures/Parallax/Cloud2X2.png" marginX ="0" marginY ="0" spacing ="0" width ="640" height="360" slowX ="4"  repeatNum="6" slowY ="1"/>
-        <layer name="cloud3" path = "Assets/Textures/Parallax/Cloud3X2.png" marginX ="0" marginY ="0" spacing ="0" width ="640" height="360" slowX ="3"  repeatNum="6" slowY ="1"/>
-        <layer name="sky" path = "Assets/Textures/Parallax/SkyX2.png" marginX ="0" marginY ="0" spacing ="0" width ="640" height="360" slowX ="1"  repeatNum="6" slowY ="1"/>
-      </parallax>
-    </map>
-    
-    <entities>
-      <player x ="25" y = "350" w ="48" h = "48" lives ="3" texture = "Assets/Textures/GhostCharacter/Ghost_Sheet.png" >
-		<propierties jumpForce = "0.6f" pushForce = "0.5f"  moveSpeed = "0.2f" friction = "2.0f" gravity = "1.2f" hurtTime ="1.0f" respawnTime =" 2.0f" playerState ="0" direction ="1"/>
-        <animations>
-          <idle loop = "true" speed ="0.2f">
-            <frame x = "0" y ="0" w = "48" h = "48"/>
-            <frame x = "48" y ="0" w = "48" h = "48"/>
-            <frame x = "96" y ="0" w = "48" h = "48"/>
-            <frame x = "144" y ="0" w = "48" h = "48"/>
-            <frame x = "192" y ="0" w = "48" h = "48"/>
-            <frame x = "240" y ="0" w = "48" h = "48"/>
-            <frame x = "288" y ="0" w = "48" h = "48"/>
-            <frame x = "336" y ="0" w = "48" h = "48"/>
-          </idle>
-          <walk loop = "true" speed = "0.1f">
-            <frame x = "0" y ="48" w = "48" h = "48"/>
-            <frame x = "48" y ="48" w = "48" h = "48"/>
-            <frame x = "96" y ="48" w = "48" h = "48"/>
-            <frame x = "144" y ="48" w = "48" h = "48"/>
-          </walk>
-          <jump loop ="false" speed ="0.2f">
-            <frame x = "0" y ="96" w = "48" h = "48"/>
-            <frame x = "48" y ="96" w = "48" h = "48"/>
-            <frame x = "96" y ="96" w = "48" h = "48"/>
-          </jump>
-          <fall loop = "false" speed =" 0.2f">
-            <frame x = "48" y ="144" w = "48" h = "48"/>
-            <frame x = "96" y ="144" w = "48" h = "48"/>
-			      <frame x = "0" y ="144" w = "48" h = "48"/>
-          </fall>
-          <hurt loop = "false" speed = "0.15sf">
-            <frame x = "0" y ="192" w = "48" h = "48"/>
-            <frame x = "48" y ="192" w = "48" h = "48"/>
-            <frame x = "96" y ="192" w = "48" h = "48"/>
-            <frame x = "144" y ="192" w = "48" h = "48"/>
-          </hurt>
-          <death loop = "false" speed = "0.2f">
-            <frame x = "0" y ="240" w = "48" h = "48"/>
-            <frame x = "48" y ="240" w = "48" h = "48"/>
-            <frame x = "96" y ="240" w = "48" h = "48"/>
-            <frame x = "144" y ="240" w = "48" h = "48"/>
-            <frame x = "192" y ="240" w = "48" h = "48"/>
-            <frame x = "240" y ="240" w = "48" h = "48"/>
-          </death>
-
-        </animations>
-      </player>
-    </entities>
-  </scene>
-  <ui path ="Assets/Textures/UI/HelpMenu2.png"/>
-  
+	<engine>
+		<title>My platformer game</title>
+		<maxFrameDuration value="16" />
+	</engine>
+	<render>
+		<vsync value="false" />
+	</render>
+	<window>
+		<resolution width="1280" height="640" scale="2" />
+		<fullscreen value="false" />
+		<borderless value="false" />
+		<resizable value="false" />
+		<fullscreen_window value="false" />
+	</window>
+	<scene>
+		<map path="Assets/Maps/" name="Mapa.tmx">
+			<parallax>
+				<layer name="mountain1" path="Assets/Textures/Parallax/Mountain1OFF.png" marginX="0" marginY="0" spacing="0" width="640" height="360" slowX="20" repeatNum="8" slowY="30" />
+				<layer name="mountain2" path="Assets/Textures/Parallax/Mountain2OFF.png" marginX="0" marginY="0" spacing="0" width="640" height="360" slowX="10" repeatNum="8" slowY="5" />
+				<layer name="cloud1" path="Assets/Textures/Parallax/Cloud1X2.png" marginX="0" marginY="0" spacing="0" width="640" height="360" slowX="5" repeatNum="6" slowY="1" />
+				<layer name="moon" path="Assets/Textures/Parallax/MoonX2.png" marginX="480" marginY="0" spacing="0" width="640" height="360" slowX="2" repeatNum="1" slowY="1" />
+				<layer name="cloud2" path="Assets/Textures/Parallax/Cloud2X2.png" marginX="0" marginY="0" spacing="0" width="640" height="360" slowX="4" repeatNum="6" slowY="1" />
+				<layer name="cloud3" path="Assets/Textures/Parallax/Cloud3X2.png" marginX="0" marginY="0" spacing="0" width="640" height="360" slowX="3" repeatNum="6" slowY="1" />
+				<layer name="sky" path="Assets/Textures/Parallax/SkyX2.png" marginX="0" marginY="0" spacing="0" width="640" height="360" slowX="1" repeatNum="6" slowY="1" />
+			</parallax>
+		</map>
+		<entities>
+			<player x="25" y="350" w="48" h="48" lives="3" texture="Assets/Textures/GhostCharacter/Ghost_Sheet.png">
+				<propierties jumpForce="0.6f" pushForce="0.5f" moveSpeed="0.2f" friction="2.0f" gravity="1.2f" hurtTime="1.0f" respawnTime=" 2.0f" playerState="0" direction="1" />
+				<animations>
+					<idle loop="true" speed="0.2f">
+						<frame x="0" y="0" w="48" h="48" />
+						<frame x="48" y="0" w="48" h="48" />
+						<frame x="96" y="0" w="48" h="48" />
+						<frame x="144" y="0" w="48" h="48" />
+						<frame x="192" y="0" w="48" h="48" />
+						<frame x="240" y="0" w="48" h="48" />
+						<frame x="288" y="0" w="48" h="48" />
+						<frame x="336" y="0" w="48" h="48" />
+					</idle>
+					<walk loop="true" speed="0.1f">
+						<frame x="0" y="48" w="48" h="48" />
+						<frame x="48" y="48" w="48" h="48" />
+						<frame x="96" y="48" w="48" h="48" />
+						<frame x="144" y="48" w="48" h="48" />
+					</walk>
+					<jump loop="false" speed="0.2f">
+						<frame x="0" y="96" w="48" h="48" />
+						<frame x="48" y="96" w="48" h="48" />
+						<frame x="96" y="96" w="48" h="48" />
+					</jump>
+					<fall loop="false" speed=" 0.2f">
+						<frame x="48" y="144" w="48" h="48" />
+						<frame x="96" y="144" w="48" h="48" />
+						<frame x="0" y="144" w="48" h="48" />
+					</fall>
+					<hurt loop="false" speed="0.15sf">
+						<frame x="0" y="192" w="48" h="48" />
+						<frame x="48" y="192" w="48" h="48" />
+						<frame x="96" y="192" w="48" h="48" />
+						<frame x="144" y="192" w="48" h="48" />
+					</hurt>
+					<death loop="false" speed="0.2f">
+						<frame x="0" y="240" w="48" h="48" />
+						<frame x="48" y="240" w="48" h="48" />
+						<frame x="96" y="240" w="48" h="48" />
+						<frame x="144" y="240" w="48" h="48" />
+						<frame x="192" y="240" w="48" h="48" />
+						<frame x="240" y="240" w="48" h="48" />
+					</death>
+				</animations>
+				<savedData saved="false" x="398" y="398" lives="3" />
+			</player>
+		</entities>
+	</scene>
+	<ui path="Assets/Textures/UI/HelpMenu2.png" />
 </config>
