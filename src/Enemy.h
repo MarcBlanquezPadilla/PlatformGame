@@ -14,9 +14,14 @@ class Enemy : public Entity
 {
 public:
 
-	enum state {
+	enum State {
 		PATROL,
 		CHASING
+	};
+
+	enum Dir {
+		LEFT,
+		RIGHT
 	};
 
 	Enemy();
@@ -53,5 +58,8 @@ public:
 	Animation* currentAnimation = nullptr;
 	Animation idle;
 	PhysBody* pbody;
+
+	State state;
+	Dir dir;
 	Pathfinding* pathfinding;
 };

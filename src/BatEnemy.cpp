@@ -47,6 +47,8 @@ bool BatEnemy::Start() {
 	pathfinding = new Pathfinding();
 	ResetPath();
 
+	destinationPoint = route[0];
+
 	return true;
 }
 
@@ -56,20 +58,27 @@ bool BatEnemy::Update(float dt) {
 	
 
 	if (state == PATROL) {
-		/*if (position.getX() == Engine::GetInstance().map.get()->MapToWorldCentered(route.front().getX()) {
-			destinationTile = route.back();
-			ResetPath();
-		}
-		else if (position == Engine::GetInstance().map.get()->MapToWorldCentered(route.back().getX(), route.back().getY())) {
-			destinationTile = route.front();
-			ResetPath();
-		}*/
-
+		
+		int st = 0;
 		for (int i = 0; i < route.size(); i++) {
-			b2Vec2 direction = { route[i].getX() - pbody->body->GetPosition().x, route[i].getY() - pbody->body->GetPosition().y };
+			b2Vec2 direction = { route[i].getX() - METERS_TO_PIXELS(pbody->body->GetPosition().x), route[i].getY() - METERS_TO_PIXELS(pbody->body->GetPosition().y) };
 			float dist = direction.Length();
-			if (dist < 3) {
-				destinationPoint = route[i];
+			LOG("distance to route point: %f", dist);
+			if (dist < 5) {
+				if (i == route.size() - 1) {
+					destinationPoint = route[0];
+				}
+				else {
+					destinationPoint = route[i + 1];
+				}
+				
+				if (direction.x < 0) {
+					dir = RIGHT;
+				}
+				else {
+					dir == LEFT;
+				}
+				ResetPath();
 			}
 		
 		}
