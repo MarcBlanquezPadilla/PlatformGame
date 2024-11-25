@@ -155,6 +155,7 @@ bool Map::Load(std::string path, std::string fileName)
         mapData.height = mapFileXML.child("map").attribute("height").as_int();
         mapData.tileWidth = mapFileXML.child("map").attribute("tilewidth").as_int();
         mapData.tileHeight = mapFileXML.child("map").attribute("tileheight").as_int();
+        mapData.orientation = ORTOGRAPHIC;
 
         // L06: TODO 4: Implement the LoadTileSet function to load the tileset properties
        

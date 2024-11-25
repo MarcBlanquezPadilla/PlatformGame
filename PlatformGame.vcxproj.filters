@@ -94,7 +94,7 @@
       <Filter>Source Files\Game\Enemies</Filter>
     </ClCompile>
     <ClCompile Include="src\Enemy.cpp">
-      <Filter>Source Files\Game</Filter>
+      <Filter>Source Files\Game\Enemies</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

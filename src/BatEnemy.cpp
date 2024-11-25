@@ -49,7 +49,7 @@ bool BatEnemy::Start() {
 }
 
 bool BatEnemy::Update(float dt) {
-
+	LOG("%d", pathfinding->pathTiles.size());
 
 	if (pathfinding->pathTiles.empty())
 		pathfinding->PropagateAStar(SQUARED, {200,200});
