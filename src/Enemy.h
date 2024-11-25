@@ -6,11 +6,18 @@
 #include "Animation.h"
 #include "Pathfinding.h"
 
+
+
 struct SDL_Texture;
 
 class Enemy : public Entity
 {
 public:
+
+	enum state {
+		PATROL,
+		CHASING
+	};
 
 	Enemy();
 	virtual ~Enemy();

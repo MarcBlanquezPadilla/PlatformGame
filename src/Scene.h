@@ -44,11 +44,12 @@ public:
 	// Return the player position
 	Vector2D GetPlayerPosition();
 	
+	Player* player;
 
 private:
 	
 	//L03: TODO 3b: Declare a Player attribute
-	Player* player;
+	
 	BatEnemy* batEnemy;
 
 };

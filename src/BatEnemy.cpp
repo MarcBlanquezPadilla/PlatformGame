@@ -2,6 +2,8 @@
 #include "Engine.h"
 #include "Textures.h"
 #include "Physics.h"
+#include "Scene.h"
+#include "Player.h"
 #include "LOG.h"
 
 BatEnemy::BatEnemy()
@@ -22,8 +24,7 @@ bool BatEnemy::Start() {
 	drawOffsetX = 0;
 	drawOffsetY = 0;
 
-	//Load animations
-	/*idle.LoadAnimations(parameters.child("animations").child("idle"));*/
+	
 	AddAnimation(idle, 0, 32, 4);
 
 	idle.speed = 0.2f;
@@ -36,6 +37,7 @@ bool BatEnemy::Start() {
 	pbody->ctype = ColliderType::ENEMY;
 
 	speed = 1;
+	state = PATROL;
 
 	// Set the gravity of the body
 	if (!parameters.attribute("gravity").as_bool()) pbody->body->SetGravityScale(1.0f);
@@ -51,9 +53,38 @@ bool BatEnemy::Start() {
 bool BatEnemy::Update(float dt) {
 	LOG("%d", pathfinding->pathTiles.size());
 
-	if (pathfinding->pathTiles.empty())
-		pathfinding->PropagateAStar(SQUARED, {200,200});
+	
+
+	if (state == PATROL) {
+		/*if (position.getX() == Engine::GetInstance().map.get()->MapToWorldCentered(route.front().getX()) {
+			destinationTile = route.back();
+			ResetPath();
+		}
+		else if (position == Engine::GetInstance().map.get()->MapToWorldCentered(route.back().getX(), route.back().getY())) {
+			destinationTile = route.front();
+			ResetPath();
+		}*/
+
+		for (int i = 0; i < route.size(); i++) {
+			b2Vec2 direction = { route[i].getX() - pbody->body->GetPosition().x, route[i].getY() - pbody->body->GetPosition().y };
+			float dist = direction.Length();
+			if (dist < 3) {
+				destinationPoint = route[i];
+			}
+		
+		}
+	}
 	else {
+		Vector2D playerPos = Engine::GetInstance().scene.get()->GetPlayerPosition();
+		destinationPoint = playerPos;
+	}
+
+	if (pathfinding->pathTiles.empty()) 
+	{
+		pathfinding->PropagateAStar(SQUARED, destinationPoint);
+	}	
+	else 
+	{
 
 		Vector2D nextTile = pathfinding->pathTiles.back();
 		Vector2D nextTileWorld = Engine::GetInstance().map.get()->MapToWorldCentered(nextTile.getX(), nextTile.getY());
