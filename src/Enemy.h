@@ -47,6 +47,8 @@ public:
 
 	void AddAnimation(Animation& anim, int startPosY, int frameSize, int numFrames);
 
+	bool CheckIfTwoPointsNear(Vector2D point1, Vector2D point2, float nearDistance);
+
 public:
 
 //protected:

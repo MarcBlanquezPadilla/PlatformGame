@@ -152,3 +152,9 @@ void Enemy::AddAnimation(Animation& anim, int startPosY, int frameSize, int numF
 		anim.PushBack({ i*frameSize,startPosY,frameSize,frameSize });
 	}
 }
+
+bool Enemy::CheckIfTwoPointsNear(Vector2D point1, Vector2D point2, float nearDistance)
+{
+	b2Vec2 vectorBetweenPoints = { point1.getX() - point2.getX(), point1.getY() - point2.getY() };
+	return vectorBetweenPoints.Length()<nearDistance;
+}

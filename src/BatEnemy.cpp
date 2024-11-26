@@ -24,7 +24,7 @@ bool BatEnemy::Start() {
 	drawOffsetX = 0;
 	drawOffsetY = 0;
 
-	
+
 	AddAnimation(idle, 0, 32, 4);
 
 	idle.speed = 0.2f;
@@ -40,47 +40,34 @@ bool BatEnemy::Start() {
 	state = PATROL;
 
 	// Set the gravity of the body
-	if (!parameters.attribute("gravity").as_bool()) pbody->body->SetGravityScale(1.0f);
+	pbody->body->SetGravityScale(0);
 	pbody->body->SetFixedRotation(true);
 
 	// Initialize pathfinding
 	pathfinding = new Pathfinding();
 	ResetPath();
-
-	destinationPoint = route[0];
+	
+	for (int i = 0; i < route.size(); i++)
+	{
+		route[i] = Engine::GetInstance().map.get()->WorldToWorldCenteredOnTile(route[i].getX(), route[i].getY());
+	}
+	routeDestinationIndex = 0;
+	destinationPoint = route[routeDestinationIndex];
 
 	return true;
 }
 
 bool BatEnemy::Update(float dt) {
-	LOG("%d", pathfinding->pathTiles.size());
 
-	
-
+	//STATES CONTROLER
 	if (state == PATROL) {
-		
-		int st = 0;
-		for (int i = 0; i < route.size(); i++) {
-			b2Vec2 direction = { route[i].getX() - METERS_TO_PIXELS(pbody->body->GetPosition().x), route[i].getY() - METERS_TO_PIXELS(pbody->body->GetPosition().y) };
-			float dist = direction.Length();
-			LOG("distance to route point: %f", dist);
-			if (dist < 5) {
-				if (i == route.size() - 1) {
-					destinationPoint = route[0];
-				}
-				else {
-					destinationPoint = route[i + 1];
-				}
-				
-				if (direction.x < 0) {
-					dir = RIGHT;
-				}
-				else {
-					dir == LEFT;
-				}
-				ResetPath();
-			}
-		
+
+		if (CheckIfTwoPointsNear(destinationPoint, { (float)METERS_TO_PIXELS(pbody->body->GetPosition().x), (float)METERS_TO_PIXELS(pbody->body->GetPosition().y) }, 5))
+		{
+			routeDestinationIndex++;
+			if (routeDestinationIndex == route.size()) routeDestinationIndex = 0;
+			destinationPoint = route[routeDestinationIndex];
+			ResetPath();
 		}
 	}
 	else {
@@ -88,8 +75,12 @@ bool BatEnemy::Update(float dt) {
 		destinationPoint = playerPos;
 	}
 
+	
+	
+	//PATHFINDING CONTROLER
 	if (pathfinding->pathTiles.empty()) 
 	{
+		pbody->body->SetLinearVelocity({ 0, 0 });
 		pathfinding->PropagateAStar(SQUARED, destinationPoint);
 	}	
 	else 
@@ -97,33 +88,24 @@ bool BatEnemy::Update(float dt) {
 
 		Vector2D nextTile = pathfinding->pathTiles.back();
 		Vector2D nextTileWorld = Engine::GetInstance().map.get()->MapToWorldCentered(nextTile.getX(), nextTile.getY());
-		Vector2D nextTilePhysics = { PIXEL_TO_METERS(nextTileWorld.getX()),PIXEL_TO_METERS(nextTileWorld.getY()) };
 
-		Engine::GetInstance().render.get()->DrawCircle(nextTileWorld.getX(), nextTileWorld.getY(), 2, 255, 0, 0, 255);
 
-		// Calcular la dirección hacia el próximo tile
-		b2Vec2 direction = { nextTilePhysics.getX()-pbody->body->GetPosition().x, nextTilePhysics.getY() - pbody->body->GetPosition().y };
-		float distanceToTile = direction.Length();
-
-		// Si estamos cerca del tile objetivo, eliminarlo de la lista
-		if (distanceToTile < PIXEL_TO_METERS(3)) { // 5 píxeles de tolerancia
+		if (CheckIfTwoPointsNear(nextTileWorld, {(float)METERS_TO_PIXELS(pbody->body->GetPosition().x), (float)METERS_TO_PIXELS(pbody->body->GetPosition().y)}, 3)) {
 
 			pathfinding->pathTiles.pop_back();
 			if (pathfinding->pathTiles.empty()) ResetPath();
 		}
 		else {
-			// Normalizar la dirección y mover al enemigo hacia el tile
+			Vector2D nextTilePhysics = { PIXEL_TO_METERS(nextTileWorld.getX()),PIXEL_TO_METERS(nextTileWorld.getY()) };
+			b2Vec2 direction = { nextTilePhysics.getX() - pbody->body->GetPosition().x, nextTilePhysics.getY() - pbody->body->GetPosition().y };
 			direction.Normalize();
 			pbody->body->SetLinearVelocity({direction.x * speed, direction.y * speed});
 		}
 	}
 
-
-
 	//DRAW
 	pathfinding->DrawPath();
 	
-
 	currentAnimation->Update();
 
 	b2Transform pbodyPos = pbody->body->GetTransform();
@@ -133,6 +115,8 @@ bool BatEnemy::Update(float dt) {
 
 	return true;
 }
+
+
 
 
 

@@ -259,7 +259,7 @@ void Pathfinding::PropagateDijkstra() {
     }
 }
 
-void Pathfinding::PropagateAStar(ASTAR_HEURISTICS heuristic, Vector2D destination) { // can calculate path using different heuristics
+void Pathfinding::PropagateAStar(ASTAR_HEURISTICS heuristic, Vector2D destination, bool withGround, int maxVerticalTiles) { // can calculate path using different heuristics
 
     bool foundDestination = false;
     Vector2D destinationTile = Engine::GetInstance().map.get()->WorldToMap((int)destination.getX(), (int)destination.getY());
@@ -284,16 +284,16 @@ void Pathfinding::PropagateAStar(ASTAR_HEURISTICS heuristic, Vector2D destinatio
         frontierAStar.pop();
 
         std::list<Vector2D> neighbors;
-        if (IsWalkable(frontierTile.getX() + 1, frontierTile.getY())) {
+        if (IsWalkable(frontierTile.getX() + 1, frontierTile.getY()) && (!withGround || !IsWalkable(frontierTile.getX() + 1, frontierTile.getY() + 1))) {
             neighbors.push_back(Vector2D((int)frontierTile.getX() + 1, (int)frontierTile.getY()));
         }
-        if (IsWalkable(frontierTile.getX(), frontierTile.getY() + 1)) {
+        if (IsWalkable(frontierTile.getX(), frontierTile.getY() + 1) && (!withGround || !IsWalkable(frontierTile.getX(), frontierTile.getY()))) {
             neighbors.push_back(Vector2D((int)frontierTile.getX(), (int)frontierTile.getY() + 1));
         }
-        if (IsWalkable(frontierTile.getX() - 1, frontierTile.getY())) {
+        if (IsWalkable(frontierTile.getX() - 1, frontierTile.getY()) && (!withGround || !IsWalkable(frontierTile.getX() - 1, frontierTile.getY() + 1))) {
             neighbors.push_back(Vector2D((int)frontierTile.getX() - 1, (int)frontierTile.getY()));
         }
-        if (IsWalkable(frontierTile.getX(), frontierTile.getY() - 1)) {
+        if (IsWalkable(frontierTile.getX(), frontierTile.getY() - 1) && (!withGround || !IsWalkable(frontierTile.getX(), frontierTile.getY() - 2))) {
             neighbors.push_back(Vector2D((int)frontierTile.getX(), (int)frontierTile.getY() - 1));
         }
 
@@ -326,8 +326,6 @@ void Pathfinding::PropagateAStar(ASTAR_HEURISTICS heuristic, Vector2D destinatio
         }
 
     }
-
-
 }
 
 int Pathfinding::MovementCost(int x, int y)

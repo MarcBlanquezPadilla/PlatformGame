@@ -33,7 +33,7 @@ public:
     void PropagateDijkstra();
 
     // L13: A* Pathfinding methods
-    void PropagateAStar(ASTAR_HEURISTICS heuristic, Vector2D destination);
+    void PropagateAStar(ASTAR_HEURISTICS heuristic, Vector2D destination, bool withGround = false, int maxVerticalTiles = 0);
 
 private:
     int Find(std::vector<Vector2D> vector, Vector2D elem);
