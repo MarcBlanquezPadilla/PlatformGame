@@ -53,7 +53,9 @@ bool Scene::Start()
 	
 	//Load Enemies
 	batEnemy = (BatEnemy*)Engine::GetInstance().entityManager->CreateEntity(EntityType::BAT_ENEMY);
-	groundEnemy = (GroundEnemy*)Engine::GetInstance().entityManager->CreateEntity(EntityType::GROUND_ENEMY);
+	batEnemy->SetPlayer(player);
+	groundEnemy = (GroundEnemy*)Engine::GetInstance().entityManager->CreateEntity(EntityType::GvROUND_ENEMY);
+	groundEnemy->SetPlayer(player);
 	
 	return true;
 }
@@ -116,6 +118,7 @@ Vector2D Scene::GetPlayerPosition()
 {
 	return player->GetPosition();
 }
+
 
 void Scene::SaveGame()
 {

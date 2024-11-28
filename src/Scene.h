@@ -45,7 +45,7 @@ public:
 
 	// Return the player position
 	Vector2D GetPlayerPosition();
-	
+
 
 	
 

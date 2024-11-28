@@ -392,6 +392,10 @@ void PhysBody::GetPosition(int& x, int& y) const
 	y = METERS_TO_PIXELS(pos.y) - (height);
 }
 
+Vector2D PhysBody::GetPhysBodyPosition()
+{
+	return  { (float)METERS_TO_PIXELS(body->GetPosition().x), (float)METERS_TO_PIXELS(body->GetPosition().y) };
+}
 
 
 float PhysBody::GetRotation() const

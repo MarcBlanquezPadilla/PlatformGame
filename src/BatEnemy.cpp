@@ -36,6 +36,9 @@ bool BatEnemy::Start() {
 	//Assign collider type
 	pbody->ctype = ColliderType::ENEMY;
 
+	chaseArea = 100;
+
+
 	speed = 1;
 	state = PATROL;
 
@@ -59,6 +62,8 @@ bool BatEnemy::Start() {
 
 bool BatEnemy::Update(float dt) {
 
+	Vector2D playerPos = player->pbody->GetPhysBodyPosition();
+
 	//STATES CONTROLER
 	if (state == PATROL) {
 
@@ -71,26 +76,32 @@ bool BatEnemy::Update(float dt) {
 		}
 	}
 	else {
-		Vector2D playerPos = Engine::GetInstance().scene.get()->GetPlayerPosition();
+
 		destinationPoint = playerPos;
 	}
 
-	
-	
+	if (position.distanceEuclidean(playerPos) < chaseArea && state == PATROL) {
+		state = CHASING;
+	}
+	if (position.distanceEuclidean(playerPos) > chaseArea && state == CHASING) {
+		state = PATROL;
+	}
+
+
 	//PATHFINDING CONTROLER
-	if (pathfinding->pathTiles.empty()) 
+	if (pathfinding->pathTiles.empty())
 	{
 		pbody->body->SetLinearVelocity({ 0, 0 });
 		pathfinding->PropagateAStar(SQUARED, destinationPoint);
-	}	
-	else 
+	}
+	else
 	{
 
 		Vector2D nextTile = pathfinding->pathTiles.back();
 		Vector2D nextTileWorld = Engine::GetInstance().map.get()->MapToWorldCentered(nextTile.getX(), nextTile.getY());
 
 
-		if (CheckIfTwoPointsNear(nextTileWorld, {(float)METERS_TO_PIXELS(pbody->body->GetPosition().x), (float)METERS_TO_PIXELS(pbody->body->GetPosition().y)}, 3)) {
+		if (CheckIfTwoPointsNear(nextTileWorld, { (float)METERS_TO_PIXELS(pbody->body->GetPosition().x), (float)METERS_TO_PIXELS(pbody->body->GetPosition().y) }, 3)) {
 
 			pathfinding->pathTiles.pop_back();
 			if (pathfinding->pathTiles.empty()) ResetPath();
@@ -99,13 +110,17 @@ bool BatEnemy::Update(float dt) {
 			Vector2D nextTilePhysics = { PIXEL_TO_METERS(nextTileWorld.getX()),PIXEL_TO_METERS(nextTileWorld.getY()) };
 			b2Vec2 direction = { nextTilePhysics.getX() - pbody->body->GetPosition().x, nextTilePhysics.getY() - pbody->body->GetPosition().y };
 			direction.Normalize();
-			pbody->body->SetLinearVelocity({direction.x * speed, direction.y * speed});
+			pbody->body->SetLinearVelocity({ direction.x * speed, direction.y * speed });
 		}
 	}
 
 	//DRAW
 	pathfinding->DrawPath();
-	
+
+	if (Engine::GetInstance().physics.get()->debug) {
+		Engine::GetInstance().render.get()->DrawCircle(position.getX(), position.getY(), chaseArea, 255, 0, 0);
+	}
+
 	currentAnimation->Update();
 
 	b2Transform pbodyPos = pbody->body->GetTransform();
@@ -114,6 +129,7 @@ bool BatEnemy::Update(float dt) {
 	Engine::GetInstance().render.get()->DrawTexture(texture, (int)position.getX(), (int)position.getY(), &currentAnimation->GetCurrentFrame());
 
 	return true;
+	
 }
 
 
