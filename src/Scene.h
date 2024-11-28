@@ -40,6 +40,18 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
+<<<<<<< Updated upstream
+=======
+	// Return the player position
+	Vector2D GetPlayerPosition();
+	
+	Vector2D GetPhysPlayerPosition();
+	
+
+	void SaveGame();
+
+
+>>>>>>> Stashed changes
 private:
 	SDL_Texture* img;
 

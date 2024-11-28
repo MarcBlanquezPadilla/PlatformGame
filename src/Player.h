@@ -52,7 +52,14 @@ public:
 		this->parameters = parameters;
 	}
 
+<<<<<<< Updated upstream
 	
+=======
+	Vector2D GetPhysPosition()
+	{
+		return  { (float)METERS_TO_PIXELS(pbody->body->GetPosition().x), (float)METERS_TO_PIXELS(pbody->body->GetPosition().y) };
+	}
+>>>>>>> Stashed changes
 
 public:
 

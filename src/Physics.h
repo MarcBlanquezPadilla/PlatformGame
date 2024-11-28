@@ -83,10 +83,13 @@ public:
 	void EndContact(b2Contact* contact);
 
 	/*Vector2D position = entity*/
-private:
 
 	// Debug mode
 	bool debug;
+
+private:
+
+	
 
 	// Box2D World
 	b2World* world;

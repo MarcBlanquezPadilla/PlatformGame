@@ -2,6 +2,7 @@
 
 #include "Input.h"
 #include "Render.h"
+#include "Physics.h"
 
 enum class EntityType
 {
@@ -81,6 +82,7 @@ public:
 	{
 		return position;
 	}
+	
 
 	void SetPosition(float _x, float _y) {
 		position = { _x, _y };

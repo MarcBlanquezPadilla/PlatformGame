@@ -105,3 +105,46 @@ bool Scene::CleanUp()
 
 	return true;
 }
+<<<<<<< Updated upstream
+=======
+
+// Return the player position
+Vector2D Scene::GetPlayerPosition()
+{
+	return player->GetPosition();
+}
+
+//Vector2D Scene::GetPhysPlayerPosition()
+//{
+//	return  { (float)METERS_TO_PIXELS(player->pbody->body->GetPosition().x), (float)METERS_TO_PIXELS(player->pbody->body->GetPosition().y) };
+//}
+
+void Scene::SaveGame()
+{
+
+	pugi::xml_document loadFile;
+	pugi::xml_parse_result result = loadFile.load_file("config.xml");
+
+	if (result == NULL)
+	{
+		LOG("Could not load file. Pugi error: %s", result.description());
+		return;
+	}
+
+	pugi::xml_node sceneNode = loadFile.child("config").child("scene");
+
+	//Save info to XML 
+
+	//Player position
+	sceneNode.child("entities").child("player").child("savedData").attribute("saved").set_value(true);
+	sceneNode.child("entities").child("player").child("savedData").attribute("x").set_value(player->position.getY());
+	sceneNode.child("entities").child("player").child("savedData").attribute("y").set_value(player->position.getY());
+	sceneNode.child("entities").child("player").child("savedData").attribute("lives").set_value(player->lives);
+
+	//enemies
+	// ...
+
+	//Saves the modifications to the XML 
+	loadFile.save_file("config.xml");
+}
+>>>>>>> Stashed changes
