@@ -12,6 +12,8 @@
 #include "Map.h"
 #include "Item.h"
 #include "Physics.h"
+#include "BatEnemy.h"
+#include "GroundEnemy.h"
 
 Scene::Scene() : Module()
 {
@@ -49,8 +51,9 @@ bool Scene::Start()
 	//Load Parallax -> TODO: Pass parallax to config
 	Engine::GetInstance().map->LoadParalax(configParameters.child("map").child("parallax"));
 	
-	//Load SkullWolf Enemy
+	//Load Enemies
 	batEnemy = (BatEnemy*)Engine::GetInstance().entityManager->CreateEntity(EntityType::BAT_ENEMY);
+	groundEnemy = (GroundEnemy*)Engine::GetInstance().entityManager->CreateEntity(EntityType::GROUND_ENEMY);
 	
 	return true;
 }

@@ -88,7 +88,6 @@ bool Player::Start() {
 
 bool Player::Update(float dt)
 {
-
 	pbody->body->SetAwake(true);
 	currentFrame = currentAnim->GetCurrentFrame();
 

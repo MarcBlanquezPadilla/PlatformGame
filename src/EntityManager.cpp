@@ -5,6 +5,8 @@
 #include "Scene.h"
 #include "Log.h"
 #include "Item.h"
+#include "BatEnemy.h"
+#include "GroundEnemy.h"
 
 EntityManager::EntityManager() : Module()
 {
@@ -80,6 +82,10 @@ Entity* EntityManager::CreateEntity(EntityType type)
 		break;
 	case EntityType::BAT_ENEMY:
 		entity = new BatEnemy();
+		break;
+	case EntityType::GROUND_ENEMY:
+		entity = new GroundEnemy();
+		break;
 	default:
 
 		break;

@@ -9,6 +9,7 @@ enum class EntityType
 	ITEM,
 	ENEMY,
 	BAT_ENEMY,
+	GROUND_ENEMY,
 	UNKNOWN
 };
 
