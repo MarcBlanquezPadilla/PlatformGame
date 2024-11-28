@@ -31,7 +31,7 @@ private:
 	int drawOffsetY = 0;
 	Vector2D destinationPoint;
 	int routeDestinationIndex;
-	std::vector<Vector2D> route = { { 100, 420 }, { 200, 420 } };
+	std::vector<Vector2D> route = { { 100, 420 }, { 275, 390 } };
 
 
 

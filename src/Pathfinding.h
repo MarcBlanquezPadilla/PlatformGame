@@ -17,6 +17,12 @@ class Pathfinding
 
 public:
 
+    enum PATH_MOVEMENT_TYPE
+    {
+        WALK = 0,
+        WALK_JUMP,
+        FLY
+    };
     Pathfinding();
 
     ~Pathfinding();
@@ -33,7 +39,7 @@ public:
     void PropagateDijkstra();
 
     // L13: A* Pathfinding methods
-    void PropagateAStar(ASTAR_HEURISTICS heuristic, Vector2D destination, bool withGround = false, int maxVerticalTiles = 0);
+    void PropagateAStar(ASTAR_HEURISTICS heuristic, Vector2D destination, PATH_MOVEMENT_TYPE movementType = Pathfinding::FLY);
 
 private:
     int Find(std::vector<Vector2D> vector, Vector2D elem);
@@ -58,7 +64,8 @@ public:
     // L13: A* Pathfinding variables
     std::priority_queue<std::pair<int, Vector2D>, std::vector<std::pair<int, Vector2D>>, std::greater<std::pair<int, Vector2D>> > frontierAStar;
 
-    int blockedGid = 295; //Gid of the tiles that block the path - Important adjust this value to your map
+    int blockedGid = 296; //Gid of the tiles that block the path - Important adjust this value to your map
+    int walkableGid = 297; //Gid of the tiles that block the path - Important adjust this value to your map
     int highCostGid = 50; //Gid of the tiles that have high cost - Important adjust this value to your map
 };
 
