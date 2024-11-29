@@ -306,9 +306,6 @@ void Pathfinding::PropagateAStar(ASTAR_HEURISTICS heuristic, Vector2D destinatio
     bool foundDestination = false;
     Vector2D destinationTile = Engine::GetInstance().map.get()->WorldToMap((int)destination.getX(), (int)destination.getY());
 
-    Vector2D closestTile;
-    int closestDistance = INT_MAX; // Inicializa con un valor muy alto
-
     if (frontierAStar.size() > 0) {
         Vector2D frontierTile = frontierAStar.top().second;
 
@@ -328,12 +325,6 @@ void Pathfinding::PropagateAStar(ASTAR_HEURISTICS heuristic, Vector2D destinatio
         //remove the first element from the queue
         frontierAStar.pop();
 
-        int currentDistance = frontierTile.distanceEuclidean(destinationTile); 
-        if (currentDistance < closestDistance) {
-            closestDistance = currentDistance;
-            closestTile = frontierTile;
-        }
-       
 
         std::list<Vector2D> neighbors;
         if (movementType == Pathfinding::FLY)
@@ -384,10 +375,6 @@ void Pathfinding::PropagateAStar(ASTAR_HEURISTICS heuristic, Vector2D destinatio
             case SQUARED:
                 H = neighbor.distanceSquared(destinationTile);
                 break;
-            }
-            if (H < closestDistance) {
-                closestDistance = H;
-                closestTile = frontierTile;
             }
             int F = G + H;
 
