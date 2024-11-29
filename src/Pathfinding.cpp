@@ -62,7 +62,7 @@ void Pathfinding::DrawPath() {
     // Draw visited
     for (const auto& pathTile : visited) {
         Vector2D pathTileWorld = Engine::GetInstance().map.get()->MapToWorld(pathTile.getX(), pathTile.getY());
-        SDL_Rect rect = { 33,0,16,16 };
+        SDL_Rect rect = { 17,0,16,16 };
         Engine::GetInstance().render.get()->DrawTexture(pathTex, pathTileWorld.getX(), pathTileWorld.getY(), &rect);
     }
 
