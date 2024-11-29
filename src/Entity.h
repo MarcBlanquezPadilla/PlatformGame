@@ -2,7 +2,6 @@
 
 #include "Input.h"
 #include "Render.h"
-#include "Physics.h"
 
 enum class EntityType
 {
@@ -67,8 +66,6 @@ public:
 	virtual void OnCollisionEnd(PhysBody* physA, PhysBody* physB) {
 
 	};
-
-	
 
 public:
 

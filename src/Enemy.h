@@ -5,8 +5,6 @@
 #include "SDL2/SDL.h"
 #include "Animation.h"
 #include "Pathfinding.h"
-#include "Physics.h"
-#include "Player.h"
 
 
 
@@ -51,12 +49,10 @@ public:
 
 	bool CheckIfTwoPointsNear(Vector2D point1, Vector2D point2, float nearDistance);
 
-	void SetPlayer(Player* _player);
-
 public:
 
 //protected:
-	Player* player;
+
 	SDL_Texture* texture;
 	const char* texturePath;
 	int texW, texH;
@@ -68,6 +64,4 @@ public:
 	State state;
 	Dir dir;
 	Pathfinding* pathfinding;
-
-	int chaseArea;
 };
