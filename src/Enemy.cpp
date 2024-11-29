@@ -8,6 +8,7 @@
 #include "Log.h"
 #include "Physics.h"
 #include "Map.h"
+#include "Player.h"
 
 Enemy::Enemy() : Entity(EntityType::ENEMY)
 {
@@ -157,4 +158,9 @@ bool Enemy::CheckIfTwoPointsNear(Vector2D point1, Vector2D point2, float nearDis
 {
 	b2Vec2 vectorBetweenPoints = { point1.getX() - point2.getX(), point1.getY() - point2.getY() };
 	return vectorBetweenPoints.Length()<nearDistance;
+}
+
+void Enemy::SetPlayer(Player* _player)
+{
+	player = _player;
 }

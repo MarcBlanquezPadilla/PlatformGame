@@ -385,11 +385,12 @@ void Physics::EndContact(b2Contact* contact)
 
 //--------------- PhysBody
 
-void PhysBody::GetPosition(int& x, int& y) const
+Vector2D PhysBody::GetPosition()
 {
 	b2Vec2 pos = body->GetPosition();
-	x = METERS_TO_PIXELS(pos.x) - (width);
-	y = METERS_TO_PIXELS(pos.y) - (height);
+	float x = METERS_TO_PIXELS(pos.x);
+	float y = METERS_TO_PIXELS(pos.y);
+	return { x,y };
 }
 
 
@@ -447,4 +448,9 @@ int PhysBody::RayCast(int x1, int y1, int x2, int y2, float& normal_x, float& no
 	}
 
 	return ret;
+}
+
+Vector2D PhysBody::GetPhysBodyWorldPosition()
+{
+	return { (float)METERS_TO_PIXELS(body->GetPosition().x), (float)METERS_TO_PIXELS(body->GetPosition().y) };
 }

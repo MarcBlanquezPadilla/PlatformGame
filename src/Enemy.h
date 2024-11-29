@@ -6,7 +6,7 @@
 #include "Animation.h"
 #include "Pathfinding.h"
 
-
+class Player;
 
 struct SDL_Texture;
 
@@ -49,6 +49,8 @@ public:
 
 	bool CheckIfTwoPointsNear(Vector2D point1, Vector2D point2, float nearDistance);
 
+	void SetPlayer(Player* player);
+
 public:
 
 //protected:
@@ -60,8 +62,10 @@ public:
 	Animation* currentAnimation = nullptr;
 	Animation idle;
 	PhysBody* pbody;
+	Player* player;
 
 	State state;
 	Dir dir;
 	Pathfinding* pathfinding;
+	int chaseArea;
 };

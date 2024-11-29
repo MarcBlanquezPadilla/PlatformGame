@@ -37,6 +37,7 @@ bool BatEnemy::Start() {
 	pbody->ctype = ColliderType::ENEMY;
 
 	speed = 1;
+	chaseArea = 100;
 	state = PATROL;
 
 	// Set the gravity of the body
@@ -59,6 +60,18 @@ bool BatEnemy::Start() {
 
 bool BatEnemy::Update(float dt) {
 
+	//STATES CHANGERS
+	if (pbody->GetPhysBodyWorldPosition().distanceEuclidean(player->pbody->GetPhysBodyWorldPosition()) > chaseArea && state!=PATROL)
+	{
+		state = PATROL;
+		ResetPath();
+	}
+	else if (pbody->GetPhysBodyWorldPosition().distanceEuclidean(player->pbody->GetPhysBodyWorldPosition()) <= chaseArea && state != CHASING)
+	{
+		state = CHASING;
+		ResetPath();
+	}
+
 	//STATES CONTROLER
 	if (state == PATROL) {
 
@@ -71,17 +84,25 @@ bool BatEnemy::Update(float dt) {
 		}
 	}
 	else {
-		Vector2D playerPos = Engine::GetInstance().scene.get()->GetPlayerPosition();
-		destinationPoint = playerPos;
+		
+		Vector2D playerPos = player->pbody->GetPhysBodyWorldPosition();
+		Vector2D playerPosCenteredOnTile = Engine::GetInstance().map.get()->WorldToWorldCenteredOnTile(playerPos.getX(), playerPos.getY());
+		if (destinationPoint != playerPosCenteredOnTile)
+		{
+			destinationPoint = playerPosCenteredOnTile;
+			ResetPath();
+		}
 	}
-
-	
 	
 	//PATHFINDING CONTROLER
 	if (pathfinding->pathTiles.empty()) 
 	{
-		pbody->body->SetLinearVelocity({ 0, 0 });
-		pathfinding->PropagateAStar(SQUARED, destinationPoint);
+		while (pathfinding->pathTiles.empty())
+		{
+			pathfinding->PropagateAStar(SQUARED, destinationPoint);
+			
+		}
+		pathfinding->pathTiles.pop_back();
 	}	
 	else 
 	{
