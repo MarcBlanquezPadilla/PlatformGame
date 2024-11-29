@@ -131,6 +131,27 @@ void Pathfinding::DrawPath() {
     }
 }
 
+bool Pathfinding::IsFlyable(int x, int y) {
+
+    bool isFlyable = false;
+
+    // L11: TODO 3: return true only if x and y are within map limits
+    // and the tile is walkable (tile id 0 in the navigation layer)
+
+    //Set isWalkable to true if the position is inside map limits and is a position that is not blocked in the navigation layer
+    //Get the navigation layer
+
+    if (layerNav != nullptr) {
+        if (x >= 0 && y >= 0 && x < map->GetWidth() && y < map->GetHeight()) {
+            int gid = layerNav->Get(x, y);
+            if (gid != blockedGid) isFlyable = true;
+        }
+    }
+
+    return isFlyable;
+}
+
+
 bool Pathfinding::IsWalkable(int x, int y) {
 
     bool isWalkable = false;
@@ -144,12 +165,33 @@ bool Pathfinding::IsWalkable(int x, int y) {
     if (layerNav != nullptr) {
         if (x >= 0 && y >= 0 && x < map->GetWidth() && y < map->GetHeight()) {
             int gid = layerNav->Get(x, y);
-            if (gid != blockedGid) isWalkable = true;
+            if (gid == walkableGid) isWalkable = true;
         }
     }
 
     return isWalkable;
 }
+
+bool Pathfinding::IsJumpable(int x, int y) {
+
+    bool isJumpable = false;
+
+    // L11: TODO 3: return true only if x and y are within map limits
+    // and the tile is walkable (tile id 0 in the navigation layer)
+
+    //Set isWalkable to true if the position is inside map limits and is a position that is not blocked in the navigation layer
+    //Get the navigation layer
+
+    if (layerNav != nullptr) {
+        if (x >= 0 && y >= 0 && x < map->GetWidth() && y < map->GetHeight()) {
+            int gid = layerNav->Get(x, y);
+            if (gid == jumpableGid) isJumpable = true;
+        }
+    }
+
+    return isJumpable;
+}
+
 
 void Pathfinding::PropagateBFS() {
 
@@ -177,16 +219,16 @@ void Pathfinding::PropagateBFS() {
         frontier.pop();
 
         std::list<Vector2D> neighbors;
-        if (IsWalkable(frontierTile.getX() + 1, frontierTile.getY())) {
+        if (IsFlyable(frontierTile.getX() + 1, frontierTile.getY())) {
             neighbors.push_back(Vector2D(frontierTile.getX() + 1, frontierTile.getY()));
         }
-        if (IsWalkable(frontierTile.getX(), frontierTile.getY() + 1)) {
+        if (IsFlyable(frontierTile.getX(), frontierTile.getY() + 1)) {
             neighbors.push_back(Vector2D(frontierTile.getX(), frontierTile.getY() + 1));
         }
-        if (IsWalkable(frontierTile.getX() - 1, frontierTile.getY())) {
+        if (IsFlyable(frontierTile.getX() - 1, frontierTile.getY())) {
             neighbors.push_back(Vector2D(frontierTile.getX() - 1, frontierTile.getY()));
         }
-        if (IsWalkable(frontierTile.getX(), frontierTile.getY() - 1)) {
+        if (IsFlyable(frontierTile.getX(), frontierTile.getY() - 1)) {
             neighbors.push_back(Vector2D(frontierTile.getX(), frontierTile.getY() - 1));
         }
 
@@ -230,16 +272,16 @@ void Pathfinding::PropagateDijkstra() {
         frontierDijkstra.pop();
 
         std::list<Vector2D> neighbors;
-        if (IsWalkable(frontierTile.getX() + 1, frontierTile.getY())) {
+        if (IsFlyable(frontierTile.getX() + 1, frontierTile.getY())) {
             neighbors.push_back(Vector2D((int)frontierTile.getX() + 1, (int)frontierTile.getY()));
         }
-        if (IsWalkable(frontierTile.getX(), frontierTile.getY() + 1)) {
+        if (IsFlyable(frontierTile.getX(), frontierTile.getY() + 1)) {
             neighbors.push_back(Vector2D((int)frontierTile.getX(), (int)frontierTile.getY() + 1));
         }
-        if (IsWalkable(frontierTile.getX() - 1, frontierTile.getY())) {
+        if (IsFlyable(frontierTile.getX() - 1, frontierTile.getY())) {
             neighbors.push_back(Vector2D((int)frontierTile.getX() - 1, (int)frontierTile.getY()));
         }
-        if (IsWalkable(frontierTile.getX(), frontierTile.getY() - 1)) {
+        if (IsFlyable(frontierTile.getX(), frontierTile.getY() - 1)) {
             neighbors.push_back(Vector2D((int)frontierTile.getX(), (int)frontierTile.getY() - 1));
         }
 
@@ -264,6 +306,9 @@ void Pathfinding::PropagateAStar(ASTAR_HEURISTICS heuristic, Vector2D destinatio
     bool foundDestination = false;
     Vector2D destinationTile = Engine::GetInstance().map.get()->WorldToMap((int)destination.getX(), (int)destination.getY());
 
+    Vector2D closestTile;
+    int closestDistance = INT_MAX; // Inicializa con un valor muy alto
+
     if (frontierAStar.size() > 0) {
         Vector2D frontierTile = frontierAStar.top().second;
 
@@ -283,19 +328,45 @@ void Pathfinding::PropagateAStar(ASTAR_HEURISTICS heuristic, Vector2D destinatio
         //remove the first element from the queue
         frontierAStar.pop();
 
+        int currentDistance = frontierTile.distanceEuclidean(destinationTile); 
+        if (currentDistance < closestDistance) {
+            closestDistance = currentDistance;
+            closestTile = frontierTile;
+        }
+       
+
         std::list<Vector2D> neighbors;
-        if (IsWalkable(frontierTile.getX() + 1, frontierTile.getY())) {
-            neighbors.push_back(Vector2D((int)frontierTile.getX() + 1, (int)frontierTile.getY()));
+        if (movementType == Pathfinding::FLY)
+        {
+            if (IsFlyable(frontierTile.getX() + 1, frontierTile.getY())) {
+                neighbors.push_back(Vector2D((int)frontierTile.getX() + 1, (int)frontierTile.getY()));
+            }
+            if (IsFlyable(frontierTile.getX(), frontierTile.getY() + 1)) {
+                neighbors.push_back(Vector2D((int)frontierTile.getX(), (int)frontierTile.getY() + 1));
+            }
+            if (IsFlyable(frontierTile.getX() - 1, frontierTile.getY())) {
+                neighbors.push_back(Vector2D((int)frontierTile.getX() - 1, (int)frontierTile.getY()));
+            }
+            if (IsFlyable(frontierTile.getX(), frontierTile.getY() -1)) {
+                neighbors.push_back(Vector2D((int)frontierTile.getX(), (int)frontierTile.getY() - 1));
+            }
         }
-        if (IsWalkable(frontierTile.getX(), frontierTile.getY() + 1)) {
-            neighbors.push_back(Vector2D((int)frontierTile.getX(), (int)frontierTile.getY() + 1));
+        else if (movementType == Pathfinding::WALK)
+        {
+            if (IsWalkable(frontierTile.getX() + 1, frontierTile.getY()) || IsJumpable(frontierTile.getX() + 1, frontierTile.getY())) {
+                neighbors.push_back(Vector2D((int)frontierTile.getX() + 1, (int)frontierTile.getY()));
+            }
+            if (IsWalkable(frontierTile.getX(), frontierTile.getY() + 1) || IsJumpable(frontierTile.getX(), frontierTile.getY() + 1)) {
+                neighbors.push_back(Vector2D((int)frontierTile.getX(), (int)frontierTile.getY() + 1));
+            }
+            if (IsWalkable(frontierTile.getX() - 1, frontierTile.getY()) || IsJumpable(frontierTile.getX() - 1, frontierTile.getY())) {
+                neighbors.push_back(Vector2D((int)frontierTile.getX() - 1, (int)frontierTile.getY()));
+            }
+            if (IsWalkable(frontierTile.getX(), frontierTile.getY() - 1) || IsJumpable(frontierTile.getX(), frontierTile.getY() - 1)) {
+                neighbors.push_back(Vector2D((int)frontierTile.getX(), (int)frontierTile.getY() - 1));
+            }
         }
-        if (IsWalkable(frontierTile.getX() - 1, frontierTile.getY())) {
-            neighbors.push_back(Vector2D((int)frontierTile.getX() - 1, (int)frontierTile.getY()));
-        }
-        if (IsWalkable(frontierTile.getX(), frontierTile.getY())) {
-            neighbors.push_back(Vector2D((int)frontierTile.getX(), (int)frontierTile.getY() - 1));
-        }
+
 
         //For each neighbor, if not visited, add it to the frontier queue and visited list
         for (const auto& neighbor : neighbors) {
@@ -313,6 +384,10 @@ void Pathfinding::PropagateAStar(ASTAR_HEURISTICS heuristic, Vector2D destinatio
             case SQUARED:
                 H = neighbor.distanceSquared(destinationTile);
                 break;
+            }
+            if (H < closestDistance) {
+                closestDistance = H;
+                closestTile = frontierTile;
             }
             int F = G + H;
 

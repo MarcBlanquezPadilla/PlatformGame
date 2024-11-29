@@ -24,36 +24,36 @@ bool BatEnemy::Start() {
 	drawOffsetX = 0;
 	drawOffsetY = 0;
 
-
+	//INIT ANIMS
 	AddAnimation(idle, 0, 32, 4);
-
 	idle.speed = 0.2f;
 	currentAnimation = &idle;
 
-	//Add a physics to an item - initialize the physics body
-	pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX(), (int)position.getY(), 32 / 4, bodyType::DYNAMIC);
-
-	//Assign collider type
-	pbody->ctype = ColliderType::ENEMY;
-
-	speed = 1;
-	chaseArea = 100;
-	state = PATROL;
-
-	// Set the gravity of the body
-	pbody->body->SetGravityScale(0);
-	pbody->body->SetFixedRotation(true);
-
-	// Initialize pathfinding
-	pathfinding = new Pathfinding();
-	ResetPath();
-	
+	//INIT ROUTE
 	for (int i = 0; i < route.size(); i++)
 	{
 		route[i] = Engine::GetInstance().map.get()->WorldToWorldCenteredOnTile(route[i].getX(), route[i].getY());
 	}
 	routeDestinationIndex = 0;
 	destinationPoint = route[routeDestinationIndex];
+
+	//INIT PHYSICS
+	pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX(), (int)position.getY(), 32 / 4, bodyType::DYNAMIC);
+	pbody->ctype = ColliderType::ENEMY;
+
+	pbody->body->SetGravityScale(0);
+	pbody->body->SetFixedRotation(true);
+	pbody->body->SetTransform({ PIXEL_TO_METERS(destinationPoint.getX()), PIXEL_TO_METERS(destinationPoint.getY()) }, 0);
+
+	//INIT PATH
+	pathfinding = new Pathfinding();
+	ResetPath();
+	
+	//INIT VARIABLES
+	speed = 1;
+	chaseArea = 100;
+	state = PATROL;
+	
 
 	return true;
 }

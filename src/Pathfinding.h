@@ -20,7 +20,6 @@ public:
     enum PATH_MOVEMENT_TYPE
     {
         WALK = 0,
-        WALK_JUMP,
         FLY
     };
     Pathfinding();
@@ -30,7 +29,9 @@ public:
     // L11: BFS Pathfinding methods
     void ResetPath(Vector2D pos);
     void DrawPath();
+    bool IsFlyable(int x, int y);
     bool IsWalkable(int x, int y);
+    bool IsJumpable(int x, int y);
     void PropagateBFS();
 
     // L12: Methods for BFS + Pathfinding and cost function for Dijkstra
@@ -66,6 +67,7 @@ public:
 
     int blockedGid = 296; //Gid of the tiles that block the path - Important adjust this value to your map
     int walkableGid = 297; //Gid of the tiles that block the path - Important adjust this value to your map
+    int jumpableGid = 298; //Gid of the tiles that block the path - Important adjust this value to your map
     int highCostGid = 50; //Gid of the tiles that have high cost - Important adjust this value to your map
 };
 

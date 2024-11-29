@@ -38,5 +38,6 @@ private:
 
 
 	float speed;
+	float jumpForce;
 };
 

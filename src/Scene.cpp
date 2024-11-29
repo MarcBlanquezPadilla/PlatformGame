@@ -52,8 +52,8 @@ bool Scene::Start()
 	Engine::GetInstance().map->LoadParalax(configParameters.child("map").child("parallax"));
 	
 	//Load Enemies
-	batEnemy = (BatEnemy*)Engine::GetInstance().entityManager->CreateEntity(EntityType::BAT_ENEMY);
-	batEnemy->SetPlayer(player);
+	//batEnemy = (BatEnemy*)Engine::GetInstance().entityManager->CreateEntity(EntityType::BAT_ENEMY);
+	//batEnemy->SetPlayer(player);
 	groundEnemy = (GroundEnemy*)Engine::GetInstance().entityManager->CreateEntity(EntityType::GROUND_ENEMY);
 	groundEnemy->SetPlayer(player);
 	return true;
