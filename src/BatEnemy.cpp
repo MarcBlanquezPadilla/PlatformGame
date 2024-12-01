@@ -60,11 +60,13 @@ bool BatEnemy::Start() {
 
 bool BatEnemy::Update(float dt) {
 
+
 	//STATES CHANGERS
 	if (pbody->GetPhysBodyWorldPosition().distanceEuclidean(player->pbody->GetPhysBodyWorldPosition()) > chaseArea && state!=PATROL)
 	{
 		state = PATROL;
 		ResetPath();
+		destinationPoint = route[routeDestinationIndex];
 	}
 	else if (pbody->GetPhysBodyWorldPosition().distanceEuclidean(player->pbody->GetPhysBodyWorldPosition()) <= chaseArea && state != CHASING)
 	{
@@ -100,7 +102,6 @@ bool BatEnemy::Update(float dt) {
 		while (pathfinding->pathTiles.empty())
 		{
 			pathfinding->PropagateAStar(SQUARED, destinationPoint);
-			
 		}
 		pathfinding->pathTiles.pop_back();
 	}	

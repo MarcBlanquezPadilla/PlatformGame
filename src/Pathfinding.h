@@ -64,7 +64,14 @@ public:
 
     // L13: A* Pathfinding variables
     std::priority_queue<std::pair<int, Vector2D>, std::vector<std::pair<int, Vector2D>>, std::greater<std::pair<int, Vector2D>> > frontierAStar;
+    
+    float lowestDistance;
+    Vector2D nearestTile;
 
+    int maxIterations = 20;
+    int iterations;
+
+    
     int blockedGid = 296; //Gid of the tiles that block the path - Important adjust this value to your map
     int walkableGid = 297; //Gid of the tiles that block the path - Important adjust this value to your map
     int jumpableGid = 298; //Gid of the tiles that block the path - Important adjust this value to your map

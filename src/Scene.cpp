@@ -55,6 +55,7 @@ bool Scene::Start()
 	//Load Enemies
 	batEnemy = (BatEnemy*)Engine::GetInstance().entityManager->CreateEntity(EntityType::BAT_ENEMY);
 	batEnemy->SetPlayer(player);
+
 	batEnemy->SetParameters(configParameters.child("entities").child("enemies").child("flyEnemy").child("bat"));
 	groundEnemy = (GroundEnemy*)Engine::GetInstance().entityManager->CreateEntity(EntityType::GROUND_ENEMY);
 	groundEnemy->SetPlayer(player);

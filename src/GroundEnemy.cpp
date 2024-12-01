@@ -61,7 +61,7 @@ bool GroundEnemy::Start() {
 	speed = 1;
 	jumpForce = 0.3f;
 	state = PATROL;
-	chaseArea = 0;
+	chaseArea = 100;
 
 	dir = LEFT;
 
@@ -70,11 +70,13 @@ bool GroundEnemy::Start() {
 
 bool GroundEnemy::Update(float dt) {
 
+
 	//STATES CHANGERS
 	if (pbody->GetPhysBodyWorldPosition().distanceEuclidean(player->pbody->GetPhysBodyWorldPosition()) > chaseArea && state != PATROL)
 	{
 		state = PATROL;
 		ResetPath();
+		destinationPoint = route[routeDestinationIndex];
 	}
 	else if (pbody->GetPhysBodyWorldPosition().distanceEuclidean(player->pbody->GetPhysBodyWorldPosition()) <= chaseArea && state != CHASING)
 	{
@@ -129,7 +131,6 @@ bool GroundEnemy::Update(float dt) {
 
 		if (CheckIfTwoPointsNear(nextTileWorld, { (float)METERS_TO_PIXELS(pbody->body->GetPosition().x), (float)METERS_TO_PIXELS(pbody->body->GetPosition().y) }, 3)) {
 
-			//if (pathfinding->IsJumpable(pathfinding->pathTiles.back().getX(), pathfinding->pathTiles.back().getY())) pbody->body->ApplyLinearImpulseToCenter({ 0, -jumpForce }, true);
 			pathfinding->pathTiles.pop_back();
 			if (pathfinding->pathTiles.empty()) ResetPath();
 		}
@@ -139,6 +140,15 @@ bool GroundEnemy::Update(float dt) {
 			direction.Normalize();
 			pbody->body->SetLinearVelocity({ direction.x * speed, pbody->body->GetLinearVelocity().y});
 		}
+	}
+
+	Vector2D currentTile = Engine::GetInstance().map.get()->WorldToMap(pbody->GetPhysBodyWorldPosition().getX(), pbody->GetPhysBodyWorldPosition().getY());
+
+	LOG("%f", pbody->body->GetLinearVelocity().LengthSquared());
+
+	if (pathfinding->IsJumpable(currentTile.getX(), currentTile.getY()) && VALUE_NEAR_TO_0(pbody->body->GetLinearVelocity().LengthSquared()))
+	{
+		pbody->body->ApplyLinearImpulseToCenter({ 0, -jumpForce }, true);
 	}
 
 	//DRAW
