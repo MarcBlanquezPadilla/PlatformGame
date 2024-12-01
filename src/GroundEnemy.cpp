@@ -52,7 +52,7 @@ bool GroundEnemy::Start() {
 	speed = 1;
 	jumpForce = 0.3f;
 	state = PATROL;
-	chaseArea = 0;
+	chaseArea = 100;
 
 
 	return true;
@@ -60,11 +60,13 @@ bool GroundEnemy::Start() {
 
 bool GroundEnemy::Update(float dt) {
 
+
 	//STATES CHANGERS
 	if (pbody->GetPhysBodyWorldPosition().distanceEuclidean(player->pbody->GetPhysBodyWorldPosition()) > chaseArea && state != PATROL)
 	{
 		state = PATROL;
 		ResetPath();
+		destinationPoint = route[routeDestinationIndex];
 	}
 	else if (pbody->GetPhysBodyWorldPosition().distanceEuclidean(player->pbody->GetPhysBodyWorldPosition()) <= chaseArea && state != CHASING)
 	{

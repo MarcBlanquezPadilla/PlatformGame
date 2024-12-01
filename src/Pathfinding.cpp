@@ -40,6 +40,9 @@ void Pathfinding::ResetPath(Vector2D pos) {
         frontierAStar.pop();
     }
 
+    iterations = 0;
+    lowestDistance = -1;
+
     visited.clear(); //Clear the visited list
     breadcrumbs.clear(); //Clear the breadcrumbs list
     pathTiles.clear(); //Clear the pathTiles list
@@ -306,13 +309,24 @@ void Pathfinding::PropagateAStar(ASTAR_HEURISTICS heuristic, Vector2D destinatio
     bool foundDestination = false;
     Vector2D destinationTile = Engine::GetInstance().map.get()->WorldToMap((int)destination.getX(), (int)destination.getY());
 
+    if (lowestDistance == -1)
+    {
+        lowestDistance = visited.back().distanceSquared(destination);
+        nearestTile = visited.back();
+    }
+
+    if (iterations >= maxIterations)
+    {
+        foundDestination = true;
+        ComputePath(nearestTile.getX(), nearestTile.getY());
+    }
+
     if (frontierAStar.size() > 0) {
         Vector2D frontierTile = frontierAStar.top().second;
 
-
         if (frontierTile == destinationTile) {
+            
             foundDestination = true;
-
             // L12: TODO 2: When the destination is reach, call the function ComputePath
             ComputePath(frontierTile.getX(), frontierTile.getY());
         }
@@ -378,6 +392,11 @@ void Pathfinding::PropagateAStar(ASTAR_HEURISTICS heuristic, Vector2D destinatio
             }
             int F = G + H;
 
+            if (H < lowestDistance)
+            {
+                lowestDistance = H;
+                nearestTile = neighbor;
+            }
 
             if (std::find(visited.begin(), visited.end(), neighbor) == visited.end() || G < costSoFar[neighbor.getX()][neighbor.getY()]) {
                 costSoFar[neighbor.getX()][neighbor.getY()] = G;
@@ -388,6 +407,8 @@ void Pathfinding::PropagateAStar(ASTAR_HEURISTICS heuristic, Vector2D destinatio
         }
 
     }
+
+    iterations++;
 }
 
 int Pathfinding::MovementCost(int x, int y)
