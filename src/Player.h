@@ -5,17 +5,20 @@
 #include "Box2D/Box2D.h"
 #include "Animation.h"
 #include "Timer.h"
+#include "Item.h"
 
 #define GHOST_W 9
 
 struct SDL_Texture;
 
 enum state {
-	IDLE,
+	IDLE = 0,
 	WALK,
 	JUMP,
 	FALL,
 	HURT,
+	ATTACK1,
+	ATTACK2,
 	DEAD
 };
 
@@ -52,12 +55,16 @@ public:
 		this->parameters = parameters;
 	}
 
+	void SetPosition(Vector2D pos);
+
 public:
 
 	//Declare player parameters
 	
 	SDL_Texture* texture;
+	SDL_Texture* t_texture;
 	int texW, texH;
+	int t_texW, t_texH;
 	SDL_Rect currentFrame;
 
 	// L08 TODO 5: Add physics to the player - declare a Physics body
@@ -72,6 +79,11 @@ public:
 	bool godMode;
 	bool tpToStart;
 	bool canClimb;
+	bool transformable;
+	bool transformed;
+
+	Timer attack1Timer;
+	float attack1Time;
 
 	Timer hurtTimer;
 	float hurtTime;
@@ -97,10 +109,19 @@ public:
 	Animation hurt;
 	Animation death;
 
+	Animation t_idle;
+	Animation t_spell1;
+	Animation t_spell2;
+	Animation t_hurt;
+	Animation t_death;
+
 
 	state playerState; 
 	state previousState;
 
 	Direction dir;
+
+	//audio
+	int saveGame;
 	
 };

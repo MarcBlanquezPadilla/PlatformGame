@@ -32,6 +32,8 @@ private:
 	Vector2D destinationPoint;
 	int routeDestinationIndex;
 	std::vector<Vector2D> route = { { 100, 420 }, { 275, 390 } };
+	Animation walk;
+	Animation attack;
 
 
 

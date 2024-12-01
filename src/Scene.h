@@ -45,11 +45,11 @@ public:
 
 	// Return the player position
 	Vector2D GetPlayerPosition();
-	
 
-	
+	void LoadState();
 
-	void SaveGame();
+	void SaveState();
+	
 
 
 private:
@@ -58,5 +58,11 @@ private:
 	Player* player;
 	BatEnemy* batEnemy;
 	GroundEnemy* groundEnemy;
+
+	
+
+
+	/*Item* pumpkin;*/
+	/*std::vector<Enemy*> enemyList;*/
 
 };

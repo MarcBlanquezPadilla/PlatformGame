@@ -16,16 +16,16 @@ BatEnemy::~BatEnemy() {
 }
 
 bool BatEnemy::Start() {
-	texture = Engine::GetInstance().textures.get()->Load("Assets/Textures/Enemies/Bat/Vampire/BatVampire_Sheet.png");
-	position.setX(250);
-	position.setY(350);
-	texW = 32;
-	texH = 32;
+	texture = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture").as_string());
+	position.setX(parameters.attribute("x").as_float());
+	position.setY(parameters.attribute("y").as_float());
+	texW = parameters.attribute("w").as_float();
+	texH = parameters.attribute("h").as_float();
 	drawOffsetX = 0;
 	drawOffsetY = 0;
 
 	//INIT ANIMS
-	AddAnimation(idle, 0, 32, 4);
+	AddAnimation(idle, 0, texW, 4);
 	idle.speed = 0.2f;
 	currentAnimation = &idle;
 
@@ -50,8 +50,8 @@ bool BatEnemy::Start() {
 	ResetPath();
 	
 	//INIT VARIABLES
-	speed = 1;
-	chaseArea = 100;
+	speed = parameters.child("properties").attribute("speed").as_float();
+	chaseArea = parameters.child("properties").attribute("chaseArea").as_float();
 	state = PATROL;
 	
 

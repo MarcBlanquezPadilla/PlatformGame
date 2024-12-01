@@ -16,17 +16,26 @@ GroundEnemy::~GroundEnemy() {
 }
 
 bool GroundEnemy::Start() {
-	texture = Engine::GetInstance().textures.get()->Load("Assets/Textures/Enemies/Bat/Root/BatRoot_Sheet.png");
-	position.setX(100);
-	position.setY(420);
-	texW = 32;
-	texH = 32;
+	texture = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture").as_string());
+	position.setX(parameters.attribute("x").as_float());
+	position.setY(parameters.attribute("y").as_float());
+	texW = parameters.attribute("w").as_float();
+	texH = parameters.attribute("h").as_float();
 	drawOffsetX = 0;
 	drawOffsetY = 0;
 
 	//INIT ANIMS
-	AddAnimation(idle, 0, 32, 4);
+	AddAnimation(idle, 0, texW, 1);
 	idle.speed = 0.2f;
+	
+
+	AddAnimation(walk, 0, texW, 4);
+	idle.speed = 0.2f;
+	
+
+	AddAnimation(attack, 96, texW, 5);
+	attack.speed = 0.2f;
+
 	currentAnimation = &idle;
 
 	//INIT ROUTE
@@ -38,11 +47,11 @@ bool GroundEnemy::Start() {
 	destinationPoint = route[routeDestinationIndex];
 
 	//INIT PHYSICS
-	pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX(), (int)position.getY(), 32 / 4, bodyType::DYNAMIC);
+	pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX(), (int)position.getY(),  32/4, bodyType::DYNAMIC);
 	pbody->ctype = ColliderType::ENEMY;
 	pbody->body->SetGravityScale(1.2f);
 	pbody->body->SetFixedRotation(true);
-	pbody->body->SetTransform({ PIXEL_TO_METERS(destinationPoint.getX()), PIXEL_TO_METERS(destinationPoint.getY()) }, 0);
+	pbody->body->SetTransform({ PIXEL_TO_METERS(destinationPoint.getX()), PIXEL_TO_METERS(destinationPoint.getY())}, 0);
 
 	//INIT PATH
 	pathfinding = new Pathfinding();
@@ -54,6 +63,7 @@ bool GroundEnemy::Start() {
 	state = PATROL;
 	chaseArea = 0;
 
+	dir = LEFT;
 
 	return true;
 }
@@ -70,6 +80,13 @@ bool GroundEnemy::Update(float dt) {
 	{
 		state = CHASING;
 		ResetPath();
+	}
+
+	if (pbody->body->GetLinearVelocity().x > 0.00001f) {
+		dir = RIGHT;
+	}
+	else {
+		dir = LEFT;
 	}
 
 	//STATES CONTROLER
@@ -131,8 +148,15 @@ bool GroundEnemy::Update(float dt) {
 
 	b2Transform pbodyPos = pbody->body->GetTransform();
 	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - texW / 2 + drawOffsetX);
-	position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2 + drawOffsetY);
-	Engine::GetInstance().render.get()->DrawTexture(texture, (int)position.getX(), (int)position.getY(), &currentAnimation->GetCurrentFrame());
+	position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - texH / 1.5 + drawOffsetY);
+
+	if (dir == LEFT) {
+		Engine::GetInstance().render.get()->DrawTexture(texture, (int)position.getX(), (int)position.getY(), &currentAnimation->GetCurrentFrame());
+	}
+	else if (dir == RIGHT) {
+		Engine::GetInstance().render.get()->DrawTextureFlipped(texture, (int)position.getX(), (int)position.getY(), &currentAnimation->GetCurrentFrame());
+	}
+	Engine::GetInstance().render.get()->DrawCircle(position.getX() + texW/2, position.getY() + texH/2, chaseArea, 255, 255, 255);
 	Engine::GetInstance().render.get()->DrawCircle(destinationPoint.getX(), destinationPoint.getY(), 3, 255, 0, 0);
 
 	return true;

@@ -7,6 +7,7 @@
 #include "Scene.h"
 #include "Log.h"
 #include "Physics.h"
+
  
 
 Player::Player() : Entity(EntityType::PLAYER)
@@ -23,8 +24,8 @@ bool Player::Awake() {
 
 	//L03: TODO 2: Initialize Player parameters
 	initPos = b2Vec2_zero;
-	initPos.x = parameters.attribute("x").as_float();
-	initPos.y = parameters.attribute("y").as_float();
+	initPos.x = 25;
+	initPos.y = 350;
 	position = Vector2D(initPos.x, initPos.y);
 
 	return true;
@@ -34,9 +35,13 @@ bool Player::Start() {
 
 	//L03: TODO 2: Initialize Player parameters
 	texture = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture").as_string());
-	/*get()->Load("Assets/Textures/GhostCharacter/Ghost_Sheet.png");*/
+	texW = parameters.attribute("w").as_int();
+	texH = parameters.attribute("h").as_int();
 
-	destroyed = false;
+	t_texture = Engine::GetInstance().textures.get()->Load(parameters.attribute("t_texture").as_string());
+	t_texW = parameters.attribute("t_w").as_int();
+	t_texH = parameters.attribute("t_h").as_int();
+	
 
 	idle.LoadAnimations(parameters.child("animations").child("idle"));
 	walk.LoadAnimations(parameters.child("animations").child("walk"));
@@ -45,12 +50,19 @@ bool Player::Start() {
 	hurt.LoadAnimations(parameters.child("animations").child("hurt"));
 	death.LoadAnimations(parameters.child("animations").child("death"));
 
+	t_idle.LoadAnimations(parameters.child("animations").child("t_idle"));
+	t_spell1.LoadAnimations(parameters.child("animations").child("t_spell1"));
+	t_spell2.LoadAnimations(parameters.child("animations").child("t_spell2"));
+	t_hurt.LoadAnimations(parameters.child("animations").child("t_hurt"));
+	t_death.LoadAnimations(parameters.child("animations").child("t_death"));
+
 	jumpForce = parameters.child("propierties").attribute("jumpForce").as_float();
 	pushForce = parameters.child("propierties").attribute("pushForce").as_float();
 	moveSpeed = parameters.child("propierties").attribute("moveSpeed").as_float();
 	friction = parameters.child("propierties").attribute("friction").as_float();
 	gravity = parameters.child("propierties").attribute("gravity").as_float();
 	hurtTime = parameters.child("propierties").attribute("hurtTime").as_float();
+	attack1Time = parameters.child("propierties").attribute("attack1Time").as_float();
 	respawnTime = parameters.child("propierties").attribute("respawnTime").as_float();
 	playerState = (state)parameters.child("propierties").attribute("playerState").as_int();
 	dir = (Direction)parameters.child("propierties").attribute("direction").as_int();
@@ -58,20 +70,24 @@ bool Player::Start() {
 
 	if (parameters.child("savedData").attribute("saved").as_bool() == true)
 	{
-		position = { parameters.child("savedData").attribute("x").as_float(), parameters.child("savedData").attribute("x").as_float() };
-		parameters.child("savedData").attribute("lives").as_int();
+		position = { parameters.child("savedData").attribute("x").as_float(), parameters.child("savedData").attribute("y").as_float() };
+		lives = parameters.child("savedData").attribute("lives").as_int();
+		
 	}
+	
 
 	destroyed = false;
 	godMode = false;
 	tpToStart = false;
 	canClimb = false;
+	transformed = false;
+
+	saveGame = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/SaveGame.ogg");
 
 	
 	currentAnim = &idle;
 
 	// L08 TODO 5: Add physics to the player - initialize physics body
-	/*Engine::GetInstance().textures.get()->GetSize(texture, currentFrame.w, currentFrame.h);*/
 	pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX(), (int)position.getY(), GHOST_W, bodyType::DYNAMIC);
 
 	pbody->listener = this;
@@ -110,7 +126,7 @@ bool Player::Update(float dt)
 
 	velocity = b2Vec2_zero;
 
-	if (playerState !=HURT && playerState != DEAD)
+	if (playerState !=HURT && playerState != DEAD && playerState != ATTACK1 && playerState != ATTACK2)
 	{
 		playerState = IDLE;
 		
@@ -152,8 +168,16 @@ bool Player::Update(float dt)
 			}
 			
 			velocity = { velocity.x, pbody->body->GetLinearVelocity().y };
+
+			if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_X) == KEY_DOWN && transformed && playerState != ATTACK1) {
+				
+				playerState = ATTACK1;
+				attack1Timer.Start();
+				
+			}
 		}
 
+		
 
 		pbody->body->SetLinearVelocity(velocity);
 
@@ -169,9 +193,21 @@ bool Player::Update(float dt)
 
 		
 
-	} else if (playerState == HURT) {
+	}
+	else if (playerState == ATTACK1) {
 		
-		if (hurtTimer.ReadSec() >= hurtTime && hurt.HasFinished()) playerState = IDLE;
+		if (attack1Timer.ReadSec() >= attack1Time && t_spell1.HasFinished()) {
+			playerState = IDLE;
+			t_spell1.Reset();
+		}
+		
+		
+	}
+	else if (playerState == HURT) {
+		
+		if (hurtTimer.ReadSec() >= hurtTime && hurt.HasFinished()) {
+			playerState = IDLE;
+		}
 		else
 		{
 			velocity = pbody->body->GetLinearVelocity();
@@ -196,7 +232,60 @@ bool Player::Update(float dt)
 		}
 	}
 
-	if (playerState != previousState) {
+	if (transformable) {
+		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_Z) == KEY_DOWN) {
+			if (!transformed) {
+				transformed = true;
+			}
+			else {
+				transformed = false;
+			}
+			
+			
+		}
+	} 
+
+	
+	if (transformed) {
+		switch (playerState) {
+		case IDLE:
+			t_idle.Reset();
+			currentAnim = &t_idle;
+			break;
+		case WALK:
+			t_idle.Reset();
+			currentAnim = &t_idle;
+			break;
+		case JUMP:
+			t_idle.Reset();  // Solo resetear si cambió el estado
+			currentAnim = &t_idle;
+			break;
+		case FALL:
+			t_idle.Reset();  // Solo resetear si cambió el estado
+			currentAnim = &t_idle;
+			break;
+		case ATTACK1:
+			/*t_spell1.Reset();*/
+			currentAnim = &t_spell1;
+			break;
+
+		case ATTACK2:
+			t_spell2.Reset();
+			currentAnim = &t_spell2;
+			break;
+
+		case HURT:
+			t_hurt.Reset();
+			currentAnim = &t_hurt;
+			break;
+		case DEAD:
+			t_death.Reset();
+			currentAnim = &t_death;
+			break;
+		}
+	}
+		
+	else {
 		switch (playerState) {
 		case IDLE:
 			idle.Reset();
@@ -215,11 +304,11 @@ bool Player::Update(float dt)
 			currentAnim = &fall;
 			break;
 		case HURT:
-			hurt.Reset();
+			/*hurt.Reset();*/
 			currentAnim = &hurt;
 			break;
 		case DEAD:
-			death.Reset();
+			/*death.Reset();*/
 			currentAnim = &death;
 			break;
 		}
@@ -229,17 +318,35 @@ bool Player::Update(float dt)
 
 	
 	b2Transform pbodyPos = pbody->body->GetTransform();
-	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - currentFrame.w / 2);
-	position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - currentFrame.h / 2);
-	
-	
 	//flip player texture according to direction
-	if (dir == RIGHT) {
-		Engine::GetInstance().render.get()->DrawTexture(texture, position.getX(), position.getY(), &currentFrame);
+	if (!transformed) {
+
+		
+		position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - texW / 2);
+		position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2);
+
+		if (dir == RIGHT) {
+			Engine::GetInstance().render.get()->DrawTexture(texture, position.getX(), position.getY(), &currentFrame);
+		}
+		else if (dir == LEFT) {
+			Engine::GetInstance().render.get()->DrawTextureFlipped(texture, position.getX(), position.getY(), &currentFrame);
+		}
 	}
-	else if (dir == LEFT) {
-		Engine::GetInstance().render.get()->DrawTextureFlipped(texture, position.getX(), position.getY(), &currentFrame);
+	else {
+
+		
+		position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - t_texW / 2);
+		position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - t_texH / 2);
+
+
+		if (dir == RIGHT) {
+			Engine::GetInstance().render.get()->DrawTexture(t_texture, position.getX(), position.getY(), &currentFrame);
+		}
+		else if (dir == LEFT) {
+			Engine::GetInstance().render.get()->DrawTextureFlipped(t_texture, position.getX(), position.getY(), &currentFrame);
+		}
 	}
+	
 	
 
 	currentAnim->Update();
@@ -269,6 +376,7 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		break;
 	case ColliderType::ITEM:
 		LOG("Collision ITEM");
+		transformable = true;
 		break;
 	case ColliderType::SPYKE:
 
@@ -331,6 +439,7 @@ void Player::OnCollisionEnd(PhysBody* physA, PhysBody* physB)
 		LOG("End Collision PLATFORM");
 		break;
 	case ColliderType::ITEM:
+		transformable = false;
 		LOG("End Collision ITEM");
 		break;
 	case ColliderType::LADDER:
@@ -344,4 +453,21 @@ void Player::OnCollisionEnd(PhysBody* physA, PhysBody* physB)
 	default:
 		break;
 	}
+}
+
+
+void Player::SetPosition(Vector2D pos) {
+	if (!transformed) {
+		pos.setX(pos.getX() + texW / 2);
+		pos.setY(pos.getY() + texH / 2);
+		b2Vec2 bodyPos = b2Vec2(PIXEL_TO_METERS(pos.getX()), PIXEL_TO_METERS(pos.getY()));
+		pbody->body->SetTransform(bodyPos, 0);
+	}
+	else {
+		pos.setX(pos.getX() + t_texW / 2);
+		pos.setY(pos.getY() + t_texH / 2);
+		b2Vec2 bodyPos = b2Vec2(PIXEL_TO_METERS(pos.getX()), PIXEL_TO_METERS(pos.getY()));
+		pbody->body->SetTransform(bodyPos, 0);
+	}
+	
 }

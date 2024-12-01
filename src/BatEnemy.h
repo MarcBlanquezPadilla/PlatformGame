@@ -26,8 +26,8 @@ public:
 
 private:
 
-	int drawOffsetX=0;
-	int drawOffsetY=0;
+	int drawOffsetX=-16;
+	int drawOffsetY=-16;
 	Vector2D destinationPoint;
 	int routeDestinationIndex;
 	std::vector<Vector2D> route = { { 200, 350 }, { 300, 350 } };

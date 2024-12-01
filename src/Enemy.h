@@ -13,6 +13,10 @@ struct SDL_Texture;
 class Enemy : public Entity
 {
 public:
+	enum Type {
+		FLY,
+		GROUND
+	};
 
 	enum State {
 		PATROL,
