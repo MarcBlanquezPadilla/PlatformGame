@@ -115,6 +115,8 @@ public:
 
 	Animation t_idle;
 	Animation t_walk;
+	Animation t_jump;
+	Animation t_fall;
 	Animation t_spell1;
 	Animation t_spell2;
 	Animation t_hurt;

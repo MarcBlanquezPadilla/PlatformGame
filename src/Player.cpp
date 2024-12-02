@@ -52,6 +52,8 @@ bool Player::Start() {
 
 	t_idle.LoadAnimations(parameters.child("animations").child("t_idle"));
 	t_walk.LoadAnimations(parameters.child("animations").child("t_walk"));
+	t_jump.LoadAnimations(parameters.child("animations").child("t_jump"));
+	t_fall.LoadAnimations(parameters.child("animations").child("t_fall"));
 	t_spell1.LoadAnimations(parameters.child("animations").child("t_spell1"));
 	t_spell2.LoadAnimations(parameters.child("animations").child("t_spell2"));
 	t_hurt.LoadAnimations(parameters.child("animations").child("t_hurt"));
@@ -263,11 +265,11 @@ bool Player::Update(float dt)
 			break;
 		case JUMP:
 			
-			currentAnim = &t_idle;
+			currentAnim = &t_jump;
 			break;
 		case FALL:
 			
-			currentAnim = &t_idle;
+			currentAnim = &t_fall;
 			break;
 		case ATTACK1:
 			

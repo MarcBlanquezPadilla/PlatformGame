@@ -72,16 +72,21 @@
 					</death>
 					<t_idle loop="true" speed="0.1f">
 						<frame x="0" y="0" w="64" h="64" />
-						<!--<frame x="64" y="0" w="64" h="64" />
-						<frame x="128" y="0" w="64" h="64" />
-						<frame x="192" y="0" w="64" h="64" />-->
 					</t_idle>
-					<t_walk loop = "true" speed = "0.1f">
+					<t_walk loop="true" speed="0.1f">
 						<frame x="0" y="0" w="64" h="64" />
 						<frame x="64" y="0" w="64" h="64" />
 						<frame x="128" y="0" w="64" h="64" />
 						<frame x="192" y="0" w="64" h="64" />
 					</t_walk>
+					<t_jump>
+						<frame x="0" y="0" w="64" h="64" />
+						<frame x="64" y="0" w="64" h="64" />
+					</t_jump>
+					<t_fall>
+						<frame x="192" y="0" w="64" h="64" />
+						<frame x="128" y="0" w="64" h="64" />
+					</t_fall>
 					<t_spell1 loop="false" speed="0.2f">
 						<frame x="0" y="64" w="64" h="64" />
 						<frame x="64" y="64" w="64" h="64" />
@@ -92,7 +97,6 @@
 						<frame x="384" y="64" w="64" h="64" />
 						<frame x="448" y="64" w="64" h="64" />
 					</t_spell1>
-					
 					<t_hurt loop="false" speed="0.1f">
 						<frame x="0" y="128" w="64" h="64" />
 						<frame x="64" y="128" w="64" h="64" />
@@ -133,9 +137,9 @@
 			</items>
 		</entities>
 		<savedData saved="true">
-			<player x="25" y="358" lives="3" transformable="false" transformed="false" />
+			<player x="24" y="358" lives="3" transformable="false" transformed="true" />
 			<enemy0 alive="true" x="200" y="343" />
-			<enemy1 alive="true" x="170" y="423" />
+			<enemy1 alive="true" x="266" y="391" />
 		</savedData>
 	</scene>
 	<ui path="Assets/Textures/UI/HelpMenu2.png" />
