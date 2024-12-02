@@ -14,6 +14,7 @@
 #include "Physics.h"
 #include "BatEnemy.h"
 #include "GroundEnemy.h"
+#include <string>
 
 Scene::Scene() : Module()
 {
@@ -53,13 +54,18 @@ bool Scene::Start()
 	Engine::GetInstance().map->LoadParalax(configParameters.child("map").child("parallax"));
 	
 	//Load Enemies
-	batEnemy = (BatEnemy*)Engine::GetInstance().entityManager->CreateEntity(EntityType::BAT_ENEMY);
-	batEnemy->SetPlayer(player);
+	
+	
 
+	Enemy* batEnemy = (BatEnemy*)Engine::GetInstance().entityManager->CreateEntity(EntityType::BAT_ENEMY);
+	batEnemy->SetPlayer(player);
 	batEnemy->SetParameters(configParameters.child("entities").child("enemies").child("flyEnemy").child("bat"));
-	groundEnemy = (GroundEnemy*)Engine::GetInstance().entityManager->CreateEntity(EntityType::GROUND_ENEMY);
+	Enemy* groundEnemy = (GroundEnemy*)Engine::GetInstance().entityManager->CreateEntity(EntityType::GROUND_ENEMY);
 	groundEnemy->SetPlayer(player);
 	groundEnemy->SetParameters(configParameters.child("entities").child("enemies").child("groundEnemy").child("skeleton"));
+
+	enemies.push_back(batEnemy);
+	enemies.push_back(groundEnemy);
 
 	Item* pumpkin = (Item*)Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM);
 	/*pumpkin->SetPlayer(player);*/
@@ -148,22 +154,27 @@ void Scene::SaveState()
 		return;
 	}
 
-	pugi::xml_node sceneNode = saveFile.child("config").child("scene");
+	pugi::xml_node savedDataNode = saveFile.child("config").child("scene").child("savedData");
 
 	//Save info to XML 
+	//Player 
+	player->SaveData(savedDataNode.child("player"));
 
-	//Player position
-	sceneNode.child("entities").child("player").child("savedData").attribute("saved").set_value(true);
-	sceneNode.child("entities").child("player").child("savedData").attribute("x").set_value(player->position.getX());
-	sceneNode.child("entities").child("player").child("savedData").attribute("y").set_value(player->position.getY());
-	sceneNode.child("entities").child("player").child("savedData").attribute("lives").set_value(player->lives);
-	sceneNode.child("entities").child("player").child("savedData").attribute("transformed").set_value(player->transformed);
-	sceneNode.child("entities").child("player").child("savedData").attribute("transformed").set_value(player->transformable);
-	//enemies
-	// ...
+	//Enemies
+	for (int i = 0; i < enemies.size(); i++)
+	{
+		std::string nodeChar = "enemy" + std::to_string(i);
+		pugi::xml_node parent = savedDataNode.child(nodeChar.c_str());
 
-	//sceneNode.child("entities").child("player").attribute("x").set_value(player->position.getX());
-	//sceneNode.child("entities").child("player").attribute("y").set_value(player->position.getY());
+		if (!parent) {
+			parent = savedDataNode.append_child(nodeChar.c_str());
+			parent.append_attribute("alive");
+			parent.append_attribute("x");
+			parent.append_attribute("y");
+		}
+
+		enemies[i]->SaveData(parent);
+	}
 
 	//Saves the modifications to the XML 
 	saveFile.save_file("config.xml");
@@ -175,18 +186,15 @@ void Scene::LoadState() {
 	pugi::xml_parse_result result = loadFile.load_file("config.xml");
 	if (result == NULL) {
 		LOG("Error loading config.xml");
+		return;
 	}
 
-	loadFile.child("config").child("scene").child("entities").child("player").child("savedData").attribute("saved").as_bool() == true;
-	player->position.setX(loadFile.child("config").child("scene").child("entities").child("player").child("savedData").attribute("x").as_int());
-	player->position.setY(loadFile.child("config").child("scene").child("entities").child("player").child("savedData").attribute("y").as_int());
-	player->lives = loadFile.child("config").child("scene").child("entities").child("player").child("savedData").attribute("lives").as_int();
-	player->transformed = loadFile.child("config").child("scene").child("entities").child("player").child("savedData").attribute("transformed").as_bool();
-	player->transformable = loadFile.child("config").child("scene").child("entities").child("player").child("savedData").attribute("transformable").as_bool();
-	//Load player position
+	pugi::xml_node savedDataNode = loadFile.child("config").child("scene").child("savedData");
 
-	player->SetPosition(player->position);
+	
+	player->LoadData(savedDataNode.child("player"));
 
 
+	loadFile.save_file("config.xml");
 }
 // L15 TODO 2: Implement the Save function

@@ -55,6 +55,10 @@ public:
 
 	void SetPlayer(Player* player);
 
+	virtual void SaveData(pugi::xml_node enemyNode);
+
+	virtual void LoadData(pugi::xml_node enemyNode);
+
 public:
 
 //protected:

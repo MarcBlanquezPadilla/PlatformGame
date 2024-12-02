@@ -2,6 +2,7 @@
 
 #include "Module.h"
 #include "Player.h"
+#include <vector>
 
 #define POS_TO_START_MOVING_CAMX 100
 #define POS_TO_STOP_MOVING_CAMX 2180
@@ -15,6 +16,7 @@ struct SDL_Texture;
 
 class BatEnemy;
 class GroundEnemy;
+class Enemy;
 
 class Scene : public Module
 {
@@ -49,18 +51,13 @@ public:
 	void LoadState();
 
 	void SaveState();
-	
-
 
 private:
 	
 	//L03: TODO 3b: Declare a Player attribute
 	Player* player;
-	BatEnemy* batEnemy;
-	GroundEnemy* groundEnemy;
 
-	
-
+	std::vector<Enemy*> enemies;
 
 	/*Item* pumpkin;*/
 	/*std::vector<Enemy*> enemyList;*/

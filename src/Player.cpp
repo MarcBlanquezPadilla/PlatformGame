@@ -73,7 +73,6 @@ bool Player::Start() {
 	{
 		position = { parameters.child("savedData").attribute("x").as_float(), parameters.child("savedData").attribute("y").as_float() };
 		lives = parameters.child("savedData").attribute("lives").as_int();
-		
 	}
 	
 
@@ -462,16 +461,30 @@ void Player::OnCollisionEnd(PhysBody* physA, PhysBody* physB)
 
 void Player::SetPosition(Vector2D pos) {
 	if (!transformed) {
-		pos.setX(pos.getX() + texW / 2);
-		pos.setY(pos.getY() + texH / 2);
 		b2Vec2 bodyPos = b2Vec2(PIXEL_TO_METERS(pos.getX()), PIXEL_TO_METERS(pos.getY()));
 		pbody->body->SetTransform(bodyPos, 0);
 	}
 	else {
-		pos.setX(pos.getX() + t_texW / 2);
-		pos.setY(pos.getY() + t_texH / 2);
 		b2Vec2 bodyPos = b2Vec2(PIXEL_TO_METERS(pos.getX()), PIXEL_TO_METERS(pos.getY()));
 		pbody->body->SetTransform(bodyPos, 0);
 	}
 	
+}
+
+void Player::SaveData(pugi::xml_node playerNode)
+{
+	playerNode.attribute("x").set_value(pbody->GetPhysBodyWorldPosition().getX());
+	playerNode.attribute("y").set_value(pbody->GetPhysBodyWorldPosition().getY());
+	playerNode.attribute("lives").set_value(lives);
+	playerNode.attribute("transformed").set_value(transformed);
+}
+
+
+void Player::LoadData(pugi::xml_node playerNode)
+{
+	position.setX(playerNode.attribute("x").as_int());
+	position.setY(playerNode.attribute("y").as_int());
+	lives = playerNode.attribute("lives").as_int();
+	transformed = playerNode.attribute("transformed").as_bool();
+	SetPosition(position);
 }

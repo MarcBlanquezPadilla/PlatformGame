@@ -128,8 +128,6 @@ bool Enemy::CleanUp()
 }
 
 void Enemy::SetPosition(Vector2D pos) {
-	pos.setX(pos.getX() + texW / 2);
-	pos.setY(pos.getY() + texH / 2);
 	b2Vec2 bodyPos = b2Vec2(PIXEL_TO_METERS(pos.getX()), PIXEL_TO_METERS(pos.getY()));
 	pbody->body->SetTransform(bodyPos, 0);
 }
@@ -163,4 +161,17 @@ bool Enemy::CheckIfTwoPointsNear(Vector2D point1, Vector2D point2, float nearDis
 void Enemy::SetPlayer(Player* _player)
 {
 	player = _player;
+}
+
+void Enemy::SaveData(pugi::xml_node enemyNode)
+{
+	enemyNode.attribute("alive").set_value(true);
+	enemyNode.attribute("x").set_value(pbody->GetPhysBodyWorldPosition().getX());
+	enemyNode.attribute("y").set_value(pbody->GetPhysBodyWorldPosition().getY());
+}
+
+
+void Enemy::LoadData(pugi::xml_node enemyNode)
+{
+	
 }

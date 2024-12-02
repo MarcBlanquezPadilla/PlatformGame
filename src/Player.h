@@ -57,6 +57,10 @@ public:
 
 	void SetPosition(Vector2D pos);
 
+	void SaveData(pugi::xml_node playerNode);
+
+	void LoadData(pugi::xml_node playerNode);
+
 public:
 
 	//Declare player parameters
