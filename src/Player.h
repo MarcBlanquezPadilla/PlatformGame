@@ -110,6 +110,7 @@ public:
 	Animation death;
 
 	Animation t_idle;
+	Animation t_walk;
 	Animation t_spell1;
 	Animation t_spell2;
 	Animation t_hurt;

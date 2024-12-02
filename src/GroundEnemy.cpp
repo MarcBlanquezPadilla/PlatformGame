@@ -166,7 +166,7 @@ bool GroundEnemy::Update(float dt) {
 	else if (dir == RIGHT) {
 		Engine::GetInstance().render.get()->DrawTextureFlipped(texture, (int)position.getX(), (int)position.getY(), &currentAnimation->GetCurrentFrame());
 	}
-	Engine::GetInstance().render.get()->DrawCircle(position.getX() + texW/2, position.getY() + texH/2, chaseArea, 255, 255, 255);
+	Engine::GetInstance().render.get()->DrawCircle(position.getX() + texW/2, position.getY() + texH/2, chaseArea*2, 255, 255, 255);
 	Engine::GetInstance().render.get()->DrawCircle(destinationPoint.getX(), destinationPoint.getY(), 3, 255, 0, 0);
 
 	return true;

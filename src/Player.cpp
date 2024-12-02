@@ -51,6 +51,7 @@ bool Player::Start() {
 	death.LoadAnimations(parameters.child("animations").child("death"));
 
 	t_idle.LoadAnimations(parameters.child("animations").child("t_idle"));
+	t_walk.LoadAnimations(parameters.child("animations").child("t_walk"));
 	t_spell1.LoadAnimations(parameters.child("animations").child("t_spell1"));
 	t_spell2.LoadAnimations(parameters.child("animations").child("t_spell2"));
 	t_hurt.LoadAnimations(parameters.child("animations").child("t_hurt"));
@@ -205,8 +206,10 @@ bool Player::Update(float dt)
 	}
 	else if (playerState == HURT) {
 		
-		if (hurtTimer.ReadSec() >= hurtTime && hurt.HasFinished()) {
+		if (hurtTimer.ReadSec() >= hurtTime /*&& (hurt.HasFinished() || t_hurt.HasFinished())*/) {
 			playerState = IDLE;
+			hurt.Reset();
+			t_hurt.Reset();
 		}
 		else
 		{
@@ -217,7 +220,7 @@ bool Player::Update(float dt)
 	else if (playerState == DEAD) {
 
 		pbody->body->SetLinearVelocity(b2Vec2_zero);
-		if (respawnTimer.ReadSec() >= respawnTime && death.HasFinished()) 
+		if (respawnTimer.ReadSec() >= respawnTime/* && death.HasFinished()*/) 
 		{
 			tpToStart = true;
 			playerState = IDLE;
@@ -229,6 +232,9 @@ bool Player::Update(float dt)
 				lives = parameters.attribute("lives").as_int();
 			}
 			LOG("Lives: %i", lives);
+
+			death.Reset();
+			t_death.Reset();
 		}
 	}
 
@@ -249,66 +255,64 @@ bool Player::Update(float dt)
 	if (transformed) {
 		switch (playerState) {
 		case IDLE:
-			t_idle.Reset();
+			
 			currentAnim = &t_idle;
 			break;
 		case WALK:
-			t_idle.Reset();
-			currentAnim = &t_idle;
+			
+			currentAnim = &t_walk;
 			break;
 		case JUMP:
-			t_idle.Reset();  // Solo resetear si cambió el estado
+			
 			currentAnim = &t_idle;
 			break;
 		case FALL:
-			t_idle.Reset();  // Solo resetear si cambió el estado
+			
 			currentAnim = &t_idle;
 			break;
 		case ATTACK1:
-			/*t_spell1.Reset();*/
+			
 			currentAnim = &t_spell1;
 			break;
 
 		case ATTACK2:
-			t_spell2.Reset();
+			
 			currentAnim = &t_spell2;
 			break;
 
 		case HURT:
-			t_hurt.Reset();
+			hurt.Reset();
 			currentAnim = &t_hurt;
 			break;
 		case DEAD:
-			t_death.Reset();
+			
 			currentAnim = &t_death;
 			break;
 		}
 	}
-		
 	else {
 		switch (playerState) {
 		case IDLE:
-			idle.Reset();
+			
 			currentAnim = &idle;
 			break;
 		case WALK:
-			walk.Reset();
 			currentAnim = &walk;
 			break;
 		case JUMP:
-			jump.Reset();  // Solo resetear si cambió el estado
+			
 			currentAnim = &jump;
 			break;
 		case FALL:
-			fall.Reset();  // Solo resetear si cambió el estado
+			
 			currentAnim = &fall;
 			break;
 		case HURT:
-			/*hurt.Reset();*/
+			
 			currentAnim = &hurt;
 			break;
 		case DEAD:
-			/*death.Reset();*/
+			
 			currentAnim = &death;
 			break;
 		}
