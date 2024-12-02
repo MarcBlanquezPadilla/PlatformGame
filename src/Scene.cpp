@@ -44,25 +44,23 @@ bool Scene::Awake()
 // Called before the first frame
 bool Scene::Start()
 {
-	//L06 TODO 3: Call the function to load the map. 
-	
-	
-	//instead of passing both path and name strings directly, you pass the variable in config storing these values
+	//Load map. 
 	Engine::GetInstance().map->Load(configParameters.child("map").attribute("path").as_string(), configParameters.child("map").attribute("name").as_string());
 
-	//Load Parallax -> TODO: Pass parallax to config
+	//Load Parallax
 	Engine::GetInstance().map->LoadParalax(configParameters.child("map").child("parallax"));
-	
+
 	//Load Enemies
-	
-	
+	pugi::xml_node pathsNode = configParameters.child("entities").child("enemies").child("paths");
 
 	Enemy* batEnemy = (BatEnemy*)Engine::GetInstance().entityManager->CreateEntity(EntityType::BAT_ENEMY);
 	batEnemy->SetPlayer(player);
 	batEnemy->SetParameters(configParameters.child("entities").child("enemies").child("flyEnemy").child("bat"));
+	batEnemy->SetPath(configParameters.child("entities").child("enemies").child("paths").child("path1"));
 	Enemy* groundEnemy = (GroundEnemy*)Engine::GetInstance().entityManager->CreateEntity(EntityType::GROUND_ENEMY);
 	groundEnemy->SetPlayer(player);
 	groundEnemy->SetParameters(configParameters.child("entities").child("enemies").child("groundEnemy").child("skeleton"));
+	groundEnemy->SetPath(configParameters.child("entities").child("enemies").child("paths").child("path2"));
 
 	enemies.push_back(batEnemy);
 	enemies.push_back(groundEnemy);
@@ -74,6 +72,7 @@ bool Scene::Start()
 
 	return true;
 }
+
 
 // Called each loop iteration
 bool Scene::PreUpdate()

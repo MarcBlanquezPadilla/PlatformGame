@@ -54,6 +54,8 @@ public:
 	bool CheckIfTwoPointsNear(Vector2D point1, Vector2D point2, float nearDistance);
 
 	void SetPlayer(Player* player);
+	
+	void SetPath(pugi::xml_node pathNode);
 
 	virtual void SaveData(pugi::xml_node enemyNode);
 
@@ -72,8 +74,17 @@ public:
 	PhysBody* pbody;
 	Player* player;
 
+	//STATES
 	State state;
 	Dir dir;
+	
+	//PATH
 	Pathfinding* pathfinding;
+	std::vector<Vector2D> route;
+	int routeDestinationIndex;
+	Vector2D destinationPoint;
+
+	//PROPERTIES
+	int speed;
 	int chaseArea;
 };

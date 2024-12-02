@@ -163,6 +163,31 @@ void Enemy::SetPlayer(Player* _player)
 	player = _player;
 }
 
+void Enemy::SetPath(pugi::xml_node pathNode)
+{
+	route.clear();
+
+	if (pathNode)
+	{
+		for (pugi::xml_node pointNode : pathNode.children("point")) {
+
+			float x = pointNode.attribute("x").as_float();
+			float y = pointNode.attribute("y").as_float();
+
+			route.emplace_back( x, y );
+
+		}
+
+		for (int i = 0; i < route.size(); i++)
+		{
+			route[i] = Engine::GetInstance().map.get()->WorldToWorldCenteredOnTile(route[i].getX(), route[i].getY());
+		}
+		routeDestinationIndex = 0;
+		destinationPoint = route[routeDestinationIndex];
+	}
+}
+
+
 void Enemy::SaveData(pugi::xml_node enemyNode)
 {
 	enemyNode.attribute("alive").set_value(true);

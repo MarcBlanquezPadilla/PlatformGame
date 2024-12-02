@@ -29,9 +29,5 @@ private:
 	int drawOffsetX=-16;
 	int drawOffsetY=-16;
 	Vector2D destinationPoint;
-	int routeDestinationIndex;
-	std::vector<Vector2D> route = { { 200, 350 }, { 300, 350 } };
-
-	float speed;
 };
 

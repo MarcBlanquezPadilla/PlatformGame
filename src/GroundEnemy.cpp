@@ -51,7 +51,7 @@ bool GroundEnemy::Start() {
 	pbody->ctype = ColliderType::ENEMY;
 	pbody->body->SetGravityScale(1.2f);
 	pbody->body->SetFixedRotation(true);
-	pbody->body->SetTransform({ PIXEL_TO_METERS(destinationPoint.getX()), PIXEL_TO_METERS(destinationPoint.getY())}, 0);
+	pbody->body->SetTransform({ PIXEL_TO_METERS(destinationPoint.getX()), PIXEL_TO_METERS(destinationPoint.getY()) }, 0);
 
 	//INIT PATH
 	pathfinding = new Pathfinding();

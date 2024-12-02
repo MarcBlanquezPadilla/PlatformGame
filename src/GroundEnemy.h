@@ -30,16 +30,9 @@ private:
 	int drawOffsetX = 0;
 	int drawOffsetY = 0;
 	Vector2D destinationPoint;
-	int routeDestinationIndex;
-	std::vector<Vector2D> route = { { 100, 420 }, { 275, 390 } };
 	Animation walk;
 	Animation attack;
 
-
-
-
-
-	float speed;
 	float jumpForce;
 };
 

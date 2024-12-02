@@ -175,11 +175,22 @@ bool Player::Update(float dt)
 				
 				playerState = ATTACK1;
 				attack1Timer.Start();
-				
+				pbody->body->SetLinearVelocity({ 0,0 });
 			}
 		}
-
 		
+		if (transformable) {
+			if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_Z) == KEY_DOWN) {
+				if (!transformed) {
+					transformed = true;
+				}
+				else {
+					transformed = false;
+				}
+
+
+			}
+		}
 
 		pbody->body->SetLinearVelocity(velocity);
 
@@ -238,19 +249,6 @@ bool Player::Update(float dt)
 			t_death.Reset();
 		}
 	}
-
-	if (transformable) {
-		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_Z) == KEY_DOWN) {
-			if (!transformed) {
-				transformed = true;
-			}
-			else {
-				transformed = false;
-			}
-			
-			
-		}
-	} 
 
 	
 	if (transformed) {
