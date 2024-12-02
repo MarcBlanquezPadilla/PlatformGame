@@ -52,7 +52,6 @@ bool BatEnemy::Start() {
 	//INIT VARIABLES
 	speed = parameters.child("properties").attribute("speed").as_float();
 	chaseArea = parameters.child("properties").attribute("chaseArea").as_float();
-	LOG("%f", speed);
 	state = PATROL;
 	
 
