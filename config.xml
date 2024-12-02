@@ -137,9 +137,15 @@
 			</items>
 		</entities>
 		<savedData saved="true">
+
 			<player x="24" y="358" lives="3" transformable="false" transformed="true" />
 			<enemy0 alive="true" x="200" y="343" />
 			<enemy1 alive="true" x="266" y="391" />
+
+			<player x="337" y="422" lives="3" transformable="false" transformed="false" />
+			<enemy0 alive="true" x="200" y="342" />
+			<enemy1 alive="true" x="456" y="397" />
+
 		</savedData>
 	</scene>
 	<ui path="Assets/Textures/UI/HelpMenu2.png" />

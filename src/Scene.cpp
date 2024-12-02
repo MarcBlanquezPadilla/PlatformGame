@@ -194,6 +194,21 @@ void Scene::LoadState() {
 	
 	player->LoadData(savedDataNode.child("player"));
 
+	bool enemyFound = true;
+	for (int i = 0; enemyFound; i++)
+	{
+		std::string nodeChar = "enemy" + std::to_string(i);
+		pugi::xml_node parent = savedDataNode.child(nodeChar.c_str());
+		if (!parent)
+		{
+			enemyFound = false;
+		}
+		else
+		{
+			enemies[i]->LoadData(parent);
+		}
+
+	}
 
 	loadFile.save_file("config.xml");
 }
