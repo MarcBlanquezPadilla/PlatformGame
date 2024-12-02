@@ -52,6 +52,7 @@ bool BatEnemy::Start() {
 	//INIT VARIABLES
 	speed = parameters.child("properties").attribute("speed").as_float();
 	chaseArea = parameters.child("properties").attribute("chaseArea").as_float();
+	LOG("%f", speed);
 	state = PATROL;
 	
 
@@ -73,6 +74,8 @@ bool BatEnemy::Update(float dt) {
 		state = CHASING;
 		ResetPath();
 	}
+	
+	
 
 	//STATES CONTROLER
 	if (state == PATROL) {
@@ -125,15 +128,32 @@ bool BatEnemy::Update(float dt) {
 		}
 	}
 
+	if (pbody->body->GetLinearVelocity().x > 0.2f) {
+		dir = RIGHT;
+	}
+	else if (pbody->body->GetLinearVelocity().x < -0.2f) {
+		dir = LEFT;
+	}
+
 	//DRAW
-	pathfinding->DrawPath();
-	
+	if (Engine::GetInstance().GetDebug())
+	{
+		Engine::GetInstance().render.get()->DrawCircle(position.getX() + texW / 2, position.getY() + texH / 2, chaseArea * 2, 255, 255, 255);
+		Engine::GetInstance().render.get()->DrawCircle(destinationPoint.getX(), destinationPoint.getY(), 3, 255, 0, 0);
+		pathfinding->DrawPath();
+	}
+
 	currentAnimation->Update();
 
 	b2Transform pbodyPos = pbody->body->GetTransform();
 	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - texW / 2 + drawOffsetX);
 	position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2 + drawOffsetY);
-	Engine::GetInstance().render.get()->DrawTexture(texture, (int)position.getX(), (int)position.getY(), &currentAnimation->GetCurrentFrame());
+	if (dir == LEFT) {
+		Engine::GetInstance().render.get()->DrawTextureFlipped(texture, (int)position.getX(), (int)position.getY(), &currentAnimation->GetCurrentFrame());
+	}
+	else if (dir == RIGHT) {
+		Engine::GetInstance().render.get()->DrawTexture(texture, (int)position.getX(), (int)position.getY(), &currentAnimation->GetCurrentFrame());
+	}
 
 	return true;
 }

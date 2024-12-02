@@ -87,9 +87,6 @@ public:
 	/*Vector2D position = entity*/
 private:
 
-	// Debug mode
-	bool debug;
-
 	// Box2D World
 	b2World* world;
 };

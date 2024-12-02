@@ -58,10 +58,10 @@ bool GroundEnemy::Start() {
 	ResetPath();
 
 	//INIT VARIABLES
-	speed = 1;
-	jumpForce = 0.3f;
 	state = PATROL;
-	chaseArea = 100;
+	speed = parameters.child("properties").attribute("speed").as_float();
+	chaseArea = parameters.child("properties").attribute("chaseArea").as_float();
+	jumpForce = parameters.child("properties").attribute("jumpForce").as_float();
 
 	dir = LEFT;
 
@@ -84,12 +84,7 @@ bool GroundEnemy::Update(float dt) {
 		ResetPath();
 	}
 
-	if (pbody->body->GetLinearVelocity().x > 0.00001f) {
-		dir = RIGHT;
-	}
-	else {
-		dir = LEFT;
-	}
+	
 
 	//STATES CONTROLER
 	if (state == PATROL) {
@@ -144,15 +139,26 @@ bool GroundEnemy::Update(float dt) {
 
 	Vector2D currentTile = Engine::GetInstance().map.get()->WorldToMap(pbody->GetPhysBodyWorldPosition().getX(), pbody->GetPhysBodyWorldPosition().getY());
 
-	LOG("%f", pbody->body->GetLinearVelocity().LengthSquared());
-
 	if (pathfinding->IsJumpable(currentTile.getX(), currentTile.getY()) && VALUE_NEAR_TO_0(pbody->body->GetLinearVelocity().LengthSquared()))
 	{
 		pbody->body->ApplyLinearImpulseToCenter({ 0, -jumpForce }, true);
 	}
 
+	//DIRECTION
+	if (pbody->body->GetLinearVelocity().x > 0.2f) {
+		dir = RIGHT;
+	}
+	else if (pbody->body->GetLinearVelocity().x < -0.2f){
+		dir = LEFT;
+	}
+
 	//DRAW
-	pathfinding->DrawPath();
+	if (Engine::GetInstance().GetDebug())
+	{
+		Engine::GetInstance().render.get()->DrawCircle(position.getX() + texW / 2, position.getY() + texH / 2, chaseArea * 2, 255, 255, 255);
+		Engine::GetInstance().render.get()->DrawCircle(destinationPoint.getX(), destinationPoint.getY(), 3, 255, 0, 0);
+		pathfinding->DrawPath();
+	}
 
 	currentAnimation->Update();
 
@@ -166,8 +172,6 @@ bool GroundEnemy::Update(float dt) {
 	else if (dir == RIGHT) {
 		Engine::GetInstance().render.get()->DrawTextureFlipped(texture, (int)position.getX(), (int)position.getY(), &currentAnimation->GetCurrentFrame());
 	}
-	Engine::GetInstance().render.get()->DrawCircle(position.getX() + texW/2, position.getY() + texH/2, chaseArea*2, 255, 255, 255);
-	Engine::GetInstance().render.get()->DrawCircle(destinationPoint.getX(), destinationPoint.getY(), 3, 255, 0, 0);
 
 	return true;
 }

@@ -139,6 +139,9 @@ bool Engine::Update() {
         LOG("FRAME CAP TO %d", maxFrameDuration);
     }
 
+    if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F9) == KEY_DOWN)
+        debug = !debug;
+
     if (ret == true)
         ret = PreUpdate();
 
@@ -297,4 +300,7 @@ bool Engine::LoadConfig()
     return ret;
 }
 
-
+bool Engine::GetDebug()
+{
+    return debug;
+}

@@ -117,7 +117,7 @@
 			<enemies>
 				<groundEnemy>
 					<skeleton x="100" y="420" w="48" h="48" texture="Assets/Textures/Enemies/Undead/SwordsMan-resized2_spritesheet.png">
-						<properties speed="1" chaseArea="100" />
+						<properties speed="1" chaseArea="100" jumpForce="0.3" />
 						<animations>
 							<idle>
 								<frame x="0" y="0" w="48" h="48" />
@@ -129,7 +129,17 @@
 					</skeleton>
 				</groundEnemy>
 				<flyEnemy>
-					<bat x="250" y="350" w="32" h="32" texture="Assets/Textures/Enemies/Bat/Vampire/BatVampire_Sheet.png" />
+					<bat x="250" y="350" w="32" h="32" texture="Assets/Textures/Enemies/Bat/Vampire/BatVampire_Sheet.png">
+						<properties speed="1" chaseArea="100" />
+						<animations>
+							<idle>
+								<frame x="0" y="0" w="48" h="48" />
+								<frame x="48" y="0" w="48" h="48" />
+								<frame x="96" y="0" w="48" h="48" />
+								<frame x="144" y="0" w="48" h="48" />
+							</idle>
+						</animations>
+					</bat>
 				</flyEnemy>
 			</enemies>
 			<items>
@@ -137,15 +147,12 @@
 			</items>
 		</entities>
 		<savedData saved="true">
-
-			<player x="24" y="358" lives="3" transformable="false" transformed="true" />
-			<enemy0 alive="true" x="200" y="343" />
-			<enemy1 alive="true" x="266" y="391" />
-
+			<player x="241" y="374" lives="3" transformable="false" transformed="false" />
+			<enemy0 alive="true" x="266" y="345" />
+			<enemy1 alive="true" x="145" y="423" />
 			<player x="337" y="422" lives="3" transformable="false" transformed="false" />
 			<enemy0 alive="true" x="200" y="342" />
 			<enemy1 alive="true" x="456" y="397" />
-
 		</savedData>
 	</scene>
 	<ui path="Assets/Textures/UI/HelpMenu2.png" />

@@ -47,6 +47,9 @@ public:
 		return dt;
 	}
 
+	//Return debug
+	bool GetDebug();
+
 private:
 
 	// Private constructor to prevent instantiation
@@ -75,7 +78,6 @@ private:
 	// Load config file
 	bool LoadConfig();
 
-	
 
 	//Check if value it's near to other
 	
@@ -138,5 +140,5 @@ private:
 	//L05 TODO 2: Declare a xml_document to load the config file
 	pugi::xml_document configFile;
 
-	
+	bool debug = false;
 };

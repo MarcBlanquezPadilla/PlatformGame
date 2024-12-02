@@ -14,7 +14,6 @@ Physics::Physics() : Module()
 {
 	// Initialise all the internal class variables, at least to NULL pointer
 	world = NULL;
-	debug = false;
 }
 
 // Destructor
@@ -225,13 +224,9 @@ void PhysBody::SetPhysPositionWithWorld(int x, int y)
 bool Physics::PostUpdate()
 {
 	bool ret = true;
-
-	// Activate or deactivate debug mode
-	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F9) == KEY_DOWN)
-		debug = !debug;
 	
 	//  Iterate all objects in the world and draw the bodies
-	if (debug)
+	if (Engine::GetInstance().GetDebug())
 	{
 		for (b2Body* b = world->GetBodyList(); b; b = b->GetNext())
 		{
