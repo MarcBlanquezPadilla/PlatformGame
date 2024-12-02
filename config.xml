@@ -98,7 +98,7 @@
 						<frame x="64" y="128" w="64" h="64" />
 						<frame x="128" y="128" w="64" h="64" />
 					</t_hurt>
-					<t_death loop =" false" speed ="0.2f">
+					<t_death loop=" false" speed="0.2f">
 						<frame x="0" y="192" w="64" h="64" />
 						<frame x="64" y="192" w="64" h="64" />
 						<frame x="128" y="192" w="64" h="64" />
@@ -109,7 +109,6 @@
 						<frame x="448" y="192" w="64" h="64" />
 					</t_death>
 				</animations>
-				<savedData saved="true" x="395" y="390" lives="2" transformable="false" transformed="false" />
 			</player>
 			<enemies>
 				<groundEnemy>
@@ -133,6 +132,11 @@
 				<pumpkin x="" y="" w=" " h="" texture="" />
 			</items>
 		</entities>
+		<savedData saved="true">
+			<player x="25" y="358" lives="3" transformable="false" transformed="false" />
+			<enemy0 alive="true" x="200" y="343" />
+			<enemy1 alive="true" x="170" y="423" />
+		</savedData>
 	</scene>
 	<ui path="Assets/Textures/UI/HelpMenu2.png" />
 </config>
