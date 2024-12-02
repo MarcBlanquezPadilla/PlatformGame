@@ -51,26 +51,25 @@ bool Scene::Start()
 	Engine::GetInstance().map->LoadParalax(configParameters.child("map").child("parallax"));
 
 	//Load Enemies
-	pugi::xml_node pathsNode = configParameters.child("entities").child("enemies").child("paths");
-
 	Enemy* batEnemy = (BatEnemy*)Engine::GetInstance().entityManager->CreateEntity(EntityType::BAT_ENEMY);
-	batEnemy->SetPlayer(player);
-	batEnemy->SetParameters(configParameters.child("entities").child("enemies").child("flyEnemy").child("bat"));
-	batEnemy->SetPath(configParameters.child("entities").child("enemies").child("paths").child("path1"));
+	LoadEnemy(batEnemy, configParameters.child("entities").child("enemies").child("flyEnemy").child("bat"), 1);
+
 	Enemy* groundEnemy = (GroundEnemy*)Engine::GetInstance().entityManager->CreateEntity(EntityType::GROUND_ENEMY);
-	groundEnemy->SetPlayer(player);
-	groundEnemy->SetParameters(configParameters.child("entities").child("enemies").child("groundEnemy").child("skeleton"));
-	groundEnemy->SetPath(configParameters.child("entities").child("enemies").child("paths").child("path2"));
+	LoadEnemy(groundEnemy, configParameters.child("entities").child("enemies").child("groundEnemy").child("skeleton"), 2);
 
-	enemies.push_back(batEnemy);
-	enemies.push_back(groundEnemy);
-
+	//Load Items
 	Item* pumpkin = (Item*)Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM);
-	/*pumpkin->SetPlayer(player);*/
-
-	
 
 	return true;
+}
+
+void Scene::LoadEnemy(Enemy* enemy, pugi::xml_node parametersNode, int pathNum)
+{
+	enemy->SetPlayer(player);
+	enemy->SetParameters(parametersNode);
+	std::string nodeChar = "path" + std::to_string(pathNum);
+	enemy->SetPath(configParameters.child("entities").child("enemies").child("paths").child(nodeChar.c_str()));
+	enemies.push_back(enemy);
 }
 
 

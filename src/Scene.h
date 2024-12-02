@@ -48,6 +48,8 @@ public:
 	// Return the player position
 	Vector2D GetPlayerPosition();
 
+	void LoadEnemy(Enemy* enemy, pugi::xml_node parametersNode, int pathNum);
+
 	void LoadState();
 
 	void SaveState();
