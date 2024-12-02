@@ -215,6 +215,12 @@ PhysBody* Physics::CreateChain(int x, int y, int* points, int size, bodyType typ
 	return pbody;
 }
 
+void PhysBody::SetPhysPositionWithWorld(int x, int y)
+{
+	b2Vec2 pos = { PIXEL_TO_METERS(x), PIXEL_TO_METERS(y) };
+	body->SetTransform(pos, 0);
+}
+
 // 
 bool Physics::PostUpdate()
 {

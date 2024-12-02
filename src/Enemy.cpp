@@ -173,5 +173,7 @@ void Enemy::SaveData(pugi::xml_node enemyNode)
 
 void Enemy::LoadData(pugi::xml_node enemyNode)
 {
-	
+	pbody->SetPhysPositionWithWorld( enemyNode.attribute("x").as_float(), enemyNode.attribute("y").as_float() );
+	ResetPath();
+	//alive = enemyNode.attribute("alive").as_bool();
 }
