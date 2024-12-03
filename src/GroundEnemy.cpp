@@ -106,6 +106,15 @@ bool GroundEnemy::Update(float dt) {
 			destinationPoint = playerPosCenteredOnTile;
 			ResetPath();
 		}
+
+		if (playerPos.getX() - position.getX() <= PIXEL_TO_METERS(10)) {
+			if(currentAnimation != &attack) currentAnimation = &attack;
+			LOG("Skeleton Attacked!");
+
+		}
+		else {
+			currentAnimation = &walk;
+		}
 	}
 
 	//PATHFINDING CONTROLER

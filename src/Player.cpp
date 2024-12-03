@@ -66,6 +66,7 @@ bool Player::Start() {
 	gravity = parameters.child("propierties").attribute("gravity").as_float();
 	hurtTime = parameters.child("propierties").attribute("hurtTime").as_float();
 	attack1Time = parameters.child("propierties").attribute("attack1Time").as_float();
+	attack2Time = parameters.child("propierties").attribute("attack2Time").as_float();
 	respawnTime = parameters.child("propierties").attribute("respawnTime").as_float();
 	playerState = (state)parameters.child("propierties").attribute("playerState").as_int();
 	dir = (Direction)parameters.child("propierties").attribute("direction").as_int();
@@ -85,6 +86,7 @@ bool Player::Start() {
 	transformed = false;
 
 	saveGame = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/SaveGame.ogg");
+	loadGame = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/LoadGame.ogg");
 
 	
 	currentAnim = &idle;
@@ -177,6 +179,14 @@ bool Player::Update(float dt)
 				attack1Timer.Start();
 				pbody->body->SetLinearVelocity({ 0,0 });
 			}
+
+
+			if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_C) == KEY_DOWN && transformed && playerState != ATTACK2) {
+
+				playerState = ATTACK2;
+				attack2Timer.Start();
+				pbody->body->SetLinearVelocity({ 0,0 });
+			}
 		}
 		
 		if (transformable) {
@@ -209,12 +219,18 @@ bool Player::Update(float dt)
 	}
 	else if (playerState == ATTACK1) {
 		
-		if (attack1Timer.ReadSec() >= attack1Time && t_spell1.HasFinished()) {
+		if (attack1Timer.ReadSec() >= attack1Time/* && t_spell1.HasFinished()*/) {
 			playerState = IDLE;
 			t_spell1.Reset();
 		}
 		
 		
+	}
+	else if (playerState == ATTACK2) {
+		if (attack2Timer.ReadSec() >= attack2Time/* && t_spell2.HasFinished()*/) {
+			playerState = IDLE;
+			t_spell2.Reset();
+		}
 	}
 	else if (playerState == HURT) {
 		
@@ -270,12 +286,10 @@ bool Player::Update(float dt)
 			currentAnim = &t_fall;
 			break;
 		case ATTACK1:
-			
 			currentAnim = &t_spell1;
 			break;
 
 		case ATTACK2:
-			
 			currentAnim = &t_spell2;
 			break;
 

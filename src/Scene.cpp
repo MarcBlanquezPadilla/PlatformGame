@@ -113,6 +113,7 @@ bool Scene::PostUpdate()
 	}
 
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F6) == KEY_DOWN) {
+		Engine::GetInstance().audio.get()->PlayFx(player->loadGame);
 		LoadState();
 	}
 

@@ -88,6 +88,8 @@ public:
 
 	Timer attack1Timer;
 	float attack1Time;
+	Timer attack2Timer;
+	float attack2Time;
 
 	Timer hurtTimer;
 	float hurtTime;
@@ -130,5 +132,6 @@ public:
 
 	//audio
 	int saveGame;
+	int loadGame;
 	
 };
