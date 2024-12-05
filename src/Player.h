@@ -61,6 +61,8 @@ public:
 
 	void LoadData(pugi::xml_node playerNode);
 
+	void DMGPlayer(PhysBody* physA, PhysBody* physB);
+
 public:
 
 	//Declare player parameters
@@ -85,6 +87,7 @@ public:
 	bool canClimb;
 	bool transformable;
 	bool transformed;
+	bool reachedCheckPoint;
 
 	Timer attack1Timer;
 	float attack1Time;
@@ -133,5 +136,17 @@ public:
 	//audio
 	int saveGame;
 	int loadGame;
+	int atk1SFX;
+	int atk2SFX;
+	int gJumpSFX;
+	int pJumpSFX;
+	int pDeathSFX;
+	int gDeathSFX;
+	int gHurtSFX;
+	int pHurtSFX;
+	int switchOnSFX;
+	int switchOffSFX;
+	
+	
 	
 };

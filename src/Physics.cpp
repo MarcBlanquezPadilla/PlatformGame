@@ -443,6 +443,8 @@ int PhysBody::RayCast(int x1, int y1, int x2, int y2, float& normal_x, float& no
 			normal_x = output.normal.x;
 			normal_y = output.normal.y;
 
+			
+
 			return output.fraction * dist;
 		}
 		fixture = fixture->GetNext();

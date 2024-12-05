@@ -267,6 +267,14 @@ bool Map::Load(std::string path, std::string fileName)
                     c->ctype = ColliderType::LADDER;
                 }
             }
+            if (objectGroup->name == "Checkpoints") {
+                for (Object* object : objectGroup->object) {
+
+                    PhysBody* c = Engine::GetInstance().physics.get()->CreateRectangleSensor(object->x + object->width / 2, object->y + object->height / 2, object->width, object->height, STATIC);
+
+                    c->ctype = ColliderType::CHECKPOINT;
+                }
+            }
         }
 
 

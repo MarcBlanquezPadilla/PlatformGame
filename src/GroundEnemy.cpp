@@ -1,6 +1,7 @@
 #include "GroundEnemy.h"
 #include "Engine.h"
 #include "Textures.h"
+#include "Audio.h"
 #include "Physics.h"
 #include "Scene.h"
 #include "Player.h"
@@ -14,6 +15,7 @@ GroundEnemy::GroundEnemy()
 GroundEnemy::~GroundEnemy() {
 	delete pathfinding;
 }
+
 
 bool GroundEnemy::Start() {
 	texture = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture").as_string());
@@ -33,10 +35,15 @@ bool GroundEnemy::Start() {
 	idle.speed = 0.2f;
 	
 
-	AddAnimation(attack, 96, texW, 5);
+	AddAnimation(attack, 48, texW, 4);
+	AddAnimation(attack, 0, texW, 1);
 	attack.speed = 0.2f;
+	attack.loop = false;
+
 
 	currentAnimation = &idle;
+	canAttack = false;
+	attacked = false;
 
 	//INIT ROUTE
 	for (int i = 0; i < route.size(); i++)
@@ -61,8 +68,9 @@ bool GroundEnemy::Start() {
 	state = PATROL;
 	speed = parameters.child("properties").attribute("speed").as_float();
 	chaseArea = parameters.child("properties").attribute("chaseArea").as_float();
+	attackArea = parameters.child("properties").attribute("attackArea").as_float();
 	jumpForce = parameters.child("properties").attribute("jumpForce").as_float();
-
+	attackTime = parameters.child("properties").attribute("attackTime").as_float();
 	dir = LEFT;
 
 	return true;
@@ -71,20 +79,36 @@ bool GroundEnemy::Start() {
 bool GroundEnemy::Update(float dt) {
 
 
+	dist = pbody->GetPhysBodyWorldPosition().distanceEuclidean(player->pbody->GetPhysBodyWorldPosition());
+
 	//STATES CHANGERS
-	if (pbody->GetPhysBodyWorldPosition().distanceEuclidean(player->pbody->GetPhysBodyWorldPosition()) > chaseArea && state != PATROL)
+	if (dist > chaseArea && state != PATROL)
 	{
 		state = PATROL;
 		ResetPath();
 		destinationPoint = route[routeDestinationIndex];
 	}
-	else if (pbody->GetPhysBodyWorldPosition().distanceEuclidean(player->pbody->GetPhysBodyWorldPosition()) <= chaseArea && state != CHASING)
-	{
-		state = CHASING;
-		ResetPath();
-	}
-
 	
+	else if (dist <= chaseArea/* && state != CHASING*/)
+	{
+		
+
+		if (pbody->GetPhysBodyWorldPosition().distanceEuclidean(player->pbody->GetPhysBodyWorldPosition()) <= attackArea && state != ATTACK) {
+			state = ATTACK;
+		}
+		
+		
+		else if (state != CHASING) 
+		{
+			state = CHASING;
+			ResetPath();
+		}
+		
+	}
+	
+
+	Vector2D playerPos = player->pbody->GetPhysBodyWorldPosition();
+	Vector2D playerPosCenteredOnTile = Engine::GetInstance().map.get()->WorldToWorldCenteredOnTile(playerPos.getX(), playerPos.getY());
 
 	//STATES CONTROLER
 	if (state == PATROL) {
@@ -98,23 +122,43 @@ bool GroundEnemy::Update(float dt) {
 			ResetPath();
 		}
 	}
-	else {
-		Vector2D playerPos = player->pbody->GetPhysBodyWorldPosition();
-		Vector2D playerPosCenteredOnTile = Engine::GetInstance().map.get()->WorldToWorldCenteredOnTile(playerPos.getX(), playerPos.getY());
+	else if (state == CHASING) {
+
+
+		
 		if (destinationPoint != playerPosCenteredOnTile)
 		{
 			destinationPoint = playerPosCenteredOnTile;
 			ResetPath();
 		}
 
-		if (playerPos.getX() - position.getX() <= PIXEL_TO_METERS(10)) {
-			if(currentAnimation != &attack) currentAnimation = &attack;
-			LOG("Skeleton Attacked!");
+		
+	}
+	else if (state == ATTACK) {
+		/*Vector2D castPos = player->pbody->GetPhysBodyWorldPosition();*/
+		
+		/*Vector2D endCastPos = castPos + (dir == LEFT ? - 1 : 1);*/
+		
+		/*pbody->RayCast(castPos.getX(), castPos.getY(), );*/
+
+		currentAnimation = &attack;
+	
+		player->DMGPlayer(player->pbody, pbody);
+
+		LOG("lives: %d", player->lives);
+		LOG("dist: %d", dist);
+		if (dist > attackArea) {
+			state = PATROL;
+			
+		}
+		if (attack.HasFinished()) {
+			attack.Reset();
+			
+			player->playerState = IDLE;
+			
 
 		}
-		else {
-			currentAnimation = &walk;
-		}
+		
 	}
 
 	//PATHFINDING CONTROLER
@@ -152,6 +196,8 @@ bool GroundEnemy::Update(float dt) {
 	{
 		pbody->body->ApplyLinearImpulseToCenter({ 0, -jumpForce }, true);
 	}
+
+	
 
 	//DIRECTION
 	if (pbody->body->GetLinearVelocity().x > 0.2f) {

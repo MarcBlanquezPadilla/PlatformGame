@@ -6,6 +6,7 @@
 #include "Render.h"
 #include "Scene.h"
 #include "Log.h"
+#include "Pathfinding.h"
 #include "Physics.h"
 
  
@@ -76,6 +77,8 @@ bool Player::Start() {
 	{
 		position = { parameters.child("savedData").attribute("x").as_float(), parameters.child("savedData").attribute("y").as_float() };
 		lives = parameters.child("savedData").attribute("lives").as_int();
+
+		//does this work?
 	}
 	
 
@@ -84,11 +87,23 @@ bool Player::Start() {
 	tpToStart = false;
 	canClimb = false;
 	transformed = false;
+	reachedCheckPoint = false;
 
 	saveGame = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/SaveGame.ogg");
 	loadGame = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/LoadGame.ogg");
+	gJumpSFX = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/ghostJump.ogg");
+	pJumpSFX = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/pumpkinJump.ogg");
+	gHurtSFX = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/SquidHit.ogg");
+	pHurtSFX = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/BonkSFX.ogg");
+	gDeathSFX = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/SinkOMO.ogg");
+	pDeathSFX = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/PumpkinCrack.ogg");
+	atk1SFX = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/atk1_alt.ogg");
+	atk2SFX = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/customATK2.ogg");
+	switchOnSFX = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/SwitchON.ogg");
+	switchOffSFX = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/SwitchOFF.ogg");
 
 	
+
 	currentAnim = &idle;
 
 	// L08 TODO 5: Add physics to the player - initialize physics body
@@ -111,10 +126,22 @@ bool Player::Update(float dt)
 	pbody->body->SetAwake(true);
 	currentFrame = currentAnim->GetCurrentFrame();
 
+	
+
 	if (tpToStart)
 	{
+		pugi::xml_node playerNode = Engine::GetInstance().scene.get()->configParameters;
+		Vector2D checkPointPos;
+		checkPointPos.setX(playerNode.child("savedData").child("player").attribute("x").as_int());
+		checkPointPos.setY(playerNode.child("savedData").child("player").attribute("y").as_int());
+
 		b2Vec2 initPosInMeters = { PIXEL_TO_METERS(initPos.x), PIXEL_TO_METERS(initPos.y) };
-		pbody->body->SetTransform(initPosInMeters, 0.0f);
+		b2Vec2 checkPointInMeters = { PIXEL_TO_METERS(checkPointPos.getX()), PIXEL_TO_METERS(checkPointPos.getY()) };
+
+
+		if (reachedCheckPoint) pbody->body->SetTransform(checkPointInMeters, 0.0f);
+		else pbody->body->SetTransform(initPosInMeters, 0.0f);
+		
 		
 		tpToStart = false;
 	}
@@ -169,6 +196,8 @@ bool Player::Update(float dt)
 			if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN && VALUE_NEAR_TO_0(pbody->body->GetLinearVelocity().y)) {
 				// Apply an initial upward force
 				pbody->body->ApplyLinearImpulseToCenter(b2Vec2(0, -jumpForce), true);
+				if(transformed) Engine::GetInstance().audio.get()->PlayFx(pJumpSFX);
+				else Engine::GetInstance().audio.get()->PlayFx(gJumpSFX);
 			}
 			
 			velocity = { velocity.x, pbody->body->GetLinearVelocity().y };
@@ -176,8 +205,10 @@ bool Player::Update(float dt)
 			if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_X) == KEY_DOWN && transformed && playerState != ATTACK1) {
 				
 				playerState = ATTACK1;
+				Engine::GetInstance().audio.get()->PlayFx(atk1SFX);
 				attack1Timer.Start();
 				pbody->body->SetLinearVelocity({ 0,0 });
+				
 			}
 
 
@@ -186,6 +217,7 @@ bool Player::Update(float dt)
 				playerState = ATTACK2;
 				attack2Timer.Start();
 				pbody->body->SetLinearVelocity({ 0,0 });
+				Engine::GetInstance().audio.get()->PlayFx(atk2SFX);
 			}
 		}
 		
@@ -193,9 +225,11 @@ bool Player::Update(float dt)
 			if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_Z) == KEY_DOWN) {
 				if (!transformed) {
 					transformed = true;
+					Engine::GetInstance().audio.get()->PlayFx(switchOnSFX);
 				}
 				else {
 					transformed = false;
+					Engine::GetInstance().audio.get()->PlayFx(switchOffSFX);
 				}
 
 
@@ -234,7 +268,7 @@ bool Player::Update(float dt)
 	}
 	else if (playerState == HURT) {
 		
-		if (hurtTimer.ReadSec() >= hurtTime /*&& (hurt.HasFinished() || t_hurt.HasFinished())*/) {
+		if (hurtTimer.ReadSec() >= hurtTime) {
 			playerState = IDLE;
 			hurt.Reset();
 			t_hurt.Reset();
@@ -247,13 +281,17 @@ bool Player::Update(float dt)
 	}
 	else if (playerState == DEAD) {
 
+		
+
 		pbody->body->SetLinearVelocity(b2Vec2_zero);
-		if (respawnTimer.ReadSec() >= respawnTime/* && death.HasFinished()*/) 
+		if (respawnTimer.ReadSec() >= respawnTime) 
 		{
 			tpToStart = true;
 			playerState = IDLE;
 			dir = RIGHT;
 			
+			
+
 			pbody->body->SetGravityScale(godMode == true || canClimb == true || playerState == DEAD ? 0 : gravity);
 			
 			if (lives <= 0) {
@@ -365,6 +403,7 @@ bool Player::Update(float dt)
 	}
 	
 	
+	
 
 	currentAnim->Update();
 
@@ -397,34 +436,18 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		break;
 	case ColliderType::SPYKE:
 
-		if (playerState != DEAD) {
+		DMGPlayer(physA, physB);
 			
-			if (!godMode && playerState != HURT)
-			{
-				lives--;
-				if (lives <= 0) {
-					playerState = DEAD;
-					pbody->body->SetGravityScale(0);
-					respawnTimer.Start();
-				}
-				else
-				{
-					hurtTimer.Start();
-					playerState = HURT;
-					pushDir = b2Vec2_zero;
-					pushDir.x = physA->body->GetPosition().x - physB->body->GetPosition().x;
-					pushDir.y = physA->body->GetPosition().y - physB->body->GetPosition().y;
-					pushDir.Normalize();
-					physA->body->SetLinearVelocity(b2Vec2_zero);
-					physA->body->ApplyLinearImpulseToCenter(b2Vec2(pushForce * pushDir.x, pushForce * pushDir.y), true);
-				}
-			}
+		LOG("Collision SPYKE");
 			
-			LOG("Collision SPYKE");
-		}
-		
 		break;
 
+	case ColliderType::ENEMY:
+
+		DMGPlayer(physA, physB);
+
+		LOG("Collision ENEMY");
+		break;
 	case ColliderType::ABYSS:
 	{ 
 		if (!godMode) {
@@ -438,6 +461,10 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		canClimb = true;
 		pbody->body->SetGravityScale(0);
 		LOG("Collision LADDER");
+		break;
+	case ColliderType::CHECKPOINT:
+		reachedCheckPoint = true;
+		Engine::GetInstance().scene.get()->SaveState();
 		break;
 	case ColliderType::UNKNOWN:
 		LOG("Collision UNKNOWN");
@@ -501,4 +528,47 @@ void Player::LoadData(pugi::xml_node playerNode)
 	lives = playerNode.attribute("lives").as_int();
 	transformed = playerNode.attribute("transformed").as_bool();
 	SetPosition(position);
+}
+
+void Player::DMGPlayer(PhysBody* physA, PhysBody* physB) {
+
+
+	if (playerState != DEAD) {
+
+		if (!godMode && playerState != HURT)
+		{
+			lives--;
+			if (lives <= 0) {
+				playerState = DEAD;
+
+				if (transformed) Engine::GetInstance().audio.get()->PlayFx(pDeathSFX);
+				else Engine::GetInstance().audio.get()->PlayFx(gDeathSFX);
+
+				pbody->body->SetGravityScale(0);
+				respawnTimer.Start();
+			}
+			else
+			{
+
+				hurtTimer.Start();
+				playerState = HURT;
+				pbody->body->SetGravityScale(godMode == true || canClimb == true || playerState == DEAD ? 0 : gravity);
+
+				if (transformed) Engine::GetInstance().audio.get()->PlayFx(pHurtSFX);
+				else Engine::GetInstance().audio.get()->PlayFx(gHurtSFX);
+				
+				pushDir = b2Vec2_zero;
+				pushDir.x = physA->body->GetPosition().x - physB->body->GetPosition().x;
+				pushDir.y = physA->body->GetPosition().y - physB->body->GetPosition().y;
+				pushDir.Normalize();
+				
+				physA->body->SetLinearVelocity(b2Vec2_zero);
+				physA->body->ApplyLinearImpulseToCenter(b2Vec2(pushForce * pushDir.x, pushForce * pushDir.y), true);
+				
+
+			}
+		}
+	}
+	
+	
 }

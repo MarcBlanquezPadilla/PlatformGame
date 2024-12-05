@@ -195,6 +195,19 @@ bool Pathfinding::IsJumpable(int x, int y) {
     return isJumpable;
 }
 
+//bool Pathfinding::IsCheckPoint(int x, int y) {
+//    bool isCheckPoint = false;
+//
+//    if (layerNav != nullptr) {
+//        if (x >= 0 && y >= 0 && x < map->GetHeight() && y < map->GetHeight()) {
+//            int gid = layerNav->Get(x, y);
+//            if (gid == checkPointGid) isCheckPoint = true;
+//        }
+//    }
+//
+//    return isCheckPoint;
+//}
+
 
 void Pathfinding::PropagateBFS() {
 

@@ -60,6 +60,8 @@ bool Scene::Start()
 	//Load Items
 	Item* pumpkin = (Item*)Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM);
 
+	//Load CheckPoint?
+
 	return true;
 }
 
@@ -107,13 +109,11 @@ bool Scene::PostUpdate()
 
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F5) == KEY_DOWN)
 	{
-		Engine::GetInstance().audio.get()->PlayFx(player->saveGame);
-		LOG("Played save game sound fx");
 		SaveState();
 	}
 
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F6) == KEY_DOWN) {
-		Engine::GetInstance().audio.get()->PlayFx(player->loadGame);
+		
 		LoadState();
 	}
 
@@ -143,7 +143,7 @@ Vector2D Scene::GetPlayerPosition()
 
 void Scene::SaveState()
 {
-
+	Engine::GetInstance().audio.get()->PlayFx(player->saveGame);
 	pugi::xml_document saveFile;
 	pugi::xml_parse_result result = saveFile.load_file("config.xml");
 
@@ -180,6 +180,8 @@ void Scene::SaveState()
 }
 
 void Scene::LoadState() {
+
+	Engine::GetInstance().audio.get()->PlayFx(player->loadGame);
 
 	pugi::xml_document loadFile;
 	pugi::xml_parse_result result = loadFile.load_file("config.xml");

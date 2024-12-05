@@ -20,7 +20,9 @@ public:
 
 	enum State {
 		PATROL,
-		CHASING
+		CHASING,
+		ATTACK,
+		DEAD
 	};
 
 	enum Dir {
@@ -87,4 +89,5 @@ public:
 	//PROPERTIES
 	int speed;
 	int chaseArea;
+	int attackArea;
 };

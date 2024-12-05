@@ -6,6 +6,7 @@
 #include "Animation.h"
 #include "Pathfinding.h"
 #include <vector>
+#include "Timer.h"
 
 
 
@@ -24,7 +25,7 @@ public:
 	bool Update(float dt) override;
 
 
-
+	
 private:
 
 	int drawOffsetX = 0;
@@ -32,6 +33,13 @@ private:
 	Vector2D destinationPoint;
 	Animation walk;
 	Animation attack;
+	float attackTime;
+	Timer attackTimer;
+
+	bool canAttack;
+	bool attacked;
+
+	float dist;
 
 	float jumpForce;
 };
