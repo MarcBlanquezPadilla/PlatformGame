@@ -32,7 +32,7 @@ bool GroundEnemy::Start() {
 	
 
 	AddAnimation(walk, 0, texW, 4);
-	idle.speed = 0.2f;
+	walk.speed = 0.2f;
 	
 
 	AddAnimation(attack, 48, texW, 4);
@@ -82,28 +82,29 @@ bool GroundEnemy::Update(float dt) {
 	dist = pbody->GetPhysBodyWorldPosition().distanceEuclidean(player->pbody->GetPhysBodyWorldPosition());
 
 	//STATES CHANGERS
-	if (dist > chaseArea && state != PATROL)
+	if (state != ATTACK)
 	{
-		state = PATROL;
-		ResetPath();
-		destinationPoint = route[routeDestinationIndex];
-	}
-	
-	else if (dist <= chaseArea/* && state != CHASING*/)
-	{
-		
-
-		if (pbody->GetPhysBodyWorldPosition().distanceEuclidean(player->pbody->GetPhysBodyWorldPosition()) <= attackArea && state != ATTACK) {
-			state = ATTACK;
-		}
-		
-		
-		else if (state != CHASING) 
+		if (dist > chaseArea && state != PATROL)
 		{
-			state = CHASING;
+			state = PATROL;
 			ResetPath();
+			destinationPoint = route[routeDestinationIndex];
 		}
-		
+		else if (dist <= chaseArea/* && state != CHASING*/)
+		{
+			if (dist <= attackArea && state != ATTACK) {
+				state = ATTACK;
+				player->DMGPlayer(player->pbody, pbody);
+				attackTimer.Start();
+				pbody->body->SetLinearVelocity({ 0,0 });
+				attack.Reset();
+			}
+			else if (state != CHASING)
+			{
+				state = CHASING;
+				ResetPath();
+			}
+		}
 	}
 	
 
@@ -124,15 +125,11 @@ bool GroundEnemy::Update(float dt) {
 	}
 	else if (state == CHASING) {
 
-
-		
 		if (destinationPoint != playerPosCenteredOnTile)
 		{
 			destinationPoint = playerPosCenteredOnTile;
 			ResetPath();
 		}
-
-		
 	}
 	else if (state == ATTACK) {
 		/*Vector2D castPos = player->pbody->GetPhysBodyWorldPosition();*/
@@ -141,63 +138,82 @@ bool GroundEnemy::Update(float dt) {
 		
 		/*pbody->RayCast(castPos.getX(), castPos.getY(), );*/
 
-		currentAnimation = &attack;
-	
-		player->DMGPlayer(player->pbody, pbody);
-
-		LOG("lives: %d", player->lives);
-		LOG("dist: %d", dist);
-		if (dist > attackArea) {
+		if (attackTimer.ReadSec() > attackTime) {
+			
 			state = PATROL;
-			
 		}
-		if (attack.HasFinished()) {
-			attack.Reset();
-			
-			player->playerState = IDLE;
-			
-
-		}
-		
 	}
 
 	//PATHFINDING CONTROLER
-	if (pathfinding->pathTiles.empty())
+	if (state == PATROL || state == CHASING)
 	{
-		while (pathfinding->pathTiles.empty())
+		if (pathfinding->pathTiles.empty())
 		{
-			pathfinding->PropagateAStar(SQUARED, destinationPoint, Pathfinding::WALK);
+			while (pathfinding->pathTiles.empty())
+			{
+				pathfinding->PropagateAStar(SQUARED, destinationPoint, Pathfinding::WALK);
 
-		}
-		pathfinding->pathTiles.pop_back();
-	}
-	else
-	{
-
-		Vector2D nextTile = pathfinding->pathTiles.back();
-		Vector2D nextTileWorld = Engine::GetInstance().map.get()->MapToWorldCentered(nextTile.getX(), nextTile.getY());
-
-		if (CheckIfTwoPointsNear(nextTileWorld, { (float)METERS_TO_PIXELS(pbody->body->GetPosition().x), (float)METERS_TO_PIXELS(pbody->body->GetPosition().y) }, 3)) {
-
+			}
 			pathfinding->pathTiles.pop_back();
-			if (pathfinding->pathTiles.empty()) ResetPath();
 		}
-		else {
-			Vector2D nextTilePhysics = { PIXEL_TO_METERS(nextTileWorld.getX()),PIXEL_TO_METERS(nextTileWorld.getY()) };
-			b2Vec2 direction = { nextTilePhysics.getX() - pbody->body->GetPosition().x, nextTilePhysics.getY() - pbody->body->GetPosition().y };
-			direction.Normalize();
-			pbody->body->SetLinearVelocity({ direction.x * speed, pbody->body->GetLinearVelocity().y});
+		else
+		{
+
+			Vector2D nextTile = pathfinding->pathTiles.back();
+			Vector2D nextTileWorld = Engine::GetInstance().map.get()->MapToWorldCentered(nextTile.getX(), nextTile.getY());
+
+			if (CheckIfTwoPointsNear(nextTileWorld, { (float)METERS_TO_PIXELS(pbody->body->GetPosition().x), (float)METERS_TO_PIXELS(pbody->body->GetPosition().y) }, 3)) {
+
+				pathfinding->pathTiles.pop_back();
+				if (pathfinding->pathTiles.empty()) ResetPath();
+			}
+			else {
+				Vector2D nextTilePhysics = { PIXEL_TO_METERS(nextTileWorld.getX()),PIXEL_TO_METERS(nextTileWorld.getY()) };
+				b2Vec2 direction = { nextTilePhysics.getX() - pbody->body->GetPosition().x, nextTilePhysics.getY() - pbody->body->GetPosition().y };
+				direction.Normalize();
+				pbody->body->SetLinearVelocity({ direction.x * speed, pbody->body->GetLinearVelocity().y });
+			}
+		}
+		Vector2D currentTile = Engine::GetInstance().map.get()->WorldToMap(pbody->GetPhysBodyWorldPosition().getX(), pbody->GetPhysBodyWorldPosition().getY());
+
+		if (pathfinding->IsJumpable(currentTile.getX(), currentTile.getY()) && VALUE_NEAR_TO_0(pbody->body->GetLinearVelocity().LengthSquared()))
+		{
+			pbody->body->ApplyLinearImpulseToCenter({ 0, -jumpForce }, true);
 		}
 	}
-
-	Vector2D currentTile = Engine::GetInstance().map.get()->WorldToMap(pbody->GetPhysBodyWorldPosition().getX(), pbody->GetPhysBodyWorldPosition().getY());
-
-	if (pathfinding->IsJumpable(currentTile.getX(), currentTile.getY()) && VALUE_NEAR_TO_0(pbody->body->GetLinearVelocity().LengthSquared()))
-	{
-		pbody->body->ApplyLinearImpulseToCenter({ 0, -jumpForce }, true);
-	}
-
 	
+	
+
+	switch (state) {
+			break;
+		case CHASING:
+			currentAnimation = &walk;
+			break;
+		case PATROL:
+			currentAnimation = &walk;
+			break;
+		case ATTACK:
+			currentAnimation = &attack;
+			break;
+		//case JUMP:
+
+		//	currentAnimation = &jump;
+		//	break;
+		//case FALL:
+
+		//	currentAnimation = &fall;
+		//	break;
+		//case HURT:
+
+		//	currentAnimation = &hurt;
+		//	break;
+	/*	case DEAD:
+
+			currentAnimation = &death;
+			break;*/
+		default:
+			break;
+	}
 
 	//DIRECTION
 	if (pbody->body->GetLinearVelocity().x > 0.2f) {

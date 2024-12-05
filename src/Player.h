@@ -129,7 +129,6 @@ public:
 
 
 	state playerState; 
-	state previousState;
 
 	Direction dir;
 

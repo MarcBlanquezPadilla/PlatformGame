@@ -130,7 +130,7 @@
 			<enemies>
 				<groundEnemy>
 					<skeleton x="100" y="420" w="48" h="48" texture="Assets/Textures/Enemies/Undead/SwordsMan-reorganized_spritesheet.png">
-						<properties speed="1" chaseArea="100" attackArea="50" jumpForce="0.3" attackTime="1.0f" />
+						<properties speed="1" chaseArea="100" attackArea="20" jumpForce="0.3f" attackTime="1.0f" />
 						<animations>
 							<idle loop="false" speed="0.2f">
 								<frame x="0" y="0" w="48" h="48" />
@@ -177,8 +177,8 @@
 			</items>
 		</entities>
 		<savedData saved="true">
-			<player x="1784" y="196" lives="3" transformable="false" transformed="false" />
-			<enemy0 alive="true" x="271" y="343" />
+			<player x="1784" y="195" lives="3" transformable="false" transformed="false" />
+			<enemy0 alive="true" x="264" y="391" />
 			<enemy1 alive="true" x="185" y="423" />
 			<player x="337" y="422" lives="3" transformable="false" transformed="false" />
 			<enemy0 alive="true" x="200" y="342" />

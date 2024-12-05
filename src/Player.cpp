@@ -139,7 +139,7 @@ bool Player::Update(float dt)
 		b2Vec2 checkPointInMeters = { PIXEL_TO_METERS(checkPointPos.getX()), PIXEL_TO_METERS(checkPointPos.getY()) };
 
 
-		if (reachedCheckPoint) pbody->body->SetTransform(checkPointInMeters, 0.0f);
+		if (reachedCheckPoint && playerNode.child("savedData").attribute("saved").as_bool()) pbody->body->SetTransform(checkPointInMeters, 0.0f);
 		else pbody->body->SetTransform(initPosInMeters, 0.0f);
 		
 		
@@ -253,6 +253,7 @@ bool Player::Update(float dt)
 	}
 	else if (playerState == ATTACK1) {
 		
+		LOG("%f", attack1Timer.ReadSec());
 		if (attack1Timer.ReadSec() >= attack1Time/* && t_spell1.HasFinished()*/) {
 			playerState = IDLE;
 			t_spell1.Reset();
@@ -297,7 +298,6 @@ bool Player::Update(float dt)
 			if (lives <= 0) {
 				lives = parameters.attribute("lives").as_int();
 			}
-			LOG("Lives: %i", lives);
 
 			death.Reset();
 			t_death.Reset();
@@ -344,32 +344,26 @@ bool Player::Update(float dt)
 	else {
 		switch (playerState) {
 		case IDLE:
-			
 			currentAnim = &idle;
 			break;
 		case WALK:
 			currentAnim = &walk;
 			break;
 		case JUMP:
-			
 			currentAnim = &jump;
 			break;
 		case FALL:
-			
 			currentAnim = &fall;
 			break;
 		case HURT:
-			
 			currentAnim = &hurt;
 			break;
 		case DEAD:
-			
 			currentAnim = &death;
 			break;
 		}
 	}
 
-	previousState = playerState;
 
 	
 	b2Transform pbodyPos = pbody->body->GetTransform();
