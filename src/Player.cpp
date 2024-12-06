@@ -73,15 +73,15 @@ bool Player::Start() {
 	dir = (Direction)parameters.child("propierties").attribute("direction").as_int();
 	lives = parameters.attribute("lives").as_int();
 
+	
+
 	if (parameters.child("savedData").attribute("saved").as_bool() == true)
 	{
 		position = { parameters.child("savedData").attribute("x").as_float(), parameters.child("savedData").attribute("y").as_float() };
 		lives = parameters.child("savedData").attribute("lives").as_int();
 
-		//does this work?
 	}
 	
-
 	destroyed = false;
 	godMode = false;
 	tpToStart = false;
@@ -109,10 +109,20 @@ bool Player::Start() {
 	// L08 TODO 5: Add physics to the player - initialize physics body
 	pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX(), (int)position.getY(), GHOST_W, bodyType::DYNAMIC);
 
+
 	pbody->listener = this;
 	pbody->ctype = ColliderType::PLAYER;
 	pbody->body->SetLinearDamping(friction);
 	pbody->body->SetGravityScale(gravity);
+
+	ATKcolliderW = 41;
+	ATKcolliderH = 32;
+	attackCollider = Engine::GetInstance().physics.get()->CreateRectangleSensor((int)position.getX(), (int)position.getY(), ATKcolliderW, ATKcolliderH, bodyType::DYNAMIC);
+	attackCollider->ctype = ColliderType::WEAPON;
+	attackCollider->body->SetEnabled(false);
+	weaponOffset = { 23, 12 };
+	pbody->listener = this;
+
 
 	
 	hurtTimer = Timer();
@@ -124,6 +134,7 @@ bool Player::Start() {
 bool Player::Update(float dt)
 {
 	pbody->body->SetAwake(true);
+	attackCollider->body->SetAwake(true);
 	currentFrame = currentAnim->GetCurrentFrame();
 
 	
@@ -156,6 +167,26 @@ bool Player::Update(float dt)
 
 
 	velocity = b2Vec2_zero;
+
+	if (transformable) {
+		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_Z) == KEY_DOWN) {
+			if (!transformed) {
+				transformed = true;
+				float pJumpForce = 0.5f;
+				parameters.child("propierties").attribute("jumpForce").set_value(pJumpForce);
+				Engine::GetInstance().audio.get()->PlayFx(switchOnSFX);
+			}
+			else {
+				transformed = false;
+				float gJumpForce = 0.6f;
+				parameters.child("propierties").attribute("jumpForce").set_value(gJumpForce);
+				
+				Engine::GetInstance().audio.get()->PlayFx(switchOffSFX);
+			}
+			jumpForce = parameters.child("propierties").attribute("jumpForce").as_float();
+			LOG("jump force = %f", parameters.child("propierties").attribute("jumpForce"));
+		}
+	}
 
 	if (playerState !=HURT && playerState != DEAD && playerState != ATTACK1 && playerState != ATTACK2)
 	{
@@ -208,6 +239,8 @@ bool Player::Update(float dt)
 				Engine::GetInstance().audio.get()->PlayFx(atk1SFX);
 				attack1Timer.Start();
 				pbody->body->SetLinearVelocity({ 0,0 });
+				attackCollider->body->SetEnabled(true);
+			
 				
 			}
 
@@ -221,22 +254,10 @@ bool Player::Update(float dt)
 			}
 		}
 		
-		if (transformable) {
-			if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_Z) == KEY_DOWN) {
-				if (!transformed) {
-					transformed = true;
-					Engine::GetInstance().audio.get()->PlayFx(switchOnSFX);
-				}
-				else {
-					transformed = false;
-					Engine::GetInstance().audio.get()->PlayFx(switchOffSFX);
-				}
-
-
-			}
-		}
+		
 
 		pbody->body->SetLinearVelocity(velocity);
+		/*attackCollider->body->SetLinearVelocity(velocity);*/
 
 		if (pbody->body->GetLinearVelocity().y < -0.0001)
 		{
@@ -253,10 +274,11 @@ bool Player::Update(float dt)
 	}
 	else if (playerState == ATTACK1) {
 		
-		LOG("%f", attack1Timer.ReadSec());
+		/*LOG("%f", attack1Timer.ReadSec());*/
 		if (attack1Timer.ReadSec() >= attack1Time/* && t_spell1.HasFinished()*/) {
 			playerState = IDLE;
 			t_spell1.Reset();
+			attackCollider->body->SetEnabled(false);
 		}
 		
 		
@@ -376,6 +398,7 @@ bool Player::Update(float dt)
 
 		if (dir == RIGHT) {
 			Engine::GetInstance().render.get()->DrawTexture(texture, position.getX(), position.getY(), &currentFrame);
+			
 		}
 		else if (dir == LEFT) {
 			Engine::GetInstance().render.get()->DrawTextureFlipped(texture, position.getX(), position.getY(), &currentFrame);
@@ -387,13 +410,30 @@ bool Player::Update(float dt)
 		position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - t_texW / 2);
 		position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - t_texH / 2);
 
-
+		
+	
 		if (dir == RIGHT) {
+
 			Engine::GetInstance().render.get()->DrawTexture(t_texture, position.getX(), position.getY(), &currentFrame);
+			attackCollider->body->SetTransform({ attackCollider->body->GetPosition().x + weaponOffset.getX(),attackCollider->body->GetPosition().y }, pbody->GetRotation());
 		}
 		else if (dir == LEFT) {
 			Engine::GetInstance().render.get()->DrawTextureFlipped(t_texture, position.getX(), position.getY(), &currentFrame);
+			attackCollider->body->SetTransform({ attackCollider->body->GetPosition().x - weaponOffset.getX(),attackCollider->body->GetPosition().y }, pbody->GetRotation());
 		}
+		
+
+		SDL_Rect attackRect = {
+		(attackCollider->body->GetPosition().x) - ATKcolliderW / 2,
+		(attackCollider->body->GetPosition().y) - ATKcolliderH / 2,
+		ATKcolliderW,
+		ATKcolliderH
+		};
+		
+
+		/*Engine::GetInstance().render.get()->DrawRectangle(attackRect, 255, 255, 255, 255, false, true);*/
+		
+		
 	}
 	
 	
@@ -438,7 +478,13 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 
 	case ColliderType::ENEMY:
 
-		DMGPlayer(physA, physB);
+		if (physA->ctype == ColliderType::WEAPON) {
+			hitEnemy = true;
+		}
+		else {
+			DMGPlayer(physA, physB);
+		}
+		
 
 		LOG("Collision ENEMY");
 		break;
@@ -460,6 +506,7 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		reachedCheckPoint = true;
 		Engine::GetInstance().scene.get()->SaveState();
 		break;
+	
 	case ColliderType::UNKNOWN:
 		LOG("Collision UNKNOWN");
 		break;

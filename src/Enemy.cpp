@@ -108,16 +108,24 @@ bool Enemy::Update(float dt)
 		pathfinding->PropagateAStar(SQUARED, position);
 	}
 
+	if (player->hitEnemy) {
+
+		pbody->body->SetEnabled(false);
+		player->hitEnemy = false;
+		hitByPlayer = true;
+	}
+
 	// L08 TODO 4: Add a physics to an item - update the position of the object from the physics.  
 	b2Transform pbodyPos = pbody->body->GetTransform();
 	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - texH / 2);
 	position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2);
 
-	Engine::GetInstance().render.get()->DrawTexture(texture, (int)position.getX(), (int)position.getY(), &currentAnimation->GetCurrentFrame());
-	currentAnimation->Update();
-
-	// Draw pathfinding 
-	pathfinding->DrawPath();
+	if (!hitByPlayer) {
+		Engine::GetInstance().render.get()->DrawTexture(texture, (int)position.getX(), (int)position.getY(), &currentAnimation->GetCurrentFrame());
+		currentAnimation->Update();
+		pathfinding->DrawPath();
+	}
+	
 
 	return true;
 }
@@ -201,4 +209,59 @@ void Enemy::LoadData(pugi::xml_node enemyNode)
 	pbody->SetPhysPositionWithWorld( enemyNode.attribute("x").as_float(), enemyNode.attribute("y").as_float() );
 	ResetPath();
 	//alive = enemyNode.attribute("alive").as_bool();
+}
+
+void Enemy::OnCollision(PhysBody* physA, PhysBody* physB) {
+	switch (physB->ctype)
+	{
+	case ColliderType::WEAPON:
+		LOG("Collision PLATFORM");
+		break;
+	case ColliderType::ITEM:
+		LOG("Collision ITEM");
+		break;
+	case ColliderType::SPYKE:
+
+		LOG("Collision SPYKE");
+
+		break;
+
+	case ColliderType::ENEMY:
+		LOG("Collision ENEMY");
+		break;
+	case ColliderType::ABYSS:
+	{
+
+		LOG("Collision ABYSS");
+		break;
+	}
+	case ColliderType::UNKNOWN:
+		LOG("Collision UNKNOWN");
+		break;
+
+	default:
+		break;
+	}
+}
+
+void Enemy::OnCollisionEnd(PhysBody* physA, PhysBody* physB)
+{
+	switch (physB->ctype)
+	{
+	case ColliderType::PLATFORM:
+		LOG("End Collision PLATFORM");
+		break;
+	case ColliderType::ITEM:
+
+		LOG("End Collision ITEM");
+		break;
+	case ColliderType::LADDER:
+		LOG("End Collision LADDER");
+		break;
+	case ColliderType::UNKNOWN:
+		LOG("End Collision UNKNOWN");
+		break;
+	default:
+		break;
+	}
 }

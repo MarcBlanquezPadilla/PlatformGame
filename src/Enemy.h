@@ -5,6 +5,7 @@
 #include "SDL2/SDL.h"
 #include "Animation.h"
 #include "Pathfinding.h"
+#include "Timer.h"
 
 class Player;
 
@@ -45,6 +46,10 @@ public:
 		this->parameters = parameters;
 	}
 
+	void OnCollision(PhysBody* physA, PhysBody* physB);
+
+	void OnCollisionEnd(PhysBody* physA, PhysBody* physB);
+
 	void SetPosition(Vector2D pos);
 
 	Vector2D GetPosition();
@@ -71,14 +76,19 @@ public:
 	const char* texturePath;
 	int texW, texH;
 	pugi::xml_node parameters;
-	Animation* currentAnimation = nullptr;
-	Animation idle;
+	
 	PhysBody* pbody;
 	Player* player;
 
 	//STATES
 	State state;
 	Dir dir;
+
+	Animation* currentAnimation = nullptr;
+	Animation idle;
+	Animation attack;
+	Animation hurt;
+	Animation death;
 	
 	//PATH
 	Pathfinding* pathfinding;
@@ -90,4 +100,7 @@ public:
 	int speed;
 	int chaseArea;
 	int attackArea;
+	Timer deathTimer;
+	float deathTime;
+	bool hitByPlayer;
 };

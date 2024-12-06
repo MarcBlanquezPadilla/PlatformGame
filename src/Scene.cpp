@@ -59,8 +59,9 @@ bool Scene::Start()
 
 	//Load Items
 	Item* pumpkin = (Item*)Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM);
+	LoadItem(pumpkin, configParameters.child("entities").child("items").child("pumpkin"), 1);
 
-	//Load CheckPoint?
+	
 
 	return true;
 }
@@ -72,6 +73,13 @@ void Scene::LoadEnemy(Enemy* enemy, pugi::xml_node parametersNode, int pathNum)
 	std::string nodeChar = "path" + std::to_string(pathNum);
 	enemy->SetPath(configParameters.child("entities").child("enemies").child("paths").child(nodeChar.c_str()));
 	enemies.push_back(enemy);
+}
+
+void Scene::LoadItem(Item* item, pugi::xml_node parametersNode, int pathNum) {
+
+	item->SetPlayer(player);
+	item->SetParameters(parametersNode);
+	items.push_back(item);
 }
 
 
@@ -173,6 +181,22 @@ void Scene::SaveState()
 		}
 
 		enemies[i]->SaveData(parent);
+	}
+
+	//Items
+	for (int i = 0; i < items.size(); i++)
+	{
+		std::string nodeChar = "item" + std::to_string(i);
+		pugi::xml_node parent = savedDataNode.child(nodeChar.c_str());
+
+		if (!parent) {
+			parent = savedDataNode.append_child(nodeChar.c_str());
+			parent.append_attribute("lit");
+			parent.append_attribute("x");
+			parent.append_attribute("y");
+		}
+
+		items[i]->SaveData(parent);
 	}
 
 	//Saves the modifications to the XML 

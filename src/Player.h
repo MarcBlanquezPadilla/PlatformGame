@@ -5,7 +5,7 @@
 #include "Box2D/Box2D.h"
 #include "Animation.h"
 #include "Timer.h"
-#include "Item.h"
+
 
 #define GHOST_W 9
 
@@ -54,6 +54,7 @@ public:
 	void SetParameters(pugi::xml_node parameters) {
 		this->parameters = parameters;
 	}
+	void UpdateAttackCollider(Player& player);
 
 	void SetPosition(Vector2D pos);
 
@@ -66,6 +67,10 @@ public:
 public:
 
 	//Declare player parameters
+	PhysBody* attackCollider;
+	int ATKcolliderW;
+	int ATKcolliderH;
+	Vector2D weaponOffset;
 	
 	SDL_Texture* texture;
 	SDL_Texture* t_texture;
@@ -88,6 +93,7 @@ public:
 	bool transformable;
 	bool transformed;
 	bool reachedCheckPoint;
+	bool hitEnemy;
 
 	Timer attack1Timer;
 	float attack1Time;

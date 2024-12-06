@@ -24,6 +24,7 @@ enum bodyType {
 
 enum class ColliderType {
 	PLAYER, 
+	WEAPON,
 	ITEM,
 	PLATFORM, 
 	SPYKE,

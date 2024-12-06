@@ -17,6 +17,7 @@ struct SDL_Texture;
 class BatEnemy;
 class GroundEnemy;
 class Enemy;
+class Item;
 
 class Scene : public Module
 {
@@ -50,6 +51,8 @@ public:
 
 	void LoadEnemy(Enemy* enemy, pugi::xml_node parametersNode, int pathNum);
 
+	void LoadItem(Item* item, pugi::xml_node parametersNode, int pathNum);
+
 	void LoadState();
 
 	void SaveState();
@@ -60,8 +63,7 @@ private:
 	Player* player;
 
 	std::vector<Enemy*> enemies;
+	std::vector<Item*> items;
 
-	/*Item* pumpkin;*/
-	/*std::vector<Enemy*> enemyList;*/
 
 };

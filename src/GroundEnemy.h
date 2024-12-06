@@ -32,7 +32,6 @@ private:
 	int drawOffsetY = 0;
 	Vector2D destinationPoint;
 	Animation walk;
-	Animation attack;
 	float attackTime;
 	Timer attackTimer;
 

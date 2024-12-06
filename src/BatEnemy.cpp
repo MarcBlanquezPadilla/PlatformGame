@@ -26,7 +26,22 @@ bool BatEnemy::Start() {
 
 	//INIT ANIMS
 	AddAnimation(idle, 0, texW, 4);
+	idle.loop = true;
 	idle.speed = 0.2f;
+	
+
+	AddAnimation(attack, 32, texW, 6);
+	attack.loop = false;
+	attack.speed = 0.2f;
+	
+	AddAnimation(hurt, 64, texW, 4);
+	hurt.loop = false;
+	hurt.speed = 0.2f;
+
+	AddAnimation(death, 96, texW, 7);
+	death.loop = false;
+	death.speed = 0.2f;
+
 	currentAnimation = &idle;
 
 	//INIT ROUTE
@@ -52,7 +67,9 @@ bool BatEnemy::Start() {
 	//INIT VARIABLES
 	speed = parameters.child("properties").attribute("speed").as_float();
 	chaseArea = parameters.child("properties").attribute("chaseArea").as_float();
+	deathTime = parameters.child("properties").attribute("deathTime").as_float();
 	state = PATROL;
+
 	
 
 	return true;
@@ -87,7 +104,7 @@ bool BatEnemy::Update(float dt) {
 			ResetPath();
 		}
 	}
-	else {
+	else if (state == CHASING) {
 		
 		Vector2D playerPos = player->pbody->GetPhysBodyWorldPosition();
 		Vector2D playerPosCenteredOnTile = Engine::GetInstance().map.get()->WorldToWorldCenteredOnTile(playerPos.getX(), playerPos.getY());
@@ -96,6 +113,20 @@ bool BatEnemy::Update(float dt) {
 			destinationPoint = playerPosCenteredOnTile;
 			ResetPath();
 		}
+	}
+	else if (state == ATTACK) {
+		
+	}
+	else if (state == HURT) {
+		deathTimer.Start();
+
+		if (deathTimer.ReadSec() >= deathTime) {
+			state = DEAD;
+		}
+	}
+	else if (state == DEAD) {
+		pbody->body->SetEnabled(false);
+		LOG("killed bat");
 	}
 	
 	//PATHFINDING CONTROLER
@@ -125,6 +156,28 @@ bool BatEnemy::Update(float dt) {
 			direction.Normalize();
 			pbody->body->SetLinearVelocity({direction.x * speed, direction.y * speed});
 		}
+	}
+
+
+	switch (state) {
+		break;
+	case CHASING:
+		currentAnimation = &attack;
+		break;
+	case PATROL:
+		currentAnimation = &idle;
+		break;
+	case ATTACK:
+		currentAnimation = &attack;
+		break;
+	case HURT:
+		currentAnimation = &death;
+		break;
+	case DEAD:
+
+		break;
+	default:
+		break;
 	}
 
 	if (pbody->body->GetLinearVelocity().x > 0.2f) {

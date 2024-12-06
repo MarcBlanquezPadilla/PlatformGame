@@ -32,7 +32,7 @@ public:
     bool IsFlyable(int x, int y);
     bool IsWalkable(int x, int y);
     bool IsJumpable(int x, int y);
-   /* bool IsCheckPoint(int x, int y);*/
+
     void PropagateBFS();
 
     // L12: Methods for BFS + Pathfinding and cost function for Dijkstra

@@ -5,6 +5,8 @@
 #include "Animation.h"
 #include "Player.h"
 
+
+
 struct SDL_Texture;
 
 enum CandyType {
@@ -38,7 +40,14 @@ public:
 
 	bool CleanUp();
 
-	//void SetPlayer( Player* _player);
+	void SetParameters(pugi::xml_node _parameters) {
+		this->parameters = _parameters;
+	}
+
+	void SetPlayer(Player* _player);
+
+	void SaveData(pugi::xml_node itemNode);
+	void LoadData(pugi::xml_node itemNode);
 
 public:
 
@@ -48,16 +57,20 @@ private:
 	//L08 TODO 4: Add a physics to an item
 	PhysBody* pbody;
 
-	/*Player* ghost;*/
+	Player* player;
 
 	SDL_Texture* candyTex;
 	SDL_Texture* pumpkinTex;
+
+	bool alight;
 
 	const char* texturePath;
 	int texW, texH;
 	Animation lit;
 	Animation unlit;
 	Animation* currentAnim;
+
+	pugi::xml_node parameters;
 };
 
 

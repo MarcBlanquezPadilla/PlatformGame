@@ -19,24 +19,21 @@ bool Item::Awake() {
 	return true;
 }
 
-//void Item::SetPlayer(Player* _player)
-//{
-//	ghost = _player;
-//}
 
 bool Item::Start() {
 
 	//initilize textures
-	pumpkinTex = Engine::GetInstance().textures.get()->Load("Assets/Textures/Items/pumpkin ui obj-resized.png");
+	pumpkinTex = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture").as_string());
 	
 	/* L08 TODO 4: Add a physics to an item - initialize the physics body*/
-	Engine::GetInstance().textures.get()->GetSize(pumpkinTex, texW, texH);
-	position.setX(300);
-	position.setY(416);
-	texW = 16;
-	texH = 16;
 
-	unlit.PushBack({ 0,0,texW,texH});
+	position.setX(parameters.attribute("x").as_float());
+	position.setY(parameters.attribute("y").as_float());
+	
+	texW = parameters.attribute("w").as_float();
+	texH = parameters.attribute("h").as_float();
+
+	unlit.PushBack({ 0,0,texW,texH });
 	lit.PushBack({ 0,texH,texW,texH });
 
 
@@ -52,16 +49,7 @@ bool Item::Start() {
 
 bool Item::Update(float dt)
 {
-	// L08 TODO 4: Add a physics to an item - update the position of the object from the physics.  
 
-	/*if (ghost->transformed) {
-
-		currentAnim = &lit;
-
-	}
-	else {
-		currentAnim = &unlit;
-	}*/
 
 	b2Transform pbodyPos = pbody->body->GetTransform();
 	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - texW / 2);
@@ -77,4 +65,24 @@ bool Item::CleanUp()
 {
 	return true;
 }
+
+void Item::SetPlayer(Player* _player) {
+	player = _player;
+}
+
+void Item::SaveData(pugi::xml_node itemNode)
+{
+	itemNode.attribute("alight").set_value(player->transformed);
+	itemNode.attribute("x").set_value(pbody->GetPhysBodyWorldPosition().getX());
+	itemNode.attribute("y").set_value(pbody->GetPhysBodyWorldPosition().getY());
+}
+
+
+void Item::LoadData(pugi::xml_node itemNode)
+{
+	pbody->SetPhysPositionWithWorld(itemNode.attribute("x").as_float(), itemNode.attribute("y").as_float());
+	alight = itemNode.attribute("alight").as_bool();
+}
+
+
 

@@ -195,22 +195,6 @@ bool GroundEnemy::Update(float dt) {
 		case ATTACK:
 			currentAnimation = &attack;
 			break;
-		//case JUMP:
-
-		//	currentAnimation = &jump;
-		//	break;
-		//case FALL:
-
-		//	currentAnimation = &fall;
-		//	break;
-		//case HURT:
-
-		//	currentAnimation = &hurt;
-		//	break;
-	/*	case DEAD:
-
-			currentAnimation = &death;
-			break;*/
 		default:
 			break;
 	}
