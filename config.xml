@@ -130,7 +130,7 @@
 			<enemies>
 				<groundEnemy>
 					<skeleton x="100" y="420" w="48" h="48" texture="Assets/Textures/Enemies/Undead/SwordsMan-reorganized_spritesheet.png">
-						<properties speed="1" chaseArea="100" attackArea="20" jumpForce="0.3f" attackTime="1.0f" deathTime ="1.5f"/>
+						<properties speed="1" chaseArea="100" attackArea="20" jumpForce="0.3f" attackTime="1.0f" deathTime="1.5f" />
 						<animations>
 							<idle loop="false" speed="0.2f">
 								<frame x="0" y="0" w="48" h="48" />
@@ -150,37 +150,37 @@
 				</groundEnemy>
 				<flyEnemy>
 					<bat x="250" y="350" w="32" h="32" texture="Assets/Textures/Enemies/Bat/Vampire/BatVampire_Sheet.png">
-						<properties speed="1" chaseArea="100" deathTime ="1.0f"/>
+						<properties speed="1" chaseArea="100" deathTime="1.0f" />
 						<animations>
-							<idle loop ="true" speed ="0.2f">
-								<frame x= "0" y="0" w="32" h="32"/>
-								<frame x="32" y="0" w="32" h="32"/>
-								<frame x="64" y="0" w="32" h="32"/>
-								<frame x="96" y="0" w="32" h="32"/>
+							<idle loop="true" speed="0.2f">
+								<frame x="0" y="0" w="32" h="32" />
+								<frame x="32" y="0" w="32" h="32" />
+								<frame x="64" y="0" w="32" h="32" />
+								<frame x="96" y="0" w="32" h="32" />
 							</idle>
-              <attack loop="true" speed="0.2f">
-                <frame x= "0" y="32" w="32" h="32"/>
-                <frame x="32" y="32" w="32" h="32"/>
-                <frame x="64" y="32" w="32" h="32"/>
-                <frame x="96" y="32" w="32" h="32"/>
-                <frame x="128" y="32" w="32" h="32"/>
-                <frame x="160" y="32" w="32" h="32"/>
-              </attack>
-              <hurt>
-                <frame x= "0" y="64" w="32" h="32"/>
-                <frame x="32" y="64" w="32" h="32"/>
-                <frame x="64" y="64" w="32" h="32"/>
-                <frame x="96" y="64" w="32" h="32"/>
-              </hurt>
-              <death>
-                <frame x="0" y="96" w="32" h="32"/>
-                <frame x="32" y="96" w="32" h="32"/>
-                <frame x="64" y="96" w="32" h="32"/>
-                <frame x="96" y="96" w="32" h="32"/>
-                <frame x="128" y="96" w="32" h="32"/>
-                <frame x="192" y="96" w="32" h="32"/>
-                <frame x="224" y="96" w="32" h="32"/>
-              </death>
+							<attack loop="true" speed="0.2f">
+								<frame x="0" y="32" w="32" h="32" />
+								<frame x="32" y="32" w="32" h="32" />
+								<frame x="64" y="32" w="32" h="32" />
+								<frame x="96" y="32" w="32" h="32" />
+								<frame x="128" y="32" w="32" h="32" />
+								<frame x="160" y="32" w="32" h="32" />
+							</attack>
+							<hurt>
+								<frame x="0" y="64" w="32" h="32" />
+								<frame x="32" y="64" w="32" h="32" />
+								<frame x="64" y="64" w="32" h="32" />
+								<frame x="96" y="64" w="32" h="32" />
+							</hurt>
+							<death>
+								<frame x="0" y="96" w="32" h="32" />
+								<frame x="32" y="96" w="32" h="32" />
+								<frame x="64" y="96" w="32" h="32" />
+								<frame x="96" y="96" w="32" h="32" />
+								<frame x="128" y="96" w="32" h="32" />
+								<frame x="192" y="96" w="32" h="32" />
+								<frame x="224" y="96" w="32" h="32" />
+							</death>
 						</animations>
 					</bat>
 				</flyEnemy>
@@ -196,18 +196,41 @@
 				</paths>
 			</enemies>
 			<items>
-				<pumpkin x="300" y="416" w="16" h="16" texture="Assets/Textures/Items/pumpkin ui obj-resized.png" />
+				<pumpkins>
+					<pumpkin1 x="300" y="416" w="16" h="16" texture="Assets/Textures/Items/pumpkin ui obj-resized.png" />
+					<checkPumpkin1 x="1808" y="192" w="16" h="16" texture="Assets/Textures/Items/pumpkin ui obj-resized.png" />
+				</pumpkins>
 			</items>
 		</entities>
 		<savedData saved="true">
-			<player x="1782" y="198" lives="2" transformable="false" transformed="false" />
-			<enemy0 alive="true" x="221" y="344" />
-			<enemy1 alive="true" x="185" y="423" />
+			<player x="1799" y="198" lives="3" transformable="false" transformed="false" />
+			<enemy0 alive="true" x="243" y="344" />
+			<enemy1 alive="true" x="201" y="423" />
 			<player x="337" y="422" lives="3" transformable="false" transformed="false" />
 			<enemy0 alive="true" x="200" y="342" />
 			<enemy1 alive="true" x="456" y="397" />
 			<item0 lit="" x="308" y="423" />
+			<item1 lit="" x="1816" y="200" />
+			<item2 lit="" x="1784" y="200" />
+			<item3 lit="" x="1849" y="200" />
 		</savedData>
 	</scene>
 	<ui path="Assets/Textures/UI/HelpMenu2.png" />
+	<audio>
+		<fx>
+			<gJumpSFX path="Assets/Audio/Fx/ghostJump.ogg" />
+			<pJumpSFX path="Assets/Audio/Fx/pumpkinJump.ogg" />
+			<atk1SFX path="Assets/Audio/Fx/atk1_alt.ogg" />
+			<atk2SFX path="Assets/Audio/Fx/customATK2.ogg" />
+			<switchOnSFX path="Assets/Audio/Fx/SwitchON.ogg" />
+			<switchOffSFX path="Assets/Audio/Fx/SwitchOFF.ogg" />
+			<gHurtSFX path="Assets/Audio/Fx/SquidHit.ogg" />
+			<pHurtSFX path="Assets/Audio/Fx/BonkSFX.ogg" />
+			<gDeathSFX path="Assets/Audio/Fx/SinkOMO.ogg" />
+			<pDeathSFX path="Assets/Audio/Fx/PumpkinCrack.ogg" />
+			<saveGame path="Assets/Audio/Fx/SaveGame.ogg" />
+			<loadGame path="Assets/Audio/Fx/LoadGame.ogg" />
+		</fx>
+		<music />
+	</audio>
 </config>

@@ -89,18 +89,21 @@ bool Player::Start() {
 	transformed = false;
 	reachedCheckPoint = false;
 
-	saveGame = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/SaveGame.ogg");
-	loadGame = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/LoadGame.ogg");
-	gJumpSFX = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/ghostJump.ogg");
-	pJumpSFX = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/pumpkinJump.ogg");
-	gHurtSFX = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/SquidHit.ogg");
-	pHurtSFX = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/BonkSFX.ogg");
-	gDeathSFX = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/SinkOMO.ogg");
-	pDeathSFX = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/PumpkinCrack.ogg");
-	atk1SFX = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/atk1_alt.ogg");
-	atk2SFX = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/customATK2.ogg");
-	switchOnSFX = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/SwitchON.ogg");
-	switchOffSFX = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/SwitchOFF.ogg");
+	pugi::xml_document audioFile;
+	pugi::xml_parse_result result = audioFile.load_file("config.xml");
+
+	gJumpSFX = Engine::GetInstance().audio.get()->LoadFx(audioFile.child("config").child("audio").child("fx").child("gJumpSFX").attribute("path").as_string());
+	pJumpSFX = Engine::GetInstance().audio.get()->LoadFx(audioFile.child("config").child("audio").child("fx").child("pJumpSFX").attribute("path").as_string());
+	gHurtSFX = Engine::GetInstance().audio.get()->LoadFx(audioFile.child("config").child("audio").child("fx").child("gHurtSFX").attribute("path").as_string());
+	pHurtSFX = Engine::GetInstance().audio.get()->LoadFx(audioFile.child("config").child("audio").child("fx").child("pHurtSFX").attribute("path").as_string());
+	gDeathSFX = Engine::GetInstance().audio.get()->LoadFx(audioFile.child("config").child("audio").child("fx").child("gDeathSFX").attribute("path").as_string());
+	pDeathSFX = Engine::GetInstance().audio.get()->LoadFx(audioFile.child("config").child("audio").child("fx").child("pDeathSFX").attribute("path").as_string());
+	atk1SFX = Engine::GetInstance().audio.get()->LoadFx(audioFile.child("config").child("audio").child("fx").child("atk1SFX").attribute("path").as_string());
+	atk2SFX = Engine::GetInstance().audio.get()->LoadFx(audioFile.child("config").child("audio").child("fx").child("atk2SFX").attribute("path").as_string());
+	switchOnSFX = Engine::GetInstance().audio.get()->LoadFx(audioFile.child("config").child("audio").child("fx").child("switchOnSFX").attribute("path").as_string());
+	switchOffSFX = Engine::GetInstance().audio.get()->LoadFx(audioFile.child("config").child("audio").child("fx").child("switchOffSFX").attribute("path").as_string());
+	saveGame = Engine::GetInstance().audio.get()->LoadFx(audioFile.child("config").child("audio").child("fx").child("saveGame").attribute("path").as_string());
+	loadGame = Engine::GetInstance().audio.get()->LoadFx(audioFile.child("config").child("audio").child("fx").child("loadGame").attribute("path").as_string());
 
 	
 
@@ -491,8 +494,15 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 	case ColliderType::ABYSS:
 	{ 
 		if (!godMode) {
-			lives = parameters.attribute("lives").as_int();
-			tpToStart = true;
+			if (transformed) {
+				Engine::GetInstance().audio.get()->PlayFx(pDeathSFX);
+			}
+			else {
+				Engine::GetInstance().audio.get()->PlayFx(gDeathSFX);
+			}
+			lives = 0;
+			playerState = DEAD;
+			
 		}
 		LOG("Collision ABYSS");
 		break;

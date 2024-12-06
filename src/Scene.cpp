@@ -54,14 +54,21 @@ bool Scene::Start()
 	Enemy* batEnemy = (BatEnemy*)Engine::GetInstance().entityManager->CreateEntity(EntityType::BAT_ENEMY);
 	LoadEnemy(batEnemy, configParameters.child("entities").child("enemies").child("flyEnemy").child("bat"), 1);
 
-	//Enemy* groundEnemy = (GroundEnemy*)Engine::GetInstance().entityManager->CreateEntity(EntityType::GROUND_ENEMY);
-	//LoadEnemy(groundEnemy, configParameters.child("entities").child("enemies").child("groundEnemy").child("skeleton"), 2);
+	Enemy* groundEnemy = (GroundEnemy*)Engine::GetInstance().entityManager->CreateEntity(EntityType::GROUND_ENEMY);
+	LoadEnemy(groundEnemy, configParameters.child("entities").child("enemies").child("groundEnemy").child("skeleton"), 2);
 
 	//Load Items
-	Item* pumpkin = (Item*)Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM);
-	LoadItem(pumpkin, configParameters.child("entities").child("items").child("pumpkin"), 1);
+	Item* pumpkin1 = (Item*)Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM);
+	LoadItem(pumpkin1, configParameters.child("entities").child("items").child("pumpkins").child("pumpkin1"), 1);
 
-	
+	Item* checkPumpkin1 = (Item*)Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM);
+	LoadItem(checkPumpkin1, configParameters.child("entities").child("items").child("pumpkins").child("checkPumpkin1"), 2);
+
+	/*Item* checkPumpkin2 = (Item*)Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM);
+	LoadItem(checkPumpkin2, configParameters.child("entities").child("items").child("pumpkins").child("checkPumpkin2"), 3);
+
+	Item* checkPumpkin3 = (Item*)Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM);
+	LoadItem(checkPumpkin3, configParameters.child("entities").child("items").child("pumpkins").child("checkPumpkin3"), 4);*/
 
 	return true;
 }
@@ -191,7 +198,7 @@ void Scene::SaveState()
 
 		if (!parent) {
 			parent = savedDataNode.append_child(nodeChar.c_str());
-			parent.append_attribute("lit");
+			parent.append_attribute("alight");
 			parent.append_attribute("x");
 			parent.append_attribute("y");
 		}
@@ -237,4 +244,3 @@ void Scene::LoadState() {
 
 	loadFile.save_file("config.xml");
 }
-// L15 TODO 2: Implement the Save function

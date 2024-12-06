@@ -31,7 +31,7 @@ bool BatEnemy::Start() {
 	
 
 	AddAnimation(attack, 32, texW, 6);
-	attack.loop = false;
+	attack.loop = true;
 	attack.speed = 0.2f;
 	
 	AddAnimation(hurt, 64, texW, 4);

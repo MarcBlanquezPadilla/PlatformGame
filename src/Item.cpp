@@ -72,7 +72,7 @@ void Item::SetPlayer(Player* _player) {
 
 void Item::SaveData(pugi::xml_node itemNode)
 {
-	itemNode.attribute("alight").set_value(player->transformed);
+	itemNode.attribute("alight").set_value(true);
 	itemNode.attribute("x").set_value(pbody->GetPhysBodyWorldPosition().getX());
 	itemNode.attribute("y").set_value(pbody->GetPhysBodyWorldPosition().getY());
 }
