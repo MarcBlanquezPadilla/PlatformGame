@@ -15,6 +15,8 @@
 #include "BatEnemy.h"
 #include "GroundEnemy.h"
 #include <string>
+#include "Particle.h"
+#include "ParticleManager.h"
 
 Scene::Scene() : Module()
 {

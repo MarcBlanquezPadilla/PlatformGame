@@ -1,5 +1,6 @@
 #pragma once
 
+#include "pugixml.hpp"
 #include "SDL2/SDL_rect.h"
 #define MAX_FRAMES 25
 

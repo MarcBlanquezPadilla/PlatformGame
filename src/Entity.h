@@ -1,11 +1,13 @@
 #pragma once
 
+#include "Animation.h"
 #include "Input.h"
 #include "Render.h"
 
 enum class EntityType
 {
 	PLAYER,
+	SHOT,
 	ITEM,
 	ENEMY,
 	BAT_ENEMY,

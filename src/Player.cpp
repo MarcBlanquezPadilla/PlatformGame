@@ -8,6 +8,8 @@
 #include "Log.h"
 #include "Pathfinding.h"
 #include "Physics.h"
+#include "ParticleManager.h"
+
 
  
 
@@ -88,6 +90,7 @@ bool Player::Start() {
 	canClimb = false;
 	transformed = false;
 	reachedCheckPoint = false;
+	shot = false;
 
 	pugi::xml_document audioFile;
 	pugi::xml_parse_result result = audioFile.load_file("config.xml");
@@ -254,6 +257,12 @@ bool Player::Update(float dt)
 				attack2Timer.Start();
 				pbody->body->SetLinearVelocity({ 0,0 });
 				Engine::GetInstance().audio.get()->PlayFx(atk2SFX);
+				shot = true;
+				
+				
+				
+
+
 			}
 		}
 		
@@ -287,9 +296,18 @@ bool Player::Update(float dt)
 		
 	}
 	else if (playerState == ATTACK2) {
+
+		if (shot) {
+			Engine::GetInstance().particleManager.get()->AddParticle(Engine::GetInstance().particleManager.get()->shot, position.getX(), position.getY(), 40);
+			shot = false;
+		}
+
 		if (attack2Timer.ReadSec() >= attack2Time/* && t_spell2.HasFinished()*/) {
+			
 			playerState = IDLE;
 			t_spell2.Reset();
+			
+			
 		}
 	}
 	else if (playerState == HURT) {
@@ -432,11 +450,7 @@ bool Player::Update(float dt)
 		ATKcolliderW,
 		ATKcolliderH
 		};
-		
-
-		/*Engine::GetInstance().render.get()->DrawRectangle(attackRect, 255, 255, 255, 255, false, true);*/
-		
-		
+	
 	}
 	
 	

@@ -68,6 +68,7 @@ public:
 
 	//Declare player parameters
 	PhysBody* attackCollider;
+
 	int ATKcolliderW;
 	int ATKcolliderH;
 	Vector2D weaponOffset;
@@ -94,6 +95,7 @@ public:
 	bool transformed;
 	bool reachedCheckPoint;
 	bool hitEnemy;
+	bool shot;
 
 	Timer attack1Timer;
 	float attack1Time;
