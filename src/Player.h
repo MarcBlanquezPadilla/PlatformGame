@@ -54,7 +54,6 @@ public:
 	void SetParameters(pugi::xml_node parameters) {
 		this->parameters = parameters;
 	}
-	void UpdateAttackCollider(Player& player);
 
 	void SetPosition(Vector2D pos);
 

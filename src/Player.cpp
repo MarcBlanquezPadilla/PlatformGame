@@ -124,8 +124,9 @@ bool Player::Start() {
 	attackCollider = Engine::GetInstance().physics.get()->CreateRectangleSensor((int)position.getX(), (int)position.getY(), ATKcolliderW, ATKcolliderH, bodyType::DYNAMIC);
 	attackCollider->ctype = ColliderType::WEAPON;
 	attackCollider->body->SetEnabled(false);
+	attackCollider->body->SetGravityScale(0);
 	weaponOffset = { 10, 7 };
-	pbody->listener = this;
+	
 
 
 	
@@ -486,14 +487,6 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 
 	case ColliderType::ENEMY:
 
-		if (physA->ctype == ColliderType::WEAPON) {
-			hitEnemy = true;
-		}
-		else {
-			DMGPlayer(physA, physB);
-		}
-		
-
 		LOG("Collision ENEMY");
 		break;
 	
@@ -589,43 +582,37 @@ void Player::LoadData(pugi::xml_node playerNode)
 
 void Player::DMGPlayer(PhysBody* physA, PhysBody* physB) {
 
+	if (playerState != DEAD && !godMode && playerState != HURT) {
 
-	if (playerState != DEAD) {
+		lives--;
+		if (lives <= 0) {
+			playerState = DEAD;
 
-		if (!godMode && playerState != HURT)
+			if (transformed) Engine::GetInstance().audio.get()->PlayFx(pDeathSFX);
+			else Engine::GetInstance().audio.get()->PlayFx(gDeathSFX);
+
+			pbody->body->SetGravityScale(0);
+			respawnTimer.Start();
+		}
+		else
 		{
-			lives--;
-			if (lives <= 0) {
-				playerState = DEAD;
 
-				if (transformed) Engine::GetInstance().audio.get()->PlayFx(pDeathSFX);
-				else Engine::GetInstance().audio.get()->PlayFx(gDeathSFX);
+			hurtTimer.Start();
+			playerState = HURT;
+			pbody->body->SetGravityScale(godMode == true || canClimb == true || playerState == DEAD ? 0 : gravity);
 
-				pbody->body->SetGravityScale(0);
-				respawnTimer.Start();
-			}
-			else
-			{
-
-				hurtTimer.Start();
-				playerState = HURT;
-				pbody->body->SetGravityScale(godMode == true || canClimb == true || playerState == DEAD ? 0 : gravity);
-
-				if (transformed) Engine::GetInstance().audio.get()->PlayFx(pHurtSFX);
-				else Engine::GetInstance().audio.get()->PlayFx(gHurtSFX);
+			if (transformed) Engine::GetInstance().audio.get()->PlayFx(pHurtSFX);
+			else Engine::GetInstance().audio.get()->PlayFx(gHurtSFX);
 				
-				pushDir = b2Vec2_zero;
-				pushDir.x = physA->body->GetPosition().x - physB->body->GetPosition().x;
-				pushDir.y = physA->body->GetPosition().y - physB->body->GetPosition().y;
-				pushDir.Normalize();
+			pushDir = b2Vec2_zero;
+			pushDir.x = physA->body->GetPosition().x - physB->body->GetPosition().x;
+			pushDir.y = physA->body->GetPosition().y - physB->body->GetPosition().y;
+			pushDir.Normalize();
 				
-				physA->body->SetLinearVelocity(b2Vec2_zero);
-				physA->body->ApplyLinearImpulseToCenter(b2Vec2(pushForce * pushDir.x, pushForce * pushDir.y), true);
+			physA->body->SetLinearVelocity(b2Vec2_zero);
+			physA->body->ApplyLinearImpulseToCenter(b2Vec2(pushForce * pushDir.x, pushForce * pushDir.y), true);
 				
 
-			}
 		}
 	}
-	
-	
 }

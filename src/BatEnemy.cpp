@@ -55,10 +55,10 @@ bool BatEnemy::Start() {
 	//INIT PHYSICS
 	pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX(), (int)position.getY(), 32 / 4, bodyType::DYNAMIC);
 	pbody->ctype = ColliderType::ENEMY;
-
 	pbody->body->SetGravityScale(0);
 	pbody->body->SetFixedRotation(true);
 	pbody->body->SetTransform({ PIXEL_TO_METERS(destinationPoint.getX()), PIXEL_TO_METERS(destinationPoint.getY()) }, 0);
+	pbody->listener = this;
 
 	//INIT PATH
 	pathfinding = new Pathfinding();

@@ -43,6 +43,7 @@ bool Enemy::Start() {
 
 	//Assign collider type
 	pbody->ctype = ColliderType::ENEMY;
+	pbody->listener = this;
 
 	// Set the gravity of the body
 	if (!parameters.attribute("gravity").as_bool()) pbody->body->SetGravityScale(0);
@@ -215,6 +216,8 @@ void Enemy::LoadData(pugi::xml_node enemyNode)
 }
 
 void Enemy::OnCollision(PhysBody* physA, PhysBody* physB) {
+
+	LOG("HOLA");
 	switch (physB->ctype)
 	{
 	case ColliderType::WEAPON:

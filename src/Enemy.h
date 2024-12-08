@@ -46,9 +46,9 @@ public:
 		this->parameters = parameters;
 	}
 
-	void OnCollision(PhysBody* physA, PhysBody* physB);
+	void OnCollision(PhysBody* physA, PhysBody* physB) override;
 
-	void OnCollisionEnd(PhysBody* physA, PhysBody* physB);
+	void OnCollisionEnd(PhysBody* physA, PhysBody* physB) override;
 
 	void SetPosition(Vector2D pos);
 
@@ -59,8 +59,6 @@ public:
 	void AddAnimation(Animation& anim, int startPosY, int frameSize, int numFrames);
 
 	bool CheckIfTwoPointsNear(Vector2D point1, Vector2D point2, float nearDistance);
-
-
 
 	void SetPlayer(Player* player);
 	

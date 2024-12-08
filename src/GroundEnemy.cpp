@@ -58,6 +58,7 @@ bool GroundEnemy::Start() {
 	pbody->ctype = ColliderType::ENEMY;
 	pbody->body->SetGravityScale(1.2f);
 	pbody->body->SetFixedRotation(true);
+	pbody->listener = this;
 	pbody->body->SetTransform({ PIXEL_TO_METERS(destinationPoint.getX()), PIXEL_TO_METERS(destinationPoint.getY()) }, 0);
 
 	//INIT PATH
