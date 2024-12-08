@@ -28,7 +28,7 @@
 		</map>
 		<entities>
 			<player x="25" y="350" w="64" h="64" t_w="64" t_h="64" lives="3" texture="Assets/Textures/GhostCharacter/Ghost_Sheet_Resized.png" t_texture="Assets/Textures/Pumpkin Head/pumpkinhead_sheet2.png">
-				<propierties jumpForce="0.6f" pushForce="0.5f" moveSpeed="0.2f" friction="2.0f" gravity="1.2f" attack1Time="0.8sf" attack2Time="0.5f" hurtTime="1.0f" respawnTime=" 2.0f" playerState="0" direction="1" />
+				<propierties jumpForce="0.6f" pushForce="0.5f" moveSpeed="0.2f" friction="2.0f" gravity="1.2f" attack1Time="0.8f" attack2Time="0.5f" hurtTime="1.0f" respawnTime=" 2.0f" playerState="0" direction="1" />
 				<animations>
 					<idle loop="true" speed="0.2f">
 						<frame x="0" y="0" w="64" h="64" />
@@ -157,7 +157,7 @@
 							</attack>
 						</animations>
 					</skeleton1>
-					<skeleton2 />
+					<skeleton2/>
 				</groundEnemy>
 				<flyEnemy>
 					<bat x="250" y="350" w="32" h="32" texture="Assets/Textures/Enemies/Bat/Vampire/BatVampire_Sheet.png">
@@ -183,7 +183,7 @@
 								<frame x="64" y="64" w="32" h="32" />
 								<frame x="96" y="64" w="32" h="32" />
 							</hurt>
-							<death>
+							<death loop =" false" speed ="0.1f">
 								<frame x="0" y="96" w="32" h="32" />
 								<frame x="32" y="96" w="32" h="32" />
 								<frame x="64" y="96" w="32" h="32" />
@@ -215,11 +215,6 @@
 		</entities>
 		<savedData saved="true">
 			<player x="1799" y="197" lives="3" transformable="false" transformed="false" />
-			<enemy0 alive="true" x="255" y="343" />
-			<enemy1 alive="true" x="106" y="423" />
-			<player x="337" y="422" lives="3" transformable="false" transformed="false" />
-			<enemy0 alive="true" x="200" y="342" />
-			<enemy1 alive="true" x="456" y="397" />
 			<item0 lit="" x="308" y="423" />
 			<item1 lit="" x="1816" y="200" />
 			<item2 lit="" x="1784" y="200" />

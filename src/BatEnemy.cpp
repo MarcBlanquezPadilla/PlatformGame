@@ -78,138 +78,196 @@ bool BatEnemy::Start() {
 bool BatEnemy::Update(float dt) {
 
 
-	//STATES CHANGERS
-	if (pbody->GetPhysBodyWorldPosition().distanceEuclidean(player->pbody->GetPhysBodyWorldPosition()) > chaseArea && state!=PATROL)
-	{
-		state = PATROL;
-		ResetPath();
-		destinationPoint = route[routeDestinationIndex];
-	}
-	else if (pbody->GetPhysBodyWorldPosition().distanceEuclidean(player->pbody->GetPhysBodyWorldPosition()) <= chaseArea && state != CHASING)
-	{
-		state = CHASING;
-		ResetPath();
-	}
-	
-	
-
-	//STATES CONTROLER
-	if (state == PATROL) {
-
-		if (CheckIfTwoPointsNear(destinationPoint, { (float)METERS_TO_PIXELS(pbody->body->GetPosition().x), (float)METERS_TO_PIXELS(pbody->body->GetPosition().y) }, 5))
-		{
-			routeDestinationIndex++;
-			if (routeDestinationIndex == route.size()) routeDestinationIndex = 0;
-			destinationPoint = route[routeDestinationIndex];
-			ResetPath();
+	if (!dead) {
+		pbody->body->SetGravityScale(0);
+		//STATES CHANGERS
+		if (state != DEAD) {
+			if (pbody->GetPhysBodyWorldPosition().distanceEuclidean(player->pbody->GetPhysBodyWorldPosition()) > chaseArea && state != PATROL)
+			{
+				state = PATROL;
+				ResetPath();
+				destinationPoint = route[routeDestinationIndex];
+			}
+			else if (pbody->GetPhysBodyWorldPosition().distanceEuclidean(player->pbody->GetPhysBodyWorldPosition()) <= chaseArea && state != CHASING)
+			{
+				state = CHASING;
+				ResetPath();
+			}
 		}
-	}
-	else if (state == CHASING) {
+	
 		
-		Vector2D playerPos = player->pbody->GetPhysBodyWorldPosition();
-		Vector2D playerPosCenteredOnTile = Engine::GetInstance().map.get()->WorldToWorldCenteredOnTile(playerPos.getX(), playerPos.getY());
-		if (destinationPoint != playerPosCenteredOnTile)
-		{
-			destinationPoint = playerPosCenteredOnTile;
-			ResetPath();
-		}
-	}
-	else if (state == ATTACK) {
+
+
 		
-	}
-	else if (state == HURT) {
-		deathTimer.Start();
+		//STATES CONTROLER
+		
+		if (state == PATROL) {
 
-		if (deathTimer.ReadSec() >= deathTime) {
-			state = DEAD;
+			if (CheckIfTwoPointsNear(destinationPoint, { (float)METERS_TO_PIXELS(pbody->body->GetPosition().x), (float)METERS_TO_PIXELS(pbody->body->GetPosition().y) }, 5))
+			{
+				routeDestinationIndex++;
+				if (routeDestinationIndex == route.size()) routeDestinationIndex = 0;
+				destinationPoint = route[routeDestinationIndex];
+				ResetPath();
+			}
 		}
-	}
-	else if (state == DEAD) {
-		pbody->body->SetEnabled(false);
-		LOG("killed bat");
-	}
+		else if (state == CHASING) {
+
+			Vector2D playerPos = player->pbody->GetPhysBodyWorldPosition();
+			Vector2D playerPosCenteredOnTile = Engine::GetInstance().map.get()->WorldToWorldCenteredOnTile(playerPos.getX(), playerPos.getY());
+			if (destinationPoint != playerPosCenteredOnTile)
+			{
+				destinationPoint = playerPosCenteredOnTile;
+				ResetPath();
+			}
+		}
+		else if (state == ATTACK) {
+
+		}
+		else if (state == HURT) {
+
+
+		}
+		else if (state == DEAD) {
+			pbody->body->SetGravityScale(1);
+			if (deathTimer.ReadSec() > deathTime) {
+				pbody->body->SetEnabled(false);
+				dead = true;
+				LOG("killed bat");
+			}
+		}
+
+		//PATHFINDING CONTROLER
+		if (state == PATROL || state == CHASING) {
+			if (pathfinding->pathTiles.empty())
+			{
+				while (pathfinding->pathTiles.empty())
+				{
+					pathfinding->PropagateAStar(SQUARED, destinationPoint);
+				}
+				pathfinding->pathTiles.pop_back();
+			}
+			else
+			{
+
+				Vector2D nextTile = pathfinding->pathTiles.back();
+				Vector2D nextTileWorld = Engine::GetInstance().map.get()->MapToWorldCentered(nextTile.getX(), nextTile.getY());
+
+
+				if (CheckIfTwoPointsNear(nextTileWorld, { (float)METERS_TO_PIXELS(pbody->body->GetPosition().x), (float)METERS_TO_PIXELS(pbody->body->GetPosition().y) }, 3)) {
+
+					pathfinding->pathTiles.pop_back();
+					if (pathfinding->pathTiles.empty()) ResetPath();
+				}
+				else {
+					Vector2D nextTilePhysics = { PIXEL_TO_METERS(nextTileWorld.getX()),PIXEL_TO_METERS(nextTileWorld.getY()) };
+					b2Vec2 direction = { nextTilePhysics.getX() - pbody->body->GetPosition().x, nextTilePhysics.getY() - pbody->body->GetPosition().y };
+					direction.Normalize();
+					pbody->body->SetLinearVelocity({ direction.x * speed, direction.y * speed });
+				}
+			}
+		}
+		
+
+
+		switch (state) {
+			break;
+		case CHASING:
+			currentAnimation = &attack;
+			break;
+		case PATROL:
+			currentAnimation = &idle;
+			break;
+		case ATTACK:
+			currentAnimation = &attack;
+			break;
+		case DEAD:
+			currentAnimation = &death;
+			break;
+		default:
+			break;
+		}
+
+		if (pbody->body->GetLinearVelocity().x > 0.2f) {
+			dir = RIGHT;
+		}
+		else if (pbody->body->GetLinearVelocity().x < -0.2f) {
+			dir = LEFT;
+		}
+
+		//DRAW
+
+		if (pbody->body->IsEnabled()) {
+			if (Engine::GetInstance().GetDebug())
+			{
+				Engine::GetInstance().render.get()->DrawCircle(position.getX() + texW / 2, position.getY() + texH / 2, chaseArea * 2, 255, 255, 255);
+				Engine::GetInstance().render.get()->DrawCircle(destinationPoint.getX(), destinationPoint.getY(), 3, 255, 0, 0);
+				pathfinding->DrawPath();
+			}
+
+			currentAnimation->Update();
+
+			b2Transform pbodyPos = pbody->body->GetTransform();
+			position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - texW / 2 + drawOffsetX);
+			position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2 + drawOffsetY);
+			if (dir == LEFT) {
+				Engine::GetInstance().render.get()->DrawTextureFlipped(texture, (int)position.getX(), (int)position.getY(), &currentAnimation->GetCurrentFrame());
+			}
+			else if (dir == RIGHT) {
+				Engine::GetInstance().render.get()->DrawTexture(texture, (int)position.getX(), (int)position.getY(), &currentAnimation->GetCurrentFrame());
+			}
+		}
 	
-	//PATHFINDING CONTROLER
-	if (pathfinding->pathTiles.empty()) 
-	{
-		while (pathfinding->pathTiles.empty())
-		{
-			pathfinding->PropagateAStar(SQUARED, destinationPoint);
-		}
-		pathfinding->pathTiles.pop_back();
-	}	
-	else 
-	{
-
-		Vector2D nextTile = pathfinding->pathTiles.back();
-		Vector2D nextTileWorld = Engine::GetInstance().map.get()->MapToWorldCentered(nextTile.getX(), nextTile.getY());
-
-
-		if (CheckIfTwoPointsNear(nextTileWorld, {(float)METERS_TO_PIXELS(pbody->body->GetPosition().x), (float)METERS_TO_PIXELS(pbody->body->GetPosition().y)}, 3)) {
-
-			pathfinding->pathTiles.pop_back();
-			if (pathfinding->pathTiles.empty()) ResetPath();
-		}
-		else {
-			Vector2D nextTilePhysics = { PIXEL_TO_METERS(nextTileWorld.getX()),PIXEL_TO_METERS(nextTileWorld.getY()) };
-			b2Vec2 direction = { nextTilePhysics.getX() - pbody->body->GetPosition().x, nextTilePhysics.getY() - pbody->body->GetPosition().y };
-			direction.Normalize();
-			pbody->body->SetLinearVelocity({direction.x * speed, direction.y * speed});
-		}
 	}
 
-
-	switch (state) {
-		break;
-	case CHASING:
-		currentAnimation = &attack;
-		break;
-	case PATROL:
-		currentAnimation = &idle;
-		break;
-	case ATTACK:
-		currentAnimation = &attack;
-		break;
-	case HURT:
-		currentAnimation = &death;
-		break;
-	case DEAD:
-
-		break;
-	default:
-		break;
-	}
-
-	if (pbody->body->GetLinearVelocity().x > 0.2f) {
-		dir = RIGHT;
-	}
-	else if (pbody->body->GetLinearVelocity().x < -0.2f) {
-		dir = LEFT;
-	}
-
-	//DRAW
-	if (Engine::GetInstance().GetDebug())
-	{
-		Engine::GetInstance().render.get()->DrawCircle(position.getX() + texW / 2, position.getY() + texH / 2, chaseArea * 2, 255, 255, 255);
-		Engine::GetInstance().render.get()->DrawCircle(destinationPoint.getX(), destinationPoint.getY(), 3, 255, 0, 0);
-		pathfinding->DrawPath();
-	}
-
-	currentAnimation->Update();
-
-	b2Transform pbodyPos = pbody->body->GetTransform();
-	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - texW / 2 + drawOffsetX);
-	position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2 + drawOffsetY);
-	if (dir == LEFT) {
-		Engine::GetInstance().render.get()->DrawTextureFlipped(texture, (int)position.getX(), (int)position.getY(), &currentAnimation->GetCurrentFrame());
-	}
-	else if (dir == RIGHT) {
-		Engine::GetInstance().render.get()->DrawTexture(texture, (int)position.getX(), (int)position.getY(), &currentAnimation->GetCurrentFrame());
-	}
+	
 
 	return true;
 }
 
+void BatEnemy::OnCollision(PhysBody* physA, PhysBody* physB) {
+
+
+	switch (physB->ctype)
+	{
+	case ColliderType::WEAPON:
+		LOG("Enemy was hit by WEAPON");
+		DMGEnemy();
+		break;
+	case ColliderType::SHOT:
+		LOG("Enemy was hit by SHOT");
+
+		break;
+	case ColliderType::ITEM:
+		LOG("Collision ITEM");
+		break;
+	case ColliderType::SPYKE:
+		LOG("Collision SPYKE");
+		break;
+
+	case ColliderType::ENEMY:
+		LOG("Collision ENEMY");
+		break;
+	case ColliderType::ABYSS:
+	{
+		LOG("Collision ABYSS");
+		break;
+	}
+	case ColliderType::PLAYER:
+		LOG("Collision PLAYER");
+
+		if(state != DEAD) player->DMGPlayer(physB, physA);
+
+		break;
+
+	case ColliderType::UNKNOWN:
+		LOG("Collision UNKNOWN");
+		break;
+
+	default:
+		break;
+	}
+}
 
 
 

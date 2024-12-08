@@ -51,7 +51,7 @@ public:
 
 	void LoadEnemy(Enemy* enemy, pugi::xml_node parametersNode, int pathNum);
 
-	void LoadItem(Item* item, pugi::xml_node parametersNode, int pathNum);
+	void LoadItem(Item* item, pugi::xml_node parametersNode);
 
 	void LoadState();
 

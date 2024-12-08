@@ -68,6 +68,8 @@ public:
 
 	virtual void LoadData(pugi::xml_node enemyNode);
 
+	virtual void DMGEnemy();
+
 public:
 
 //protected:
@@ -89,7 +91,7 @@ public:
 	Animation attack;
 	Animation hurt;
 	Animation death;
-	
+
 	//PATH
 	Pathfinding* pathfinding;
 	std::vector<Vector2D> route;
@@ -100,7 +102,8 @@ public:
 	int speed;
 	int chaseArea;
 	int attackArea;
+
 	Timer deathTimer;
 	float deathTime;
-	bool hitByPlayer;
+	bool dead;
 };

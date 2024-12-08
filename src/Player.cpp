@@ -119,8 +119,8 @@ bool Player::Start() {
 	pbody->body->SetGravityScale(gravity);
 
 	//ATTACK COLLIDER
-	ATKcolliderW = 41;
-	ATKcolliderH = 32;
+	ATKcolliderW = 35;
+	ATKcolliderH = 27;
 	attackCollider = Engine::GetInstance().physics.get()->CreateRectangleSensor((int)position.getX(), (int)position.getY(), ATKcolliderW, ATKcolliderH, bodyType::DYNAMIC);
 	attackCollider->ctype = ColliderType::WEAPON;
 	attackCollider->body->SetEnabled(false);
@@ -141,6 +141,10 @@ bool Player::Update(float dt)
 	pbody->body->SetAwake(true);
 	
 	currentFrame = currentAnim->GetCurrentFrame();
+
+	if (playerState != ATTACK1) {
+		attackCollider->body->SetEnabled(false);
+	}
 
 	if (tpToStart)
 	{
@@ -290,11 +294,14 @@ bool Player::Update(float dt)
 		b2Vec2 attackColliderPos = { pbody->body->GetPosition().x + (dir == LEFT ? -PIXEL_TO_METERS(weaponOffset.getX()) : PIXEL_TO_METERS(weaponOffset.getX())), pbody->body->GetPosition().y - PIXEL_TO_METERS(weaponOffset.getY()) };
 		attackCollider->body->SetTransform(attackColliderPos, 0);
 		if (attack1Timer.ReadSec() >= attack1Time/* && t_spell1.HasFinished()*/) {
+
 			playerState = IDLE;
 			t_spell1.Reset();
+			
+		}
+		if (attack1Timer.ReadSec() >= 0.4) {
 			attackCollider->body->SetEnabled(false);
 		}
-		
 		
 	}
 	else if (playerState == ATTACK2) {
@@ -486,7 +493,6 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		break;
 
 	case ColliderType::ENEMY:
-
 		LOG("Collision ENEMY");
 		break;
 	

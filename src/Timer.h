@@ -8,7 +8,7 @@ public:
 	Timer();
 
 	void Start();
-	int ReadSec() const;
+	float ReadSec() const;
 	float ReadMSec() const;
 
 private:

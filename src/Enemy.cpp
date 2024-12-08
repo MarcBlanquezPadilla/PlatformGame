@@ -48,6 +48,8 @@ bool Enemy::Start() {
 	// Set the gravity of the body
 	if (!parameters.attribute("gravity").as_bool()) pbody->body->SetGravityScale(0);
 
+	dead = false;
+
 	// Initialize pathfinding
 	pathfinding = new Pathfinding();
 	ResetPath();
@@ -117,19 +119,13 @@ bool Enemy::Update(float dt)
 	//	hitByPlayer = true;
 	//}
 
-	// L08 TODO 4: Add a physics to an item - update the position of the object from the physics.  
+	
 	b2Transform pbodyPos = pbody->body->GetTransform();
 	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - texH / 2);
 	position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2);
 
-	if (!(Engine::GetInstance().particleManager.get()->hitEnemy)) {
-		Engine::GetInstance().render.get()->DrawTexture(texture, (int)position.getX(), (int)position.getY(), &currentAnimation->GetCurrentFrame());
-		currentAnimation->Update();
-		pathfinding->DrawPath();
-	}
-	else {
-		/*Engine::GetInstance().physics.get()->DeletePhysBody(pbody);*/
-	}
+
+
 	
 
 	return true;
@@ -202,7 +198,7 @@ void Enemy::SetPath(pugi::xml_node pathNode)
 
 void Enemy::SaveData(pugi::xml_node enemyNode)
 {
-	enemyNode.attribute("alive").set_value(true);
+	enemyNode.attribute("dead").set_value(dead);
 	enemyNode.attribute("x").set_value(pbody->GetPhysBodyWorldPosition().getX());
 	enemyNode.attribute("y").set_value(pbody->GetPhysBodyWorldPosition().getY());
 }
@@ -212,21 +208,26 @@ void Enemy::LoadData(pugi::xml_node enemyNode)
 {
 	pbody->SetPhysPositionWithWorld( enemyNode.attribute("x").as_float(), enemyNode.attribute("y").as_float() );
 	ResetPath();
-	//alive = enemyNode.attribute("alive").as_bool();
+	dead = enemyNode.attribute("dead").as_bool();
+	if (dead) {
+		state = DEAD;
+		pbody->body->SetEnabled(false);
+	}
+	
 }
 
 void Enemy::OnCollision(PhysBody* physA, PhysBody* physB) {
 
-	LOG("HOLA");
+	
 	switch (physB->ctype)
 	{
 	case ColliderType::WEAPON:
 		LOG("Enemy was hit by WEAPON");
-		hitByPlayer = true;
+		DMGEnemy();
 		break;
 	case ColliderType::SHOT:
 		LOG("Enemy was hit by SHOT");
-		hitByPlayer = true;
+
 		break;
 	case ColliderType::ITEM:
 		LOG("Collision ITEM");
@@ -272,4 +273,10 @@ void Enemy::OnCollisionEnd(PhysBody* physA, PhysBody* physB)
 	default:
 		break;
 	}
+}
+
+void Enemy::DMGEnemy() {
+	deathTimer.Start();
+	death.Reset();
+	state = DEAD;
 }

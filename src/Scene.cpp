@@ -61,22 +61,18 @@ bool Scene::Start()
 	Enemy* groundEnemy = (GroundEnemy*)Engine::GetInstance().entityManager->CreateEntity(EntityType::GROUND_ENEMY);
 	LoadEnemy(groundEnemy, configParameters.child("entities").child("enemies").child("groundEnemy").child("skeleton1"), 2);
 
-	/*Enemy* skeleton2 = (GroundEnemy*)Engine::GetInstance().entityManager->CreateEntity(EntityType::GROUND_ENEMY);
-	LoadEnemy(groundEnemy, configParameters.child("entities").child("enemies").child("groundEnemy").child("skeleton2"), 2);*/
+	//Enemy* skeleton2 = (GroundEnemy*)Engine::GetInstance().entityManager->CreateEntity(EntityType::GROUND_ENEMY);
+	//LoadEnemy(groundEnemy, configParameters.child("entities").child("enemies").child("groundEnemy").child("skeleton2"), 3);
 
 
 	//Load Items
 	Item* pumpkin1 = (Item*)Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM);
-	LoadItem(pumpkin1, configParameters.child("entities").child("items").child("pumpkins").child("pumpkin1"), 1);
+	LoadItem(pumpkin1, configParameters.child("entities").child("items").child("pumpkins").child("pumpkin1"));
 
 	Item* checkPumpkin1 = (Item*)Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM);
-	LoadItem(checkPumpkin1, configParameters.child("entities").child("items").child("pumpkins").child("checkPumpkin1"), 2);
+	LoadItem(checkPumpkin1, configParameters.child("entities").child("items").child("pumpkins").child("checkPumpkin1"));
 
-	/*Item* checkPumpkin2 = (Item*)Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM);
-	LoadItem(checkPumpkin2, configParameters.child("entities").child("items").child("pumpkins").child("checkPumpkin2"), 3);
 
-	Item* checkPumpkin3 = (Item*)Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM);
-	LoadItem(checkPumpkin3, configParameters.child("entities").child("items").child("pumpkins").child("checkPumpkin3"), 4);*/
 
 	return true;
 }
@@ -90,7 +86,7 @@ void Scene::LoadEnemy(Enemy* enemy, pugi::xml_node parametersNode, int pathNum)
 	enemies.push_back(enemy);
 }
 
-void Scene::LoadItem(Item* item, pugi::xml_node parametersNode, int pathNum) {
+void Scene::LoadItem(Item* item, pugi::xml_node parametersNode) {
 
 	item->SetPlayer(player);
 	item->SetParameters(parametersNode);
