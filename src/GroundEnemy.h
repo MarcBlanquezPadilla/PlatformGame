@@ -41,5 +41,9 @@ private:
 	float dist;
 
 	float jumpForce;
+
+	//sound FX
+	int swordSlashSFX;
+	int skeletonDeathSFX;
 };
 

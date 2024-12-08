@@ -24,14 +24,18 @@ public:
 
 	void OnCollision(PhysBody* physA, PhysBody* physB) override;
 
-	
-	
 
+	
 private:
 
 	int drawOffsetX=-16;
 	int drawOffsetY=-16;
 	Vector2D destinationPoint;
+
+	//SOUND FX
+	int batWingsSFX;
+	int farBatWingsSFX;
+	int batDeathSFX;
 	
 	
 };

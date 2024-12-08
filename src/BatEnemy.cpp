@@ -5,6 +5,7 @@
 #include "Scene.h"
 #include "Player.h"
 #include "LOG.h"
+#include "Audio.h"
 
 BatEnemy::BatEnemy()
 {
@@ -44,6 +45,18 @@ bool BatEnemy::Start() {
 
 	currentAnimation = &idle;
 
+	//this is meant to be in Enemy.cpp as both enemies use it, but it doesn't work for some reason
+	pugi::xml_document audioFile;
+	pugi::xml_parse_result result = audioFile.load_file("config.xml");
+	audioNode = audioFile.child("config").child("audio").child("fx");
+
+	//SFX LOAD
+	batWingsSFX = Engine::GetInstance().audio.get()->LoadFx(audioNode.child("batWingsSFX").attribute("path").as_string());
+	farBatWingsSFX = Engine::GetInstance().audio.get()->LoadFx(audioNode.child("farBatWings").attribute("path").as_string());
+	batDeathSFX = Engine::GetInstance().audio.get()->LoadFx(audioNode.child("batDeathSFX").attribute("path").as_string());
+	noSound = Engine::GetInstance().audio.get()->LoadFx(audioNode.child("noSound").attribute("path").as_string());
+	
+
 	//INIT ROUTE
 	for (int i = 0; i < route.size(); i++)
 	{
@@ -70,7 +83,7 @@ bool BatEnemy::Start() {
 	deathTime = parameters.child("properties").attribute("deathTime").as_float();
 	state = PATROL;
 
-	
+	playingSound = false;
 
 	return true;
 }
@@ -87,12 +100,17 @@ bool BatEnemy::Update(float dt) {
 				state = PATROL;
 				ResetPath();
 				destinationPoint = route[routeDestinationIndex];
+				
 			}
 			else if (pbody->GetPhysBodyWorldPosition().distanceEuclidean(player->pbody->GetPhysBodyWorldPosition()) <= chaseArea && state != CHASING)
 			{
 				state = CHASING;
 				ResetPath();
 			}
+
+			
+
+			
 		}
 	
 		
@@ -121,24 +139,55 @@ bool BatEnemy::Update(float dt) {
 				ResetPath();
 			}
 		}
-		else if (state == ATTACK) {
-
-		}
-		else if (state == HURT) {
-
-
-		}
 		else if (state == DEAD) {
 			pbody->body->SetGravityScale(1);
-			if (deathTimer.ReadSec() > deathTime) {
+			if (deathTimer.ReadSec() > deathTime / 2) {
+				Engine::GetInstance().audio.get()->PlayFx(batDeathSFX);
+			}
+			else if (deathTimer.ReadSec() > deathTime && !dead) {
 				pbody->body->SetEnabled(false);
 				dead = true;
+
 				LOG("killed bat");
 			}
 		}
 
 		//PATHFINDING CONTROLER
 		if (state == PATROL || state == CHASING) {
+
+			/*if (!playingSound) {
+				if (pbody->GetPhysBodyWorldPosition().distanceEuclidean(player->pbody->GetPhysBodyWorldPosition()) <= (float)chaseArea * 1.5f) {
+					Engine::GetInstance().audio.get()->PlayFx(batWingsSFX, 1);
+
+				}
+				else {
+					Engine::GetInstance().audio.get()->PlayFx(farBatWingsSFX, 1);
+				}
+
+				playingSound = true;
+			}
+			else if (playingSound) {
+				if (pbody->GetPhysBodyWorldPosition().distanceEuclidean(player->pbody->GetPhysBodyWorldPosition()) >= (float)chaseArea * 1.5f) {
+					Engine::GetInstance().audio.get()->PlayFx(noSound, 1);
+
+				}
+				else {
+					Engine::GetInstance().audio.get()->PlayFx(farBatWingsSFX, 1);
+				}
+				playingSound = false;
+			}*/
+			
+			if (pbody->GetPhysBodyWorldPosition().distanceEuclidean(player->pbody->GetPhysBodyWorldPosition()) <= (float)chaseArea * 1.5f && !playingSound) {
+				Engine::GetInstance().audio.get()->PlayFx(farBatWingsSFX, 1);
+				playingSound = true;
+			}
+			else if (pbody->GetPhysBodyWorldPosition().distanceEuclidean(player->pbody->GetPhysBodyWorldPosition()) >= chaseArea * 1.5f && playingSound) {
+				Engine::GetInstance().audio.get()->PlayFx(noSound, 1);
+				playingSound = false;
+			}
+			
+			
+
 			if (pathfinding->pathTiles.empty())
 			{
 				while (pathfinding->pathTiles.empty())
@@ -232,11 +281,18 @@ void BatEnemy::OnCollision(PhysBody* physA, PhysBody* physB) {
 	{
 	case ColliderType::WEAPON:
 		LOG("Enemy was hit by WEAPON");
-		DMGEnemy();
+		if (state != DEAD) {
+			DMGEnemy();
+			Engine::GetInstance().audio.get()->PlayFx(batDeathSFX, 0, 3);
+		}
+		
 		break;
 	case ColliderType::SHOT:
 		LOG("Enemy was hit by SHOT");
-
+		if (state != DEAD) {
+			DMGEnemy();
+			Engine::GetInstance().audio.get()->PlayFx(batDeathSFX, 0, 3);
+		}
 		break;
 	case ColliderType::ITEM:
 		LOG("Collision ITEM");
@@ -249,21 +305,24 @@ void BatEnemy::OnCollision(PhysBody* physA, PhysBody* physB) {
 		LOG("Collision ENEMY");
 		break;
 	case ColliderType::ABYSS:
-	{
+	
 		LOG("Collision ABYSS");
 		break;
-	}
+	
 	case ColliderType::PLAYER:
 		LOG("Collision PLAYER");
 
-		if(state != DEAD) player->DMGPlayer(physB, physA);
+		if (state != DEAD) {
+			player->DMGPlayer(physB, physA);
+			
+		}
 
 		break;
-
+	
 	case ColliderType::UNKNOWN:
 		LOG("Collision UNKNOWN");
 		break;
-
+	
 	default:
 		break;
 	}

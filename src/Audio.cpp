@@ -152,8 +152,8 @@ int Audio::LoadFx(const char* path)
 	return ret;
 }
 
-// Play WAV
-bool Audio::PlayFx(int id, int repeat)
+// OLD METHOD (NO CHANNELS)
+bool Audio::PlayFx(int id, int repeat, int channel)
 {
 	bool ret = false;
 
@@ -164,8 +164,23 @@ bool Audio::PlayFx(int id, int repeat)
 	{
 		auto fxIt = fx.begin();
 		std::advance(fxIt, id-1);
-		Mix_PlayChannel(-1, *fxIt, repeat);
+		Mix_PlayChannel(channel, *fxIt, repeat);
 	}
 
 	return ret;
 }
+
+//how to implement channels so 
+
+//bool Audio::PlayFx(int index, int repeat, int channel)
+//{
+//	bool ret = false;
+//
+//	if (soundFx[index] != nullptr)
+//	{
+//		Mix_PlayChannel(channel, soundFx[index], repeat);
+//		ret = true;
+//	}
+//
+//	return ret;
+//}

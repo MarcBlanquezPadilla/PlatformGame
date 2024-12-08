@@ -5,6 +5,7 @@
 #include <list>
 
 #define DEFAULT_MUSIC_FADE_TIME 2.0f
+#define MAX_FX 600
 
 struct _Mix_Music;
 
@@ -30,10 +31,15 @@ public:
 	int LoadFx(const char* path);
 
 	// Play a previously loaded WAV
-	bool PlayFx(int fx, int repeat = 0);
+	bool PlayFx(int fx, int repeat = 0, int channel = 0);
 
 private:
 
 	_Mix_Music* music;
 	std::list<Mix_Chunk*> fx;
+
+
+	// An array of all the loaded sound effects
+	// Allows us to keep track of all sound fx and handle them through indices
+	Mix_Chunk* soundFx[MAX_FX] = { nullptr };
 };

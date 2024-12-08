@@ -10,6 +10,7 @@
 #include "Map.h"
 #include "Player.h"
 #include "ParticleManager.h"
+#include "Audio.h"
 //#include "EntityManager.h"
 
 Enemy::Enemy() : Entity(EntityType::ENEMY)
@@ -53,6 +54,9 @@ bool Enemy::Start() {
 	// Initialize pathfinding
 	pathfinding = new Pathfinding();
 	ResetPath();
+
+	//SFX Node Load
+
 
 	return true;
 }

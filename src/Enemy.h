@@ -78,6 +78,7 @@ public:
 	const char* texturePath;
 	int texW, texH;
 	pugi::xml_node parameters;
+	pugi::xml_node audioNode;
 	
 	PhysBody* pbody;
 	Player* player;
@@ -102,8 +103,10 @@ public:
 	int speed;
 	int chaseArea;
 	int attackArea;
+	int noSound;
 
 	Timer deathTimer;
 	float deathTime;
 	bool dead;
+	bool playingSound;
 };

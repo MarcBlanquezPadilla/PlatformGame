@@ -139,7 +139,7 @@
 			</shot>
 			<enemies>
 				<groundEnemy>
-					<skeleton1 x="100" y="420" w="48" h="48" texture="Assets/Textures/Enemies/Undead/SwordsMan-reorganized_spritesheet.png">
+					<skeleton x="100" y="420" w="48" h="48" texture="Assets/Textures/Enemies/Undead/SwordsMan-reorganized_spritesheet.png">
 						<properties speed="1" chaseArea="100" attackArea="20" jumpForce="0.3f" attackTime="1.0f" deathTime="1.5f" />
 						<animations>
 							<idle loop="false" speed="0.2f">
@@ -156,7 +156,7 @@
 								<frame x="0" y="48" w="48" h="48" />
 							</attack>
 						</animations>
-					</skeleton1>
+					</skeleton>
 					<skeleton2/>
 				</groundEnemy>
 				<flyEnemy>
@@ -204,10 +204,14 @@
 						<point x="100" y=" 420" />
 						<point x="275" y=" 390" />
 					</path2>
+          <path3>
+            <point x="" y=""/>
+            <point x="" y =""/>
+          </path3>
 				</paths>
 			</enemies>
 			<items>
-				<pumpkins>
+				<pumpkins w="16" h="16" texture="Assets/Textures/Items/pumpkin ui obj-resized.png">
 					<pumpkin1 x="300" y="416" w="16" h="16" texture="Assets/Textures/Items/pumpkin ui obj-resized.png" />
 					<checkPumpkin1 x="1808" y="192" w="16" h="16" texture="Assets/Textures/Items/pumpkin ui obj-resized.png" />
 				</pumpkins>
@@ -224,18 +228,25 @@
 	<ui path="Assets/Textures/UI/HelpMenu_ver2.png" />
 	<audio>
 		<fx>
-			<gJumpSFX path="Assets/Audio/Fx/ghostJump.ogg" />
-			<pJumpSFX path="Assets/Audio/Fx/pumpkinJump.ogg" />
-			<atk1SFX path="Assets/Audio/Fx/atk1_alt.ogg" />
-			<atk2SFX path="Assets/Audio/Fx/customATK2.ogg" />
-			<switchOnSFX path="Assets/Audio/Fx/SwitchON.ogg" />
-			<switchOffSFX path="Assets/Audio/Fx/SwitchOFF.ogg" />
-			<gHurtSFX path="Assets/Audio/Fx/SquidHit.ogg" />
-			<pHurtSFX path="Assets/Audio/Fx/BonkSFX.ogg" />
-			<gDeathSFX path="Assets/Audio/Fx/SinkOMO.ogg" />
-			<pDeathSFX path="Assets/Audio/Fx/PumpkinCrack.ogg" />
-			<saveGame path="Assets/Audio/Fx/SaveGame.ogg" />
-			<loadGame path="Assets/Audio/Fx/LoadGame.ogg" />
+			<gJumpSFX path = "Assets/Audio/Fx/ghostJump.ogg" />
+			<pJumpSFX path = "Assets/Audio/Fx/pumpkinJump.ogg" />
+			<atk1SFX path = "Assets/Audio/Fx/atk1_alt.ogg" />
+			<atk2SFX path = "Assets/Audio/Fx/customATK2.ogg" />
+			<switchOnSFX path = "Assets/Audio/Fx/SwitchON.ogg" />
+			<switchOffSFX path = "Assets/Audio/Fx/SwitchOFF.ogg" />
+			<gHurtSFX path = "Assets/Audio/Fx/SquidHit.ogg" />
+			<pHurtSFX path = "Assets/Audio/Fx/BonkSFX.ogg" />
+			<gDeathSFX path = "Assets/Audio/Fx/SinkOMO.ogg" />
+			<pDeathSFX path = "Assets/Audio/Fx/PumpkinCrack.ogg" />
+			<saveGame path = "Assets/Audio/Fx/SaveGame.ogg" />
+			<loadGame path = "Assets/Audio/Fx/LoadGame.ogg" />
+      <batWingsSFX path = "Assets/Audio/Fx/BatWings.ogg"/>
+      <farBatWings path ="Assets/Audio/Fx/FarBatWings.ogg"/>
+      <batDeathSFX path ="Assets/Audio/Fx/BatDeath.ogg"/>
+      <swordSFX path = "Assets/Audio/Fx/SwordSlash.ogg"/>
+      <skeletonDeathSFX path = "Assets/Audio/Fx/SkeletonDeath.ogg"/>  
+      <noSoundSFX path ="Assets/Audio/Fx/NoSound.ogg"/>
+      
 		</fx>
 		<music />
 	</audio>

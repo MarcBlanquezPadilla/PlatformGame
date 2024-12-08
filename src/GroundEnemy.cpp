@@ -79,6 +79,15 @@ bool GroundEnemy::Start() {
 	deathTime = parameters.child("properties").attribute("deathTime").as_float();
 	dir = LEFT;
 
+
+	//LOAD SFX
+	pugi::xml_document audioFile;
+	pugi::xml_parse_result result = audioFile.load_file("config.xml");
+	audioNode = audioFile.child("config").child("audio").child("fx");
+
+	swordSlashSFX = Engine::GetInstance().audio.get()->LoadFx(audioNode.child("swordSFX").attribute("path").as_string());
+	skeletonDeathSFX = Engine::GetInstance().audio.get()->LoadFx(audioNode.child("skeletonDeathSFX").attribute("path").as_string());
+
 	return true;
 }
 
@@ -102,6 +111,7 @@ bool GroundEnemy::Update(float dt) {
 				if (dist <= attackArea && state != ATTACK) {
 					state = ATTACK;
 					player->DMGPlayer(player->pbody, pbody);
+					Engine::GetInstance().audio.get()->PlayFx(swordSlashSFX, 0, -1);
 					attackTimer.Start();
 					pbody->body->SetLinearVelocity({ 0,0 });
 					attack.Reset();
@@ -121,8 +131,9 @@ bool GroundEnemy::Update(float dt) {
 
 		//STATES CONTROLER
 		if (state == DEAD) {
-			
+			Engine::GetInstance().audio.get()->PlayFx(skeletonDeathSFX, 0, 2);
 			if (deathTimer.ReadSec() > deathTime) {
+				
 				pbody->body->SetEnabled(false);
 				dead = true;
 				LOG("killed skeleton");
@@ -151,6 +162,7 @@ bool GroundEnemy::Update(float dt) {
 		}
 		else if (state == ATTACK) {
 
+			
 			if (attackTimer.ReadSec() > attackTime) {
 
 				state = PATROL;
