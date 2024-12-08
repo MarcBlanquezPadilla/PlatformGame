@@ -265,6 +265,7 @@ bool Physics::PostUpdate()
 	bool ret = true;
 	
 	//  Iterate all objects in the world and draw the bodies
+	
 	if (Engine::GetInstance().GetDebug())
 	{
 		for (b2Body* b = world->GetBodyList(); b; b = b->GetNext())
@@ -365,6 +366,12 @@ bool Physics::PostUpdate()
 	}
 
 
+	// Process bodies to delete after the world step
+	for (PhysBody* physBody : bodiesToDelete) {
+		world->DestroyBody(physBody->body);
+	}
+	bodiesToDelete.clear();
+
 	return ret;
 }
 
@@ -422,6 +429,11 @@ void Physics::EndContact(b2Contact* contact)
 		}
 	}
 }
+
+void Physics::DeletePhysBody(PhysBody* physBody) {
+	bodiesToDelete.push_back(physBody);
+}
+
 
 //--------------- PhysBody
 

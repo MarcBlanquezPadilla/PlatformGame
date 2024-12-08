@@ -60,7 +60,7 @@ bool ParticleManager::Update(float dt)
 		if (particle == nullptr)	continue;
 		else if (particle != nullptr && particle->isAlive)
 		{
-			particle->pbody->body->SetEnabled(true);
+			
 			LOG("tex width = %f, tex height = %f", texW, texH);
 			particle->pbody->SetPhysPositionWithWorld(particle->position.getX() + texW / 2, particle->position.getY() + texH / 2);
 			int posX, posY;
@@ -74,7 +74,7 @@ bool ParticleManager::Update(float dt)
 		// Call particle Update. If it has reached its lifetime, destroy it
 		if (particle->Update() == false)
 		{
-			particle->pbody->body->SetEnabled(false);
+			Engine::GetInstance().physics.get()->DeletePhysBody(particle->pbody); // 
 			delete particle;
 			particles[i] = nullptr;
 		}
