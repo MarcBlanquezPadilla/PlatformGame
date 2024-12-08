@@ -46,7 +46,6 @@ bool GroundEnemy::Start() {
 
 
 	currentAnimation = &idle;
-	canAttack = false;
 	attacked = false;
 
 	//INIT ROUTE
@@ -131,7 +130,7 @@ bool GroundEnemy::Update(float dt) {
 
 		//STATES CONTROLER
 		if (state == DEAD) {
-			Engine::GetInstance().audio.get()->PlayFx(skeletonDeathSFX, 0, 2);
+			
 			if (deathTimer.ReadSec() > deathTime) {
 				
 				pbody->body->SetEnabled(false);
@@ -269,6 +268,59 @@ bool GroundEnemy::Update(float dt) {
 	return true;
 }
 
+void GroundEnemy::OnCollision(PhysBody* physA, PhysBody* physB) {
+
+
+	switch (physB->ctype)
+	{
+	case ColliderType::WEAPON:
+		LOG("Skeleton was hit by WEAPON");
+		if (state != DEAD) {
+			DMGEnemy();
+			Engine::GetInstance().audio.get()->PlayFx(skeletonDeathSFX, 0, 2);
+		}
+
+		break;
+	case ColliderType::SHOT:
+		LOG("Skeleton was hit by SHOT");
+		if (state != DEAD) {
+			DMGEnemy();
+			Engine::GetInstance().audio.get()->PlayFx(skeletonDeathSFX, 0, 2);
+		}
+		break;
+	case ColliderType::ITEM:
+		LOG("Skeleton collided with ITEM");
+		break;
+	case ColliderType::SPYKE:
+		LOG("Skeleton collided with SPYKE");
+		break;
+
+	case ColliderType::ENEMY:
+		LOG("Skeleton collided with another ENEMY");
+		break;
+	case ColliderType::ABYSS:
+
+		LOG("Skeleton fell into the ABYSS");
+		break;
+
+	case ColliderType::PLAYER:
+		LOG("Skeleton hit PLAYER");
+
+		if (state != DEAD) {
+			player->DMGPlayer(physB, physA);
+
+		}
+
+		break;
+
+	case ColliderType::UNKNOWN:
+		LOG("Skeleton collided with UNKNOWN");
+		break;
+
+	default:
+		break;
+	}
+}
 
 
 

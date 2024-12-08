@@ -227,7 +227,8 @@ void Enemy::OnCollision(PhysBody* physA, PhysBody* physB) {
 	{
 	case ColliderType::WEAPON:
 		LOG("Enemy was hit by WEAPON");
-		DMGEnemy();
+		if(state != DEAD)
+			DMGEnemy();
 		break;
 	case ColliderType::SHOT:
 		LOG("Enemy was hit by SHOT");
@@ -283,4 +284,5 @@ void Enemy::DMGEnemy() {
 	deathTimer.Start();
 	death.Reset();
 	state = DEAD;
+	/*dead = true;*/
 }

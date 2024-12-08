@@ -49,6 +49,8 @@ bool ParticleManager::Start()
 	shot.speed = { 5,0 };
 	shot.lifetime = 50;
 
+	
+
 	return true;
 }
 
@@ -67,6 +69,8 @@ bool ParticleManager::Update(float dt)
 			int posX, posY;
 			posX = particle->pbody->GetPhysBodyWorldPosition().getX() - texW / 2;
 			posY = particle->pbody->GetPhysBodyWorldPosition().getY() - texH / 2;
+			particle->pbody->body->SetEnabled(true);
+
 			Engine::GetInstance().render.get()->DrawTexture(texture, posX, posY, &(particle->anim.GetCurrentFrame()));
 			if (particle->hitEnemy) {
 				hitEnemy = true;
@@ -77,7 +81,8 @@ bool ParticleManager::Update(float dt)
 		// Call particle Update. If it has reached its lifetime, destroy it
 		if (particle->Update() == false)
 		{
-			Engine::GetInstance().physics.get()->DeletePhysBody(particle->pbody); // 
+			//Engine::GetInstance().physics.get()->DeletePhysBody(particle->pbody); // 
+			particle->pbody->body->SetEnabled(false);
 			delete particle;
 			particles[i] = nullptr;
 		}

@@ -248,12 +248,12 @@ bool Player::Update(float dt)
 				playerState = ATTACK1;
 				Engine::GetInstance().audio.get()->PlayFx(atk1SFX);
 				attack1Timer.Start();
-				pbody->body->SetLinearVelocity({ 0,0 });
+				pbody->body->SetLinearVelocity({ 0, velocity.y });
 				b2Vec2 attackColliderPos = { pbody->body->GetPosition().x + (dir == LEFT ? -PIXEL_TO_METERS(weaponOffset.getX()) : PIXEL_TO_METERS(weaponOffset.getX())), pbody->body->GetPosition().y - PIXEL_TO_METERS(weaponOffset.getY()) };
 				attackCollider->body->SetTransform(attackColliderPos, 0);
 				attackCollider->body->SetEnabled(true);
 				attackCollider->body->SetEnabled(true);
-
+				
 			}
 
 
@@ -261,7 +261,7 @@ bool Player::Update(float dt)
 
 				playerState = ATTACK2;
 				attack2Timer.Start();
-				pbody->body->SetLinearVelocity({ 0,0 });
+				pbody->body->SetLinearVelocity({ 0, velocity.y });
 				Engine::GetInstance().audio.get()->PlayFx(atk2SFX);
 				shot = true;
 

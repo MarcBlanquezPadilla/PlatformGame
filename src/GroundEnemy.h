@@ -24,6 +24,8 @@ public:
 
 	bool Update(float dt) override;
 
+	void OnCollision(PhysBody* physA, PhysBody* physB) override;
+
 
 	
 private:
@@ -35,7 +37,6 @@ private:
 	float attackTime;
 	Timer attackTimer;
 
-	bool canAttack;
 	bool attacked;
 
 	float dist;

@@ -141,10 +141,8 @@ bool BatEnemy::Update(float dt) {
 		}
 		else if (state == DEAD) {
 			pbody->body->SetGravityScale(1);
-			if (deathTimer.ReadSec() > deathTime / 2) {
-				Engine::GetInstance().audio.get()->PlayFx(batDeathSFX);
-			}
-			else if (deathTimer.ReadSec() > deathTime && !dead) {
+			
+			if (deathTimer.ReadSec() > deathTime && !dead) {
 				pbody->body->SetEnabled(false);
 				dead = true;
 

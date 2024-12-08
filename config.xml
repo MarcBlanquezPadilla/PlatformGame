@@ -28,7 +28,7 @@
 		</map>
 		<entities>
 			<player x="25" y="350" w="64" h="64" t_w="64" t_h="64" lives="3" texture="Assets/Textures/GhostCharacter/Ghost_Sheet_Resized.png" t_texture="Assets/Textures/Pumpkin Head/pumpkinhead_sheet2.png">
-				<propierties jumpForce="0.6f" pushForce="0.5f" moveSpeed="0.2f" friction="2.0f" gravity="1.2f" attack1Time="0.8f" attack2Time="0.5f" hurtTime="1.0f" respawnTime=" 2.0f" playerState="0" direction="1" />
+				<propierties jumpForce="0.6f" pushForce="0.5f" moveSpeed="0.2f" friction="2.0f" gravity="1.2f" attack1Time="0.8f" attack2Time="1.0f" hurtTime="1.0f" respawnTime=" 2.0f" playerState="0" direction="1" />
 				<animations>
 					<idle loop="true" speed="0.2f">
 						<frame x="0" y="0" w="64" h="64" />
@@ -157,7 +157,7 @@
 							</attack>
 						</animations>
 					</skeleton>
-					<skeleton2/>
+					<skeleton2 />
 				</groundEnemy>
 				<flyEnemy>
 					<bat x="250" y="350" w="32" h="32" texture="Assets/Textures/Enemies/Bat/Vampire/BatVampire_Sheet.png">
@@ -183,7 +183,7 @@
 								<frame x="64" y="64" w="32" h="32" />
 								<frame x="96" y="64" w="32" h="32" />
 							</hurt>
-							<death loop =" false" speed ="0.1f">
+							<death loop=" false" speed="0.1f">
 								<frame x="0" y="96" w="32" h="32" />
 								<frame x="32" y="96" w="32" h="32" />
 								<frame x="64" y="96" w="32" h="32" />
@@ -204,10 +204,10 @@
 						<point x="100" y=" 420" />
 						<point x="275" y=" 390" />
 					</path2>
-          <path3>
-            <point x="" y=""/>
-            <point x="" y =""/>
-          </path3>
+					<path3>
+						<point x="" y="" />
+						<point x="" y="" />
+					</path3>
 				</paths>
 			</enemies>
 			<items>
@@ -218,35 +218,36 @@
 			</items>
 		</entities>
 		<savedData saved="true">
-			<player x="1799" y="197" lives="3" transformable="false" transformed="false" />
+			<player x="1799" y="196" lives="3" transformable="false" transformed="false" />
 			<item0 lit="" x="308" y="423" />
 			<item1 lit="" x="1816" y="200" />
 			<item2 lit="" x="1784" y="200" />
 			<item3 lit="" x="1849" y="200" />
+			<enemy0 alive="" x="259" y="391" />
+			<enemy1 alive="" x="392" y="423" />
 		</savedData>
 	</scene>
 	<ui path="Assets/Textures/UI/HelpMenu_ver2.png" />
 	<audio>
 		<fx>
-			<gJumpSFX path = "Assets/Audio/Fx/ghostJump.ogg" />
-			<pJumpSFX path = "Assets/Audio/Fx/pumpkinJump.ogg" />
-			<atk1SFX path = "Assets/Audio/Fx/atk1_alt.ogg" />
-			<atk2SFX path = "Assets/Audio/Fx/customATK2.ogg" />
-			<switchOnSFX path = "Assets/Audio/Fx/SwitchON.ogg" />
-			<switchOffSFX path = "Assets/Audio/Fx/SwitchOFF.ogg" />
-			<gHurtSFX path = "Assets/Audio/Fx/SquidHit.ogg" />
-			<pHurtSFX path = "Assets/Audio/Fx/BonkSFX.ogg" />
-			<gDeathSFX path = "Assets/Audio/Fx/SinkOMO.ogg" />
-			<pDeathSFX path = "Assets/Audio/Fx/PumpkinCrack.ogg" />
-			<saveGame path = "Assets/Audio/Fx/SaveGame.ogg" />
-			<loadGame path = "Assets/Audio/Fx/LoadGame.ogg" />
-      <batWingsSFX path = "Assets/Audio/Fx/BatWings.ogg"/>
-      <farBatWings path ="Assets/Audio/Fx/FarBatWings.ogg"/>
-      <batDeathSFX path ="Assets/Audio/Fx/BatDeath.ogg"/>
-      <swordSFX path = "Assets/Audio/Fx/SwordSlash.ogg"/>
-      <skeletonDeathSFX path = "Assets/Audio/Fx/SkeletonDeath.ogg"/>  
-      <noSoundSFX path ="Assets/Audio/Fx/NoSound.ogg"/>
-      
+			<gJumpSFX path="Assets/Audio/Fx/ghostJump.ogg" />
+			<pJumpSFX path="Assets/Audio/Fx/pumpkinJump.ogg" />
+			<atk1SFX path="Assets/Audio/Fx/atk1_alt.ogg" />
+			<atk2SFX path="Assets/Audio/Fx/customATK2.ogg" />
+			<switchOnSFX path="Assets/Audio/Fx/SwitchON.ogg" />
+			<switchOffSFX path="Assets/Audio/Fx/SwitchOFF.ogg" />
+			<gHurtSFX path="Assets/Audio/Fx/SquidHit.ogg" />
+			<pHurtSFX path="Assets/Audio/Fx/BonkSFX.ogg" />
+			<gDeathSFX path="Assets/Audio/Fx/SinkOMO.ogg" />
+			<pDeathSFX path="Assets/Audio/Fx/PumpkinCrack.ogg" />
+			<saveGame path="Assets/Audio/Fx/SaveGame.ogg" />
+			<loadGame path="Assets/Audio/Fx/LoadGame.ogg" />
+			<batWingsSFX path="Assets/Audio/Fx/BatWings.ogg" />
+			<farBatWings path="Assets/Audio/Fx/FarBatWings.ogg" />
+			<batDeathSFX path="Assets/Audio/Fx/BatDeath.ogg" />
+			<swordSFX path="Assets/Audio/Fx/SwordSlash.ogg" />
+			<skeletonDeathSFX path="Assets/Audio/Fx/SkeletonDeath.ogg" />
+			<noSoundSFX path="Assets/Audio/Fx/NoSound.ogg" />
 		</fx>
 		<music />
 	</audio>

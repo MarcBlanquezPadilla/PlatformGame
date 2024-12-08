@@ -54,20 +54,20 @@ bool Particle::Update()
 }
 
 
-void Particle::OnCollision(PhysBody* physA, PhysBody* physB) {
-	switch (physB->ctype)
-	{
-	case ColliderType::ENEMY:
-		LOG("Collision ENEMY");
-		hitEnemy = true;
-		Engine::GetInstance().physics.get()->DeletePhysBody(physB);
-		/*pbody->body->SetEnabled(false);*/
-		break;
-	case ColliderType::UNKNOWN:
-		LOG("Collision UNKNOWN");
-		break;
-
-	default:
-		break;
-	}
-}
+//void Particle::OnCollision(PhysBody* physA, PhysBody* physB) {
+//	switch (physB->ctype)
+//	{
+//	case ColliderType::ENEMY:
+//		LOG("Collision ENEMY");
+//		hitEnemy = true;
+//		Engine::GetInstance().physics.get()->DeletePhysBody(physB);
+//		/*pbody->body->SetEnabled(false);*/
+//		break;
+//	case ColliderType::UNKNOWN:
+//		LOG("Collision UNKNOWN");
+//		break;
+//
+//	default:
+//		break;
+//	}
+//}

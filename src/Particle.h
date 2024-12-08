@@ -15,7 +15,7 @@ public:
 
 	bool Update();
 
-	void OnCollision(PhysBody* physA, PhysBody* physB);
+	//void OnCollision(PhysBody* physA, PhysBody* physB);
 
 
 public:
