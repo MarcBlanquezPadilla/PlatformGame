@@ -7,17 +7,16 @@
 class Particle : public Entity
 {
 public:
-	// Constructor
+
 	Particle();
 
-	// Copy constructor
-	/*Particle(const Particle& p);*/
 	bool Start();
 
 
 	bool Update();
 
-	//bool CleanUp();
+	void OnCollision(PhysBody* physA, PhysBody* physB);
+
 
 public:
 
@@ -29,7 +28,8 @@ public:
 	Animation anim;
 
 
-	bool isAlive = false;
+	bool isAlive;
+	bool hitEnemy;
 
 	// Defines the amout of frames this particle has been active
 	// Negative values mean the particle is waiting to be activated

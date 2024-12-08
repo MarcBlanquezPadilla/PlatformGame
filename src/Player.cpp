@@ -226,29 +226,30 @@ bool Player::Update(float dt)
 				velocity.y = moveSpeed * 16;
 				playerState = WALK;
 			}
-		}
-		
-		if(!canClimb)
-		{
 			
+		}
+		else {
 			if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN && VALUE_NEAR_TO_0(pbody->body->GetLinearVelocity().y)) {
 				// Apply an initial upward force
 				pbody->body->ApplyLinearImpulseToCenter(b2Vec2(0, -jumpForce), true);
-				if(transformed) Engine::GetInstance().audio.get()->PlayFx(pJumpSFX);
+
+				if (transformed) Engine::GetInstance().audio.get()->PlayFx(pJumpSFX);
 				else Engine::GetInstance().audio.get()->PlayFx(gJumpSFX);
+
+
 			}
 			
-			velocity = { velocity.x, pbody->body->GetLinearVelocity().y };
+
 
 			if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_X) == KEY_DOWN && transformed && playerState != ATTACK1) {
-				
+
 				playerState = ATTACK1;
 				Engine::GetInstance().audio.get()->PlayFx(atk1SFX);
 				attack1Timer.Start();
 				pbody->body->SetLinearVelocity({ 0,0 });
 				attackCollider->body->SetEnabled(true);
-			
-				
+
+
 			}
 
 
@@ -259,13 +260,13 @@ bool Player::Update(float dt)
 				pbody->body->SetLinearVelocity({ 0,0 });
 				Engine::GetInstance().audio.get()->PlayFx(atk2SFX);
 				shot = true;
-				
-				
-				
 
 
 			}
+			velocity = { velocity.x, pbody->body->GetLinearVelocity().y };
 		}
+		
+		
 		
 		
 

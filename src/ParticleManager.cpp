@@ -9,6 +9,7 @@
 #include "Animation.h"
 #include "Scene.h"
 #include "Physics.h"
+#include "EntityManager.h"
 
 ParticleManager:: ParticleManager() : Module()
 {
@@ -40,7 +41,7 @@ bool ParticleManager::Start()
 	texture = Engine::GetInstance().textures.get()->Load(sceneNode.child("entities").child("shot").attribute("texture").as_string());
 	texW = sceneNode.child("entities").child("shot").attribute("w").as_int();
 	texH = sceneNode.child("entities").child("shot").attribute("h").as_int();
-	
+	hitEnemy = false;
 	
 	shotRad = sceneNode.child("entities").child("shot").attribute("rad").as_int();
 	shot.anim.LoadAnimations(sceneNode.child("entities").child("shot").child("animations").child("travel"));
@@ -67,7 +68,9 @@ bool ParticleManager::Update(float dt)
 			posX = particle->pbody->GetPhysBodyWorldPosition().getX() - texW / 2;
 			posY = particle->pbody->GetPhysBodyWorldPosition().getY() - texH / 2;
 			Engine::GetInstance().render.get()->DrawTexture(texture, posX, posY, &(particle->anim.GetCurrentFrame()));
-			
+			if (particle->hitEnemy) {
+				hitEnemy = true;
+			}
 
 		}
 		
@@ -114,6 +117,8 @@ bool ParticleManager::CleanUp()
 	return true;
 }
 
+
+
 void ParticleManager::AddParticle(const Particle& particle, int x, int y, int delay)
 {
 	Particle* p = new Particle(particle);
@@ -123,9 +128,12 @@ void ParticleManager::AddParticle(const Particle& particle, int x, int y, int de
 	p->position.setX(x);
 	p->position.setY(y);
 
-	p->pbody = Engine::GetInstance().physics.get()->CreateCircleSensor((int)p->position.getX(), (int)p->position.getY(), shotRad, bodyType::KINEMATIC);
-	
+	p->pbody = Engine::GetInstance().physics.get()->CreateCircleSensor((int)p->position.getX(), (int)p->position.getY(), shotRad, bodyType::STATIC);
+	p->pbody->listener = p;
+	p->pbody->ctype = ColliderType::SHOT;
 
 	particles[lastParticle++] = p;
 	lastParticle %= MAX_ACTIVE_PARTICLES;
 }
+
+

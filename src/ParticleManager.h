@@ -34,6 +34,7 @@ public:
 	void AddParticle(const Particle& particle, int x, int y, int delay = 0);
 
 
+
 private:
 
 	SDL_Texture* texture;
@@ -45,8 +46,8 @@ private:
 	int lastParticle = 0;
 
 public:
-
 	Particle shot;
+	bool hitEnemy;
 	int shotRad;
 	int texW, texH;
 };

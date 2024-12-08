@@ -9,6 +9,8 @@
 #include "Physics.h"
 #include "Map.h"
 #include "Player.h"
+#include "ParticleManager.h"
+//#include "EntityManager.h"
 
 Enemy::Enemy() : Entity(EntityType::ENEMY)
 {
@@ -108,22 +110,24 @@ bool Enemy::Update(float dt)
 		pathfinding->PropagateAStar(SQUARED, position);
 	}
 
-	if (player->hitEnemy) {
+	//if (player->hitEnemy) {
 
-		pbody->body->SetEnabled(false);
-		player->hitEnemy = false;
-		hitByPlayer = true;
-	}
+	//	player->hitEnemy = false;
+	//	hitByPlayer = true;
+	//}
 
 	// L08 TODO 4: Add a physics to an item - update the position of the object from the physics.  
 	b2Transform pbodyPos = pbody->body->GetTransform();
 	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - texH / 2);
 	position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2);
 
-	if (!hitByPlayer) {
+	if (!(Engine::GetInstance().particleManager.get()->hitEnemy)) {
 		Engine::GetInstance().render.get()->DrawTexture(texture, (int)position.getX(), (int)position.getY(), &currentAnimation->GetCurrentFrame());
 		currentAnimation->Update();
 		pathfinding->DrawPath();
+	}
+	else {
+		/*Engine::GetInstance().physics.get()->DeletePhysBody(pbody);*/
 	}
 	
 
@@ -183,7 +187,6 @@ void Enemy::SetPath(pugi::xml_node pathNode)
 			float y = pointNode.attribute("y").as_float();
 
 			route.emplace_back( x, y );
-
 		}
 
 		for (int i = 0; i < route.size(); i++)
@@ -215,15 +218,18 @@ void Enemy::OnCollision(PhysBody* physA, PhysBody* physB) {
 	switch (physB->ctype)
 	{
 	case ColliderType::WEAPON:
-		LOG("Collision PLATFORM");
+		LOG("Enemy was hit by WEAPON");
+		hitByPlayer = true;
+		break;
+	case ColliderType::SHOT:
+		LOG("Enemy was hit by SHOT");
+		hitByPlayer = true;
 		break;
 	case ColliderType::ITEM:
 		LOG("Collision ITEM");
 		break;
 	case ColliderType::SPYKE:
-
 		LOG("Collision SPYKE");
-
 		break;
 
 	case ColliderType::ENEMY:
@@ -231,7 +237,6 @@ void Enemy::OnCollision(PhysBody* physA, PhysBody* physB) {
 		break;
 	case ColliderType::ABYSS:
 	{
-
 		LOG("Collision ABYSS");
 		break;
 	}

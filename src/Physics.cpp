@@ -268,98 +268,109 @@ bool Physics::PostUpdate()
 	
 	if (Engine::GetInstance().GetDebug())
 	{
+		
 		for (b2Body* b = world->GetBodyList(); b; b = b->GetNext())
 		{
 			for (b2Fixture* f = b->GetFixtureList(); f; f = f->GetNext())
 			{
-				switch (f->GetType())
-				{
-					// Draw circles ------------------------------------------------
-				case b2Shape::e_circle:
-				{
-					b2CircleShape* shape = (b2CircleShape*)f->GetShape();
-					int width, height;
-					Engine::GetInstance().window.get()->GetWindowSize(width, height);
-					b2Vec2 pos = f->GetBody()->GetPosition();
-					Engine::GetInstance().render.get()->DrawCircle(METERS_TO_PIXELS(pos.x), 
-																   METERS_TO_PIXELS(pos.y), 
-																   METERS_TO_PIXELS(shape->m_radius) * Engine::GetInstance().window.get()->GetScale(),
-																   255, 255, 255);
-				}
-				break;
-
-				// Draw polygons ------------------------------------------------
-				case b2Shape::e_polygon:
-				{
-					b2PolygonShape* polygonShape = (b2PolygonShape*)f->GetShape();
-					int32 count = polygonShape->m_count;
-					b2Vec2 prev, v;
-
-					for (int32 i = 0; i < count; ++i)
+				if (b->IsEnabled()) {
+					switch (f->GetType())
 					{
-						v = b->GetWorldPoint(polygonShape->m_vertices[i]);
-						if (i > 0)
-							Engine::GetInstance().render.get()->DrawLine(METERS_TO_PIXELS(prev.x), 
-																	     METERS_TO_PIXELS(prev.y), 
-																		 METERS_TO_PIXELS(v.x), 
-																		 METERS_TO_PIXELS(v.y), 
-																		 255, 255, 100);
-
-						prev = v;
-					}
-
-					v = b->GetWorldPoint(polygonShape->m_vertices[0]);
-					Engine::GetInstance().render.get()->DrawLine(METERS_TO_PIXELS(prev.x),
-																 METERS_TO_PIXELS(prev.y),
-																 METERS_TO_PIXELS(v.x),
-																 METERS_TO_PIXELS(v.y),
-																 255, 255, 100);
-				}
-				break;
-
-				// Draw chains contour -------------------------------------------
-				case b2Shape::e_chain:
-				{
-					b2ChainShape* shape = (b2ChainShape*)f->GetShape();
-					b2Vec2 prev, v;
-
-					for (int32 i = 0; i < shape->m_count; ++i)
+						// Draw circles ------------------------------------------------
+					case b2Shape::e_circle:
 					{
-						v = b->GetWorldPoint(shape->m_vertices[i]);
-						if (i > 0)
-							Engine::GetInstance().render.get()->DrawLine(METERS_TO_PIXELS(prev.x), 
-																	     METERS_TO_PIXELS(prev.y), 
-																	     METERS_TO_PIXELS(v.x), 
-																	     METERS_TO_PIXELS(v.y), 
-																		 100, 255, 100);
-						prev = v;
+						b2CircleShape* shape = (b2CircleShape*)f->GetShape();
+						int width, height;
+						Engine::GetInstance().window.get()->GetWindowSize(width, height);
+						b2Vec2 pos = f->GetBody()->GetPosition();
+						
+						Engine::GetInstance().render.get()->DrawCircle(METERS_TO_PIXELS(pos.x),
+							METERS_TO_PIXELS(pos.y),
+							METERS_TO_PIXELS(shape->m_radius) * Engine::GetInstance().window.get()->GetScale(),
+							255, 255, 255);
+						
+
 					}
+					break;
 
-					v = b->GetWorldPoint(shape->m_vertices[0]);
-					Engine::GetInstance().render.get()->DrawLine(METERS_TO_PIXELS(prev.x), 
-																 METERS_TO_PIXELS(prev.y), 
-															     METERS_TO_PIXELS(v.x), 
-															     METERS_TO_PIXELS(v.y), 
-																 100, 255, 100);
-				}
-				break;
+					// Draw polygons ------------------------------------------------
+					case b2Shape::e_polygon:
+					{
+						b2PolygonShape* polygonShape = (b2PolygonShape*)f->GetShape();
+						int32 count = polygonShape->m_count;
+						b2Vec2 prev, v;
 
-				// Draw a single segment(edge) ----------------------------------
-				case b2Shape::e_edge:
-				{
-					b2EdgeShape* shape = (b2EdgeShape*)f->GetShape();
-					b2Vec2 v1, v2;
+						for (int32 i = 0; i < count; ++i)
+						{
+							v = b->GetWorldPoint(polygonShape->m_vertices[i]);
+							if (i > 0)
 
-					v1 = b->GetWorldPoint(shape->m_vertex0);
-					v1 = b->GetWorldPoint(shape->m_vertex1);
-					Engine::GetInstance().render.get()->DrawLine(METERS_TO_PIXELS(v1.x), 
-																 METERS_TO_PIXELS(v1.y), 
-																 METERS_TO_PIXELS(v2.x), 
-																 METERS_TO_PIXELS(v2.y), 
-															     100, 100, 255);
+								Engine::GetInstance().render.get()->DrawLine(METERS_TO_PIXELS(prev.x),
+									METERS_TO_PIXELS(prev.y),
+									METERS_TO_PIXELS(v.x),
+									METERS_TO_PIXELS(v.y),
+									255, 255, 100);
+
+							prev = v;
+						}
+
+						v = b->GetWorldPoint(polygonShape->m_vertices[0]);
+						
+						Engine::GetInstance().render.get()->DrawLine(METERS_TO_PIXELS(prev.x),
+								METERS_TO_PIXELS(prev.y),
+								METERS_TO_PIXELS(v.x),
+								METERS_TO_PIXELS(v.y),
+								255, 255, 100);
+					}
+					break;
+
+					// Draw chains contour -------------------------------------------
+					case b2Shape::e_chain:
+					{
+						b2ChainShape* shape = (b2ChainShape*)f->GetShape();
+						b2Vec2 prev, v;
+
+						for (int32 i = 0; i < shape->m_count; ++i)
+						{
+							v = b->GetWorldPoint(shape->m_vertices[i]);
+							if (i > 0)
+								Engine::GetInstance().render.get()->DrawLine(METERS_TO_PIXELS(prev.x),
+									METERS_TO_PIXELS(prev.y),
+									METERS_TO_PIXELS(v.x),
+									METERS_TO_PIXELS(v.y),
+									100, 255, 100);
+							prev = v;
+						}
+
+						v = b->GetWorldPoint(shape->m_vertices[0]);
+						Engine::GetInstance().render.get()->DrawLine(METERS_TO_PIXELS(prev.x),
+							METERS_TO_PIXELS(prev.y),
+							METERS_TO_PIXELS(v.x),
+							METERS_TO_PIXELS(v.y),
+							100, 255, 100);
+					}
+					break;
+
+					// Draw a single segment(edge) ----------------------------------
+					case b2Shape::e_edge:
+					{
+						b2EdgeShape* shape = (b2EdgeShape*)f->GetShape();
+						b2Vec2 v1, v2;
+
+						v1 = b->GetWorldPoint(shape->m_vertex0);
+						v1 = b->GetWorldPoint(shape->m_vertex1);
+						Engine::GetInstance().render.get()->DrawLine(METERS_TO_PIXELS(v1.x),
+							METERS_TO_PIXELS(v1.y),
+							METERS_TO_PIXELS(v2.x),
+							METERS_TO_PIXELS(v2.y),
+							100, 100, 255);
+					}
+					break;
+
+					}
 				}
-				break;
-				}
+			
+				
 
 			}
 		}
