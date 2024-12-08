@@ -127,7 +127,7 @@
 					</t_spell2>
 				</animations>
 			</player>
-      <shot x ="0" y="0" w="64" h ="64" texture="Assets/Textures/Pumpkin Head/fireball-sheet.png">
+      <shot x ="0" y="0" w="64" h ="64" rad ="5" texture="Assets/Textures/Pumpkin Head/fireball-sheet-test.png">
         <animations>
           <travel loop ="true" speed ="0.2f">
 						<frame x ="0" y="0" w ="64" h ="64"/>
@@ -139,7 +139,7 @@
       </shot>
 			<enemies>
 				<groundEnemy>
-					<skeleton x="100" y="420" w="48" h="48" texture="Assets/Textures/Enemies/Undead/SwordsMan-reorganized_spritesheet.png">
+					<skeleton1 x="100" y="420" w="48" h="48" texture="Assets/Textures/Enemies/Undead/SwordsMan-reorganized_spritesheet.png">
 						<properties speed="1" chaseArea="100" attackArea="20" jumpForce="0.3f" attackTime="1.0f" deathTime="1.5f" />
 						<animations>
 							<idle loop="false" speed="0.2f">
@@ -156,7 +156,9 @@
 								<frame x="0" y="48" w="48" h="48" />
 							</attack>
 						</animations>
-					</skeleton>
+					</skeleton1>
+          <skeleton2>
+          </skeleton2>
 				</groundEnemy>
 				<flyEnemy>
 					<bat x="250" y="350" w="32" h="32" texture="Assets/Textures/Enemies/Bat/Vampire/BatVampire_Sheet.png">
@@ -225,7 +227,7 @@
 			<item3 lit="" x="1849" y="200" />
 		</savedData>
 	</scene>
-	<ui path="Assets/Textures/UI/HelpMenu2.png" />
+	<ui path="Assets/Textures/UI/HelpMenu_ver2.png"/>
 	<audio>
 		<fx>
 			<gJumpSFX path="Assets/Audio/Fx/ghostJump.ogg" />

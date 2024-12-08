@@ -6,6 +6,7 @@
 #include "Window.h"
 #include "Physics.h"
 
+
 UI::UI() : Module()
 {
 
@@ -31,12 +32,14 @@ bool UI::Start()
 {
 	help = false;
 	bool ret = true;
-	helpMenu = Engine::GetInstance().textures.get()->Load("Assets/Textures/UI/HelpMenu2.png");
+	pugi::xml_document configFile;
+	pugi::xml_parse_result result = configFile.load_file("config.xml");
+	helpMenu = Engine::GetInstance().textures.get()->Load(configFile.child("config").child("ui").attribute("path").as_string());
 
 
 	if (helpMenu == nullptr)
 	{
-		LOG("Failed to load texture: Assets/Textures/UI/HelpMenu2.png");
+		LOG("Failed to load texture");
 		ret = false;
 	}
 

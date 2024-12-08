@@ -33,9 +33,11 @@ public:
 
 	void AddParticle(const Particle& particle, int x, int y, int delay = 0);
 
+
 private:
 
 	SDL_Texture* texture;
+	
 
 	Particle* particles[MAX_ACTIVE_PARTICLES] = { nullptr };
 
@@ -45,4 +47,6 @@ private:
 public:
 
 	Particle shot;
+	int shotRad;
+	int texW, texH;
 };

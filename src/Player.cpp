@@ -174,7 +174,7 @@ bool Player::Update(float dt)
 
 	velocity = b2Vec2_zero;
 
-	if (transformable) {
+	if (transformable || godMode) {
 		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_Z) == KEY_DOWN) {
 			if (!transformed) {
 				transformed = true;
@@ -227,7 +227,8 @@ bool Player::Update(float dt)
 				playerState = WALK;
 			}
 		}
-		else
+		
+		if(!canClimb)
 		{
 			
 			if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN && VALUE_NEAR_TO_0(pbody->body->GetLinearVelocity().y)) {

@@ -1,8 +1,18 @@
 #include "Particle.h"
 #include "Timer.h"
+#include "Engine.h"
+#include "Textures.h"
+
+
 
 Particle::Particle() : Entity(EntityType::SHOT)
 {
+}
+
+bool Particle::Start() {
+
+	
+	return true;
 }
 
 bool Particle::Update()
@@ -31,6 +41,8 @@ bool Particle::Update()
 		// Update the position in the screen
 		position.setX(position.getX() + speed.getX());
 		position.setY(position.getY() + speed.getY());
+
+		
 	}
 
 	return ret;

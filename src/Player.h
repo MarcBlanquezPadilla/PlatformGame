@@ -68,6 +68,7 @@ public:
 
 	//Declare player parameters
 	PhysBody* attackCollider;
+	PhysBody* shotCollider;
 
 	int ATKcolliderW;
 	int ATKcolliderH;

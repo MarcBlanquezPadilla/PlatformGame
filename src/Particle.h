@@ -2,6 +2,7 @@
 
 #include "Vector2D.h"
 #include "Entity.h"
+#include "Physics.h"
 
 class Particle : public Entity
 {
@@ -11,18 +12,20 @@ public:
 
 	// Copy constructor
 	/*Particle(const Particle& p);*/
+	bool Start();
 
 
 	bool Update();
 
+	//bool CleanUp();
+
 public:
 
+	PhysBody* pbody;
+
+
 	Vector2D position;
-
-
 	Vector2D speed;
-
-
 	Animation anim;
 
 
