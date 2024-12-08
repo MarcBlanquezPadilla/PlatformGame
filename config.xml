@@ -127,16 +127,16 @@
 					</t_spell2>
 				</animations>
 			</player>
-      <shot x ="0" y="0" w="64" h ="64" rad ="5" texture="Assets/Textures/Pumpkin Head/fireball-sheet-test.png">
-        <animations>
-          <travel loop ="true" speed ="0.2f">
-						<frame x ="0" y="0" w ="64" h ="64"/>
-            <frame x ="64" y="0" w ="64" h ="64"/>
-            <frame x ="128" y="0" w ="64" h ="64"/>
-            <frame x ="192" y="0" w ="64" h ="64"/>
-          </travel>
-        </animations>
-      </shot>
+			<shot x="0" y="0" w="64" h="64" rad="5" texture="Assets/Textures/Pumpkin Head/fireball-sheet-test.png">
+				<animations>
+					<travel loop="true" speed="0.2f">
+						<frame x="0" y="0" w="64" h="64" />
+						<frame x="64" y="0" w="64" h="64" />
+						<frame x="128" y="0" w="64" h="64" />
+						<frame x="192" y="0" w="64" h="64" />
+					</travel>
+				</animations>
+			</shot>
 			<enemies>
 				<groundEnemy>
 					<skeleton1 x="100" y="420" w="48" h="48" texture="Assets/Textures/Enemies/Undead/SwordsMan-reorganized_spritesheet.png">
@@ -157,8 +157,7 @@
 							</attack>
 						</animations>
 					</skeleton1>
-          <skeleton2>
-          </skeleton2>
+					<skeleton2 />
 				</groundEnemy>
 				<flyEnemy>
 					<bat x="250" y="350" w="32" h="32" texture="Assets/Textures/Enemies/Bat/Vampire/BatVampire_Sheet.png">
@@ -215,9 +214,9 @@
 			</items>
 		</entities>
 		<savedData saved="true">
-			<player x="1799" y="198" lives="3" transformable="false" transformed="false" />
-			<enemy0 alive="true" x="243" y="344" />
-			<enemy1 alive="true" x="201" y="423" />
+			<player x="1799" y="197" lives="3" transformable="false" transformed="false" />
+			<enemy0 alive="true" x="255" y="343" />
+			<enemy1 alive="true" x="106" y="423" />
 			<player x="337" y="422" lives="3" transformable="false" transformed="false" />
 			<enemy0 alive="true" x="200" y="342" />
 			<enemy1 alive="true" x="456" y="397" />
@@ -227,7 +226,7 @@
 			<item3 lit="" x="1849" y="200" />
 		</savedData>
 	</scene>
-	<ui path="Assets/Textures/UI/HelpMenu_ver2.png"/>
+	<ui path="Assets/Textures/UI/HelpMenu_ver2.png" />
 	<audio>
 		<fx>
 			<gJumpSFX path="Assets/Audio/Fx/ghostJump.ogg" />

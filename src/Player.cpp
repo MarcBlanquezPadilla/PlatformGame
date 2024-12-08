@@ -75,8 +75,6 @@ bool Player::Start() {
 	dir = (Direction)parameters.child("propierties").attribute("direction").as_int();
 	lives = parameters.attribute("lives").as_int();
 
-	
-
 	if (parameters.child("savedData").attribute("saved").as_bool() == true)
 	{
 		position = { parameters.child("savedData").attribute("x").as_float(), parameters.child("savedData").attribute("y").as_float() };
@@ -112,21 +110,21 @@ bool Player::Start() {
 
 	currentAnim = &idle;
 
-	// L08 TODO 5: Add physics to the player - initialize physics body
+	//PLAYER PHYSICS
 	pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX(), (int)position.getY(), GHOST_W, bodyType::DYNAMIC);
-
 
 	pbody->listener = this;
 	pbody->ctype = ColliderType::PLAYER;
 	pbody->body->SetLinearDamping(friction);
 	pbody->body->SetGravityScale(gravity);
 
+	//ATTACK COLLIDER
 	ATKcolliderW = 41;
 	ATKcolliderH = 32;
 	attackCollider = Engine::GetInstance().physics.get()->CreateRectangleSensor((int)position.getX(), (int)position.getY(), ATKcolliderW, ATKcolliderH, bodyType::DYNAMIC);
 	attackCollider->ctype = ColliderType::WEAPON;
 	attackCollider->body->SetEnabled(false);
-	weaponOffset = { 23, 12 };
+	weaponOffset = { 10, 7 };
 	pbody->listener = this;
 
 
@@ -140,10 +138,8 @@ bool Player::Start() {
 bool Player::Update(float dt)
 {
 	pbody->body->SetAwake(true);
-	attackCollider->body->SetAwake(true);
-	currentFrame = currentAnim->GetCurrentFrame();
-
 	
+	currentFrame = currentAnim->GetCurrentFrame();
 
 	if (tpToStart)
 	{
@@ -243,12 +239,15 @@ bool Player::Update(float dt)
 
 			if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_X) == KEY_DOWN && transformed && playerState != ATTACK1) {
 
+				
 				playerState = ATTACK1;
 				Engine::GetInstance().audio.get()->PlayFx(atk1SFX);
 				attack1Timer.Start();
 				pbody->body->SetLinearVelocity({ 0,0 });
+				b2Vec2 attackColliderPos = { pbody->body->GetPosition().x + (dir == LEFT ? -PIXEL_TO_METERS(weaponOffset.getX()) : PIXEL_TO_METERS(weaponOffset.getX())), pbody->body->GetPosition().y - PIXEL_TO_METERS(weaponOffset.getY()) };
+				attackCollider->body->SetTransform(attackColliderPos, 0);
 				attackCollider->body->SetEnabled(true);
-
+				attackCollider->body->SetEnabled(true);
 
 			}
 
@@ -271,7 +270,6 @@ bool Player::Update(float dt)
 		
 
 		pbody->body->SetLinearVelocity(velocity);
-		/*attackCollider->body->SetLinearVelocity(velocity);*/
 
 		if (pbody->body->GetLinearVelocity().y < -0.0001)
 		{
@@ -288,7 +286,8 @@ bool Player::Update(float dt)
 	}
 	else if (playerState == ATTACK1) {
 		
-		/*LOG("%f", attack1Timer.ReadSec());*/
+		b2Vec2 attackColliderPos = { pbody->body->GetPosition().x + (dir == LEFT ? -PIXEL_TO_METERS(weaponOffset.getX()) : PIXEL_TO_METERS(weaponOffset.getX())), pbody->body->GetPosition().y - PIXEL_TO_METERS(weaponOffset.getY()) };
+		attackCollider->body->SetTransform(attackColliderPos, 0);
 		if (attack1Timer.ReadSec() >= attack1Time/* && t_spell1.HasFinished()*/) {
 			playerState = IDLE;
 			t_spell1.Reset();
@@ -438,21 +437,11 @@ bool Player::Update(float dt)
 		if (dir == RIGHT) {
 
 			Engine::GetInstance().render.get()->DrawTexture(t_texture, position.getX(), position.getY(), &currentFrame);
-			attackCollider->body->SetTransform({ attackCollider->body->GetPosition().x + weaponOffset.getX(),attackCollider->body->GetPosition().y }, pbody->GetRotation());
 		}
 		else if (dir == LEFT) {
-			Engine::GetInstance().render.get()->DrawTextureFlipped(t_texture, position.getX(), position.getY(), &currentFrame);
-			attackCollider->body->SetTransform({ attackCollider->body->GetPosition().x - weaponOffset.getX(),attackCollider->body->GetPosition().y }, pbody->GetRotation());
-		}
-		
 
-		SDL_Rect attackRect = {
-		(attackCollider->body->GetPosition().x) - ATKcolliderW / 2,
-		(attackCollider->body->GetPosition().y) - ATKcolliderH / 2,
-		ATKcolliderW,
-		ATKcolliderH
-		};
-	
+			Engine::GetInstance().render.get()->DrawTextureFlipped(t_texture, position.getX(), position.getY(), &currentFrame);
+		}
 	}
 	
 	
@@ -507,6 +496,7 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 
 		LOG("Collision ENEMY");
 		break;
+	
 	case ColliderType::ABYSS:
 	{ 
 		if (!godMode) {

@@ -60,6 +60,8 @@ public:
 
 	bool CheckIfTwoPointsNear(Vector2D point1, Vector2D point2, float nearDistance);
 
+
+
 	void SetPlayer(Player* player);
 	
 	void SetPath(pugi::xml_node pathNode);
