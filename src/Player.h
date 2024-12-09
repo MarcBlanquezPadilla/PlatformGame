@@ -66,11 +66,17 @@ public:
 
 public:
 
-	//Declare player parameters
+	//MELEE
 	PhysBody* attackCollider;
-	//PhysBody* shotCollider;
+	Timer attack1Timer;
+	float attack1Time;
 
+	//SHOT
 	Particle* shoot;
+	int shootCooldown;
+	Timer shootCooldownTimer;
+	Timer attack2Timer;
+	float attack2Time;
 
 	int ATKcolliderW;
 	int ATKcolliderH;
@@ -99,11 +105,6 @@ public:
 	bool reachedCheckPoint;
 	bool hitEnemy;
 	bool shot;
-
-	Timer attack1Timer;
-	float attack1Time;
-	Timer attack2Timer;
-	float attack2Time;
 
 	Timer hurtTimer;
 	float hurtTime;

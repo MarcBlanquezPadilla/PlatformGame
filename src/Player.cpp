@@ -107,8 +107,6 @@ bool Player::Start() {
 	saveGame = Engine::GetInstance().audio.get()->LoadFx(audioFile.child("config").child("audio").child("fx").child("saveGame").attribute("path").as_string());
 	loadGame = Engine::GetInstance().audio.get()->LoadFx(audioFile.child("config").child("audio").child("fx").child("loadGame").attribute("path").as_string());
 
-	
-
 	currentAnim = &idle;
 
 	//PLAYER PHYSICS
@@ -132,6 +130,8 @@ bool Player::Start() {
 	shoot = (Particle*)Engine::GetInstance().entityManager.get()->CreateEntity(EntityType::SHOT);
 	shoot->Start();
 	shoot->Awake();
+	shootCooldown = parameters.child("propierties").attribute("shootCooldown").as_float();;
+	shootCooldownTimer.Start();
 	
 	hurtTimer = Timer();
 	respawnTimer = Timer();
@@ -258,13 +258,14 @@ bool Player::Update(float dt)
 			}
 
 
-			if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_C) == KEY_DOWN && transformed && playerState != ATTACK2) {
+			if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_C) == KEY_DOWN && transformed && playerState != ATTACK2 && shootCooldownTimer.ReadSec()>shootCooldown) {
 
 				playerState = ATTACK2;
 				attack2Timer.Start();
 				pbody->body->SetLinearVelocity({ 0, velocity.y });
 				Engine::GetInstance().audio.get()->PlayFx(atk2SFX);
 				shot = true;
+				shootCooldownTimer.Start();
 			}
 			velocity = { velocity.x, pbody->body->GetLinearVelocity().y };
 		}
@@ -304,14 +305,13 @@ bool Player::Update(float dt)
 		if (shot) {
 			shoot->Restart({ pbody->GetPhysBodyWorldPosition().getX(), pbody->GetPhysBodyWorldPosition().getY() }, { (float)(dir == LEFT ? -1 : 1), (float)0 });
 			shot = false;
+			t_spell2.Reset();
 		}
 
 		if (attack2Timer.ReadSec() >= attack2Time/* && t_spell2.HasFinished()*/) {
 			
 			playerState = IDLE;
 			t_spell2.Reset();
-			
-			
 		}
 	}
 	else if (playerState == HURT) {
@@ -328,8 +328,6 @@ bool Player::Update(float dt)
 		}
 	}
 	else if (playerState == DEAD) {
-
-		
 
 		pbody->body->SetLinearVelocity(b2Vec2_zero);
 		if (respawnTimer.ReadSec() >= respawnTime) 

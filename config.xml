@@ -28,7 +28,7 @@
 		</map>
 		<entities>
 			<player x="25" y="350" w="64" h="64" t_w="64" t_h="64" lives="3" texture="Assets/Textures/GhostCharacter/Ghost_Sheet_Resized.png" t_texture="Assets/Textures/Pumpkin Head/pumpkinhead_sheet2.png">
-				<propierties jumpForce="0.6f" pushForce="0.5f" moveSpeed="0.2f" friction="2.0f" gravity="1.2f" attack1Time="0.8f" attack2Time="1.0f" hurtTime="1.0f" respawnTime=" 2.0f" playerState="0" direction="1" />
+				<propierties jumpForce="0.6f" pushForce="0.5f" moveSpeed="0.2f" friction="2.0f" gravity="1.2f" attack1Time="0.8f" attack2Time="1.0f" hurtTime="1.0f" respawnTime=" 2.0f" playerState="0" direction="1" shootCooldown="7"/>
 				<animations>
 					<idle loop="true" speed="0.2f">
 						<frame x="0" y="0" w="64" h="64" />
