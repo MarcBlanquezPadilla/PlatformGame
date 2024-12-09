@@ -42,18 +42,11 @@ As Pumpkin Head, you jump less, but you can attack:
 - F5: Save State
 - F6: Load State
 
-Debug Controls:
+[Debug Controls]:
 - F9: Show Logic (colliders, enemy pathfinding)
 - F10: God Mode: 
    - Float around with WASD (no need to jump as gravity is deactivated) 
    - Transform at any moment with Z (without any pumpkin nearby)
 - F11: Cap game to 30 FPS
 - Esc: Quit Game
-
-
-- Space Bar: Jump
-
-- Esc: Quit Game
-
-- H: Show / Hide Player Controls (Help Menu)
 
