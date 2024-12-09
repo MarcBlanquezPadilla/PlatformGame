@@ -102,9 +102,6 @@
     <ClCompile Include="src\Particle.cpp">
       <Filter>Source Files\Game</Filter>
     </ClCompile>
-    <ClCompile Include="src\ParticleManager.cpp">
-      <Filter>Source Files\Engine</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Audio.h">
@@ -181,9 +178,6 @@
     </ClInclude>
     <ClInclude Include="src\Particle.h">
       <Filter>Source Files\Game</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ParticleManager.h">
-      <Filter>Source Files\Engine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

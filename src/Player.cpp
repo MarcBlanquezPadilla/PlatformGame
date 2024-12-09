@@ -8,7 +8,8 @@
 #include "Log.h"
 #include "Pathfinding.h"
 #include "Physics.h"
-#include "ParticleManager.h"
+#include "Particle.h"
+#include "EntityManager.h"
 
 
  
@@ -127,8 +128,10 @@ bool Player::Start() {
 	attackCollider->body->SetGravityScale(0);
 	weaponOffset = { 10, 7 };
 	
-
-
+	//SHOOT
+	shoot = (Particle*)Engine::GetInstance().entityManager.get()->CreateEntity(EntityType::SHOT);
+	shoot->Start();
+	shoot->Awake();
 	
 	hurtTimer = Timer();
 	respawnTimer = Timer();
@@ -252,8 +255,6 @@ bool Player::Update(float dt)
 				b2Vec2 attackColliderPos = { pbody->body->GetPosition().x + (dir == LEFT ? -PIXEL_TO_METERS(weaponOffset.getX()) : PIXEL_TO_METERS(weaponOffset.getX())), pbody->body->GetPosition().y - PIXEL_TO_METERS(weaponOffset.getY()) };
 				attackCollider->body->SetTransform(attackColliderPos, 0);
 				attackCollider->body->SetEnabled(true);
-				attackCollider->body->SetEnabled(true);
-				
 			}
 
 
@@ -264,15 +265,9 @@ bool Player::Update(float dt)
 				pbody->body->SetLinearVelocity({ 0, velocity.y });
 				Engine::GetInstance().audio.get()->PlayFx(atk2SFX);
 				shot = true;
-
-
 			}
 			velocity = { velocity.x, pbody->body->GetLinearVelocity().y };
 		}
-		
-		
-		
-		
 
 		pbody->body->SetLinearVelocity(velocity);
 
@@ -307,7 +302,7 @@ bool Player::Update(float dt)
 	else if (playerState == ATTACK2) {
 
 		if (shot) {
-			Engine::GetInstance().particleManager.get()->AddParticle(Engine::GetInstance().particleManager.get()->shot, position.getX(), position.getY(), 40);
+			shoot->Restart({ pbody->GetPhysBodyWorldPosition().getX(), pbody->GetPhysBodyWorldPosition().getY() }, { (float)(dir == LEFT ? -1 : 1), (float)0 });
 			shot = false;
 		}
 
@@ -436,11 +431,8 @@ bool Player::Update(float dt)
 	}
 	else {
 
-		
 		position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - t_texW / 2);
 		position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - t_texH / 2);
-
-		
 	
 		if (dir == RIGHT) {
 
@@ -452,9 +444,6 @@ bool Player::Update(float dt)
 		}
 	}
 	
-	
-	
-
 	currentAnim->Update();
 
 	return true;

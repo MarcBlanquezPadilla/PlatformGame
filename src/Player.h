@@ -5,6 +5,7 @@
 #include "Box2D/Box2D.h"
 #include "Animation.h"
 #include "Timer.h"
+#include "Particle.h"
 
 
 #define GHOST_W 9
@@ -69,6 +70,8 @@ public:
 	PhysBody* attackCollider;
 	//PhysBody* shotCollider;
 
+	Particle* shoot;
+
 	int ATKcolliderW;
 	int ATKcolliderH;
 	Vector2D weaponOffset;
@@ -111,6 +114,7 @@ public:
 	b2Vec2 velocity = b2Vec2_zero;
 	b2Vec2 initPos;
 	b2Vec2 pushDir;
+
 
 	pugi::xml_node parameters;
 

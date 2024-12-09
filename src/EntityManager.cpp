@@ -8,7 +8,6 @@
 #include "BatEnemy.h"
 #include "GroundEnemy.h"
 #include "Particle.h"
-#include "ParticleManager.h"
 
 EntityManager::EntityManager() : Module()
 {
@@ -90,8 +89,8 @@ Entity* EntityManager::CreateEntity(EntityType type)
 		break;
 	case EntityType::SHOT:
 		entity = new Particle();
+		break;
 	default:
-
 		break;
 	}
 

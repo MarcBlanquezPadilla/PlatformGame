@@ -9,65 +9,94 @@
 
 Particle::Particle() : Entity(EntityType::SHOT)
 {
+
 }
 
 bool Particle::Start() {
 
-	bool isAlive = false;
-	bool hitEnemy = false;
+	pugi::xml_node sceneNode = Engine::GetInstance().scene.get()->configParameters;
+	texture = Engine::GetInstance().textures.get()->Load(sceneNode.child("entities").child("shot").attribute("texture").as_string());
+	texW = sceneNode.child("entities").child("shot").attribute("w").as_int();
+	texH = sceneNode.child("entities").child("shot").attribute("h").as_int();
+
+	shotRad = sceneNode.child("entities").child("shot").attribute("rad").as_int();
+	anim.LoadAnimations(sceneNode.child("entities").child("shot").child("animations").child("travel"));
+	pbody = Engine::GetInstance().physics.get()->CreateCircleSensor((int)position.getX(), (int)position.getY(), shotRad, bodyType::DYNAMIC);
+	pbody->body->SetGravityScale(0);
+	pbody->ctype = ColliderType::SHOT;
+	pbody->body->SetLinearVelocity({ 0,0 });
+	pbody->body->SetEnabled(false);
+
+	speed = 5;
+	lifeTime = 1;
+	castTime = 0.5f;
+	posXOffset = 20;
+
+	isCasted = false;
+	isAlive = false;
+
 	return true;
 }
 
-bool Particle::Update()
+bool Particle::Update(float dt)
 {
 	bool ret = true;
-	frameCount++;
-
-	// The particle is set to 'alive' when the delay has been reached
-	if (!isAlive && frameCount >= 0)
-		isAlive = true;
-
-	if (isAlive)
+	if (isCasted)
 	{
-		anim.Update();
-
-		// If the particle has a specific lifetime, check when it has to be destroyed
-		if (lifetime > 0)
+		if (!isAlive && castTimer.ReadSec() >= castTime)
 		{
-			if (frameCount >= lifetime)
-				ret = false;
+			isAlive = true;
+			aliveTimer.Start();
+			pbody->body->SetEnabled(true);
 		}
-		// Otherwise the particle is destroyed when the animation is finished
-		else if (anim.HasFinished())
-			ret = false;
 
-		// Update the position in the screen
-		
-		position.setX(position.getX() + speed.getX());
-		position.setY(position.getY() + speed.getY());
+		if (isAlive && aliveTimer.ReadSec() < lifeTime)
+		{
+			anim.Update();
 
-		
+			// Update the position in the screen
+			pbody->body->SetLinearVelocity({ direction.getX() * speed,direction.getY() });
+			position.setX(pbody->GetPhysBodyWorldPosition().getX() - texW / 2);
+			position.setY(pbody->GetPhysBodyWorldPosition().getY() - texH / 2);
+
+			Engine::GetInstance().render.get()->DrawTexture(texture, position.getX(), position.getY(), &anim.GetCurrentFrame());
+		}
+		else if (isAlive && aliveTimer.ReadSec() >= lifeTime)
+		{
+			pbody->body->SetEnabled(false);
+			isCasted = false;
+		}
 	}
-
-
+	
 	return ret;
 }
 
 
-//void Particle::OnCollision(PhysBody* physA, PhysBody* physB) {
-//	switch (physB->ctype)
-//	{
-//	case ColliderType::ENEMY:
-//		LOG("Collision ENEMY");
-//		hitEnemy = true;
-//		Engine::GetInstance().physics.get()->DeletePhysBody(physB);
-//		/*pbody->body->SetEnabled(false);*/
-//		break;
-//	case ColliderType::UNKNOWN:
-//		LOG("Collision UNKNOWN");
-//		break;
-//
-//	default:
-//		break;
-//	}
-//}
+void Particle::SetDirection(Vector2D dir)
+{
+	direction = dir;
+	direction = direction.normalized();
+}
+
+void Particle::SetPosition(Vector2D pos)
+{
+	pbody->body->SetTransform({ PIXEL_TO_METERS(pos.getX()), PIXEL_TO_METERS(pos.getY()) }, 0);
+}
+
+void Particle::Restart(Vector2D pos, Vector2D dir)
+{
+	pbody->body->SetLinearVelocity({ 0,0 });
+	pbody->body->SetTransform({ PIXEL_TO_METERS(pos.getX()) + PIXEL_TO_METERS(posXOffset), PIXEL_TO_METERS(pos.getY())}, 0);
+	direction = dir;
+	direction = direction.normalized();
+	isCasted = true;
+	isAlive = false;
+	castTimer.Start();
+}
+
+bool Particle::CleanUp()
+{
+	delete pbody;
+	delete this;
+	return true;
+}

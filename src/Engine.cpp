@@ -11,7 +11,6 @@
 #include "Audio.h"
 #include "Scene.h"
 #include "EntityManager.h"
-#include "ParticleManager.h"
 #include "Map.h"
 #include "Physics.h"
 #include "UI.h"
@@ -40,7 +39,6 @@ Engine::Engine() {
     scene = std::make_shared<Scene>();
     map = std::make_shared<Map>();
     entityManager = std::make_shared<EntityManager>();
-    particleManager = std::make_shared<ParticleManager>();
     ui = std::make_shared<UI>();
 
     // Ordered for awake / Start / Update
@@ -54,7 +52,6 @@ Engine::Engine() {
     AddModule(std::static_pointer_cast<Module>(map));
     AddModule(std::static_pointer_cast<Module>(scene));
     AddModule(std::static_pointer_cast<Module>(entityManager));
-    AddModule(std::static_pointer_cast<Module>(particleManager));
     AddModule(std::static_pointer_cast<Module>(ui));
 
     // Render last 
