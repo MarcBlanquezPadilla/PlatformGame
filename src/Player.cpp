@@ -236,32 +236,34 @@ bool Player::Update(float dt)
 			
 
 
-			if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_X) == KEY_DOWN && transformed && playerState != ATTACK1) {
-
-				
-				playerState = ATTACK1;
-				Engine::GetInstance().audio.get()->PlayFx(atk1SFX);
-				attack1Timer.Start();
-				pbody->body->SetLinearVelocity({ 0, velocity.y });
-				b2Vec2 attackColliderPos = { pbody->body->GetPosition().x + (dir == LEFT ? -PIXEL_TO_METERS(weaponOffset.getX()) : PIXEL_TO_METERS(weaponOffset.getX())), pbody->body->GetPosition().y - PIXEL_TO_METERS(weaponOffset.getY()) };
-				attackCollider->body->SetTransform(attackColliderPos, 0);
-				attackCollider->body->SetEnabled(true);
-			}
-
-
-			if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_C) == KEY_DOWN && transformed && playerState != ATTACK2 && shootCooldownTimer.ReadSec()>shootCooldown) {
-
-				playerState = ATTACK2;
-				attack2Timer.Start();
-				pbody->body->SetLinearVelocity({ 0, velocity.y });
-				Engine::GetInstance().audio.get()->PlayFx(atk2SFX);
-				shot = true;
-				shootCooldownTimer.Start();
-			}
+			
 			velocity = { velocity.x, pbody->body->GetLinearVelocity().y };
 		}
 
 		pbody->body->SetLinearVelocity(velocity);
+
+		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_X) == KEY_DOWN && transformed && playerState != ATTACK1) {
+
+
+			playerState = ATTACK1;
+			Engine::GetInstance().audio.get()->PlayFx(atk1SFX);
+			attack1Timer.Start();
+			pbody->body->SetLinearVelocity({ 0, velocity.y });
+			b2Vec2 attackColliderPos = { pbody->body->GetPosition().x + (dir == LEFT ? -PIXEL_TO_METERS(weaponOffset.getX()) : PIXEL_TO_METERS(weaponOffset.getX())), pbody->body->GetPosition().y - PIXEL_TO_METERS(weaponOffset.getY()) };
+			attackCollider->body->SetTransform(attackColliderPos, 0);
+			attackCollider->body->SetEnabled(true);
+		}
+
+
+		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_C) == KEY_DOWN && transformed && playerState != ATTACK2 && shootCooldownTimer.ReadSec() > shootCooldown) {
+
+			playerState = ATTACK2;
+			attack2Timer.Start();
+			pbody->body->SetLinearVelocity({ 0, velocity.y });
+			Engine::GetInstance().audio.get()->PlayFx(atk2SFX);
+			shot = true;
+			shootCooldownTimer.Start();
+		}
 
 		if (pbody->body->GetLinearVelocity().y < -0.0001)
 		{
