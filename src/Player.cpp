@@ -242,7 +242,7 @@ bool Player::Update(float dt)
 
 		pbody->body->SetLinearVelocity(velocity);
 
-		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_X) == KEY_DOWN && transformed && playerState != ATTACK1) {
+		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_X) == KEY_DOWN && transformed && playerState != ATTACK1 &&VALUE_NEAR_TO_0(pbody->body->GetLinearVelocity().y)) {
 
 
 			playerState = ATTACK1;
@@ -255,7 +255,7 @@ bool Player::Update(float dt)
 		}
 
 
-		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_C) == KEY_DOWN && transformed && playerState != ATTACK2 && shootCooldownTimer.ReadSec() > shootCooldown) {
+		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_C) == KEY_DOWN && transformed && playerState != ATTACK2 && shootCooldownTimer.ReadSec() > shootCooldown && VALUE_NEAR_TO_0(pbody->body->GetLinearVelocity().y)) {
 
 			playerState = ATTACK2;
 			attack2Timer.Start();
