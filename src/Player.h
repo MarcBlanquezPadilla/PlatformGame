@@ -62,6 +62,8 @@ public:
 
 	void LoadData(pugi::xml_node playerNode);
 
+	void Restart();
+
 	void DMGPlayer(PhysBody* physA, PhysBody* physB);
 
 public:

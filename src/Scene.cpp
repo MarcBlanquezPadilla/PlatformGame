@@ -114,6 +114,16 @@ void Scene::LoadItem(Item* item, pugi::xml_node parametersNode) {
 	items.push_back(item);
 }
 
+void Scene::RestartScene()
+{
+	player->Restart();
+
+	for (int i = 0; i < enemies.size(); i++)
+	{
+		enemies[i]->Restart();
+	}
+}
+
 
 // Called each loop iteration
 bool Scene::PreUpdate()
@@ -180,10 +190,6 @@ Vector2D Scene::GetPlayerPosition()
 	return player->GetPosition();
 }
 
-
-
-
-
 void Scene::SaveState()
 {
 	configParameters.child("config").child("scene").child("savedData").attribute("saved").set_value(true);
@@ -211,7 +217,7 @@ void Scene::SaveState()
 
 		if (!parent) {
 			parent = savedDataNode.append_child(nodeChar.c_str());
-			parent.append_attribute("alive");
+			parent.append_attribute("dead");
 			parent.append_attribute("x");
 			parent.append_attribute("y");
 		}

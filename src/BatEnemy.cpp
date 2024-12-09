@@ -97,10 +97,6 @@ bool BatEnemy::Update(float dt) {
 				state = CHASING;
 				ResetPath();
 			}
-
-			
-
-			
 		}
 	
 		
@@ -142,28 +138,6 @@ bool BatEnemy::Update(float dt) {
 
 		//PATHFINDING CONTROLER
 		if (state == PATROL || state == CHASING) {
-
-			/*if (!playingSound) {
-				if (pbody->GetPhysBodyWorldPosition().distanceEuclidean(player->pbody->GetPhysBodyWorldPosition()) <= (float)chaseArea * 1.5f) {
-					Engine::GetInstance().audio.get()->PlayFx(batWingsSFX, 1);
-
-				}
-				else {
-					Engine::GetInstance().audio.get()->PlayFx(farBatWingsSFX, 1);
-				}
-
-				playingSound = true;
-			}
-			else if (playingSound) {
-				if (pbody->GetPhysBodyWorldPosition().distanceEuclidean(player->pbody->GetPhysBodyWorldPosition()) >= (float)chaseArea * 1.5f) {
-					Engine::GetInstance().audio.get()->PlayFx(noSound, 1);
-
-				}
-				else {
-					Engine::GetInstance().audio.get()->PlayFx(farBatWingsSFX, 1);
-				}
-				playingSound = false;
-			}*/
 			
 			if (pbody->GetPhysBodyWorldPosition().distanceEuclidean(player->pbody->GetPhysBodyWorldPosition()) <= (float)chaseArea * 1.5f && !playingSound) {
 				Engine::GetInstance().audio.get()->PlayFx(farBatWingsSFX, 1);

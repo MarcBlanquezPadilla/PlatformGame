@@ -68,6 +68,8 @@ public:
 
 	virtual void LoadData(pugi::xml_node enemyNode);
 
+	virtual void Restart();
+
 	virtual void DMGEnemy();
 
 public:

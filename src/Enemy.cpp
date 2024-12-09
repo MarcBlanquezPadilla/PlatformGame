@@ -227,6 +227,15 @@ void Enemy::LoadData(pugi::xml_node enemyNode)
 	
 }
 
+void Enemy::Restart()
+{
+	pbody->SetPhysPositionWithWorld(route[0].getX(), route[0].getY());
+	state = CHASING;
+	dead = false;
+	pbody->body->SetEnabled(true);
+	ResetPath();
+}
+
 void Enemy::OnCollision(PhysBody* physA, PhysBody* physB) {
 
 	

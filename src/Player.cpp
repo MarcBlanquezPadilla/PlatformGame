@@ -17,7 +17,6 @@
 Player::Player() : Entity(EntityType::PLAYER)
 {
 	name = "Player";
-	
 }
 
 Player::~Player() {
@@ -76,13 +75,6 @@ bool Player::Start() {
 	dir = (Direction)parameters.child("propierties").attribute("direction").as_int();
 	lives = parameters.attribute("lives").as_int();
 
-	if (parameters.child("savedData").attribute("saved").as_bool() == true)
-	{
-		position = { parameters.child("savedData").attribute("x").as_float(), parameters.child("savedData").attribute("y").as_float() };
-		lives = parameters.child("savedData").attribute("lives").as_int();
-
-	}
-	
 	destroyed = false;
 	godMode = false;
 	tpToStart = false;
@@ -139,6 +131,14 @@ bool Player::Start() {
 	return true;
 }
 
+void Player::Restart()
+{
+	playerState = (state)parameters.child("propierties").attribute("playerState").as_int();
+	dir = (Direction)parameters.child("propierties").attribute("direction").as_int();
+	lives = parameters.attribute("lives").as_int();
+	SetPosition({ parameters.attribute("x").as_float(), parameters.attribute("y").as_float() });
+}
+
 bool Player::Update(float dt)
 {
 	pbody->body->SetAwake(true);
@@ -151,19 +151,10 @@ bool Player::Update(float dt)
 
 	if (tpToStart)
 	{
-		pugi::xml_node playerNode = Engine::GetInstance().scene.get()->configParameters;
-		Vector2D checkPointPos;
-		checkPointPos.setX(playerNode.child("savedData").child("player").attribute("x").as_int());
-		checkPointPos.setY(playerNode.child("savedData").child("player").attribute("y").as_int());
-
 		b2Vec2 initPosInMeters = { PIXEL_TO_METERS(initPos.x), PIXEL_TO_METERS(initPos.y) };
-		b2Vec2 checkPointInMeters = { PIXEL_TO_METERS(checkPointPos.getX()), PIXEL_TO_METERS(checkPointPos.getY()) };
+		if (reachedCheckPoint) Engine::GetInstance().scene.get()->LoadState();
+		else Engine::GetInstance().scene.get()->RestartScene();
 
-
-		if (reachedCheckPoint && playerNode.child("savedData").attribute("saved").as_bool()) pbody->body->SetTransform(checkPointInMeters, 0.0f);
-		else pbody->body->SetTransform(initPosInMeters, 0.0f);
-		
-		
 		tpToStart = false;
 	}
 
@@ -409,8 +400,6 @@ bool Player::Update(float dt)
 		}
 	}
 
-
-	
 	b2Transform pbodyPos = pbody->body->GetTransform();
 	//flip player texture according to direction
 	if (!transformed) {
