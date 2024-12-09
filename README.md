@@ -24,7 +24,7 @@ In the 2nd release, the following aspects have been implemented:
    - Pressing F5 will save the game state (player position, transformation, items and enemies) 
    - Pressing F6 will load the game state at the last point saved, even if the game restarted.
 - CheckPoint: The game saves automatically when reaching a big tree surrounded by pumpkins, positioned a little beyond halfway through the level.
-
+- Sound Effects: provide various audio feedback like the player jumping, dealing/receiving damage, saving and loading, the enemies dying, interacting with items, etc.
 
 
 HOW TO PLAY / CONTROLS (Keyboard):
