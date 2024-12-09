@@ -22,19 +22,21 @@ bool Item::Awake() {
 
 bool Item::Start() {
 
+	pugi::xml_node baseParameters = Engine::GetInstance().scene.get()->configParameters.child("entities").child("items").child("pumpkins");
 	//initilize textures
-	pumpkinTex = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture").as_string());
+	pumpkinTex = Engine::GetInstance().textures.get()->Load(baseParameters.child("properties").attribute("texture").as_string());
 	
 	/* L08 TODO 4: Add a physics to an item - initialize the physics body*/
 
 	position.setX(parameters.attribute("x").as_float());
 	position.setY(parameters.attribute("y").as_float());
 	
-	texW = parameters.attribute("w").as_float();
-	texH = parameters.attribute("h").as_float();
+	texW = baseParameters.child("properties").attribute("w").as_float();
+	texH = baseParameters.child("properties").attribute("h").as_float();
 
-	unlit.PushBack({ 0,0,texW,texH });
-	lit.PushBack({ 0,texH,texW,texH });
+	
+	unlit.LoadAnimations(baseParameters.child("animations").child("unlit"));
+	lit.LoadAnimations(baseParameters.child("animations").child("lit"));
 
 
 	pbody = Engine::GetInstance().physics.get()->CreateRectangleSensor((int)position.getX() + texW / 2, (int)position.getY() + texH / 2, texW, texH, bodyType::STATIC);

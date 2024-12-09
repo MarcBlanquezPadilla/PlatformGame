@@ -68,16 +68,25 @@ bool Scene::Start()
 
 	//Load Items
 	Item* pumpkin1 = (Item*)Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM);
-	LoadItem(pumpkin1, configParameters.child("entities").child("items").child("pumpkins").child("pumpkin1"));
+	LoadItem(pumpkin1, configParameters.child("entities").child("items").child("pumpkins").child("instances").child("pumpkin1"));
 
 	Item* checkPumpkin1 = (Item*)Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM);
-	LoadItem(checkPumpkin1, configParameters.child("entities").child("items").child("pumpkins").child("checkPumpkin1"));
+	LoadItem(checkPumpkin1, configParameters.child("entities").child("items").child("pumpkins").child("instances").child("checkPumpkin1"));
 
 	Item* pumpkin2 = (Item*)Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM);
-	LoadItem(pumpkin2, configParameters.child("entities").child("items").child("pumpkins").child("pumpkin2"));
+	LoadItem(pumpkin2, configParameters.child("entities").child("items").child("pumpkins").child("instances").child("pumpkin2"));
 
 	Item* pumpkin3 = (Item*)Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM);
-	LoadItem(pumpkin3, configParameters.child("entities").child("items").child("pumpkins").child("pumpkin3"));
+	LoadItem(pumpkin3, configParameters.child("entities").child("items").child("pumpkins").child("instances").child("pumpkin3"));
+
+	Item* pumpkin4 = (Item*)Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM);
+	LoadItem(pumpkin4, configParameters.child("entities").child("items").child("pumpkins").child("instances").child("pumpkin4"));
+
+	Item* pumpkin5 = (Item*)Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM);
+	LoadItem(pumpkin5, configParameters.child("entities").child("items").child("pumpkins").child("instances").child("pumpkin5"));
+
+	Item* pumpkin6 = (Item*)Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM);
+	LoadItem(pumpkin6, configParameters.child("entities").child("items").child("pumpkins").child("instances").child("pumpkin6"));
 
 	return true;
 }
