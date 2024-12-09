@@ -142,22 +142,29 @@
 					<skeleton x="100" y="420" w="48" h="48" texture="Assets/Textures/Enemies/Undead/SwordsMan-reorganized_spritesheet.png">
 						<properties speed="1" chaseArea="100" attackArea="20" jumpForce="0.3f" attackTime="1.0f" deathTime="1.5f" />
 						<animations>
-							<idle loop="false" speed="0.2f">
+							<idle loop="true" speed="0.2f">
+								<frame x="0" y="0" w="48" h="48" />
+							</idle>
+							<walk loop="true" speed="0.2f">
 								<frame x="0" y="0" w="48" h="48" />
 								<frame x="48" y="0" w="48" h="48" />
 								<frame x="96" y="0" w="48" h="48" />
 								<frame x="144" y="0" w="48" h="48" />
-							</idle>
-							<attack loop="false" speed="0.2f">
+							</walk>
+							<attack loop="false" speed="0.1f">
 								<frame x="0" y="48" w="48" h="48" />
 								<frame x="48" y="48" w="48" h="48" />
 								<frame x="96" y="48" w="48" h="48" />
 								<frame x="144" y="48" w="48" h="48" />
 								<frame x="0" y="48" w="48" h="48" />
 							</attack>
+							<death loop="false" speed="0.2f">
+								<frame x="0" y="96" w="48" h="48" />
+								<frame x="48" y="96" w="48" h="48" />
+								<frame x="96" y="96" w="48" h="48" />
+							</death>
 						</animations>
 					</skeleton>
-					<skeleton2 />
 				</groundEnemy>
 				<flyEnemy>
 					<bat x="250" y="350" w="32" h="32" texture="Assets/Textures/Enemies/Bat/Vampire/BatVampire_Sheet.png">
@@ -177,7 +184,7 @@
 								<frame x="128" y="32" w="32" h="32" />
 								<frame x="160" y="32" w="32" h="32" />
 							</attack>
-							<hurt>
+							<hurt loop=" false" speed="0.2f">
 								<frame x="0" y="64" w="32" h="32" />
 								<frame x="32" y="64" w="32" h="32" />
 								<frame x="64" y="64" w="32" h="32" />
@@ -205,15 +212,21 @@
 						<point x="275" y=" 390" />
 					</path2>
 					<path3>
-						<point x="" y="" />
-						<point x="" y="" />
+						<point x="753" y="240" />
+						<point x="865" y="240" />
 					</path3>
+					<path4>
+						<point x="2200" y="124" />
+						<point x="2000" y="130" />
+					</path4>
 				</paths>
 			</enemies>
 			<items>
-				<pumpkins w="16" h="16" texture="Assets/Textures/Items/pumpkin ui obj-resized.png">
+				<pumpkins>
 					<pumpkin1 x="300" y="416" w="16" h="16" texture="Assets/Textures/Items/pumpkin ui obj-resized.png" />
 					<checkPumpkin1 x="1808" y="192" w="16" h="16" texture="Assets/Textures/Items/pumpkin ui obj-resized.png" />
+					<pumpkin2 x="742" y="337" w="16" h="16" texture="Assets/Textures/Items/pumpkin ui obj-resized.png" />
+					<pumpkin3 x="720" y="385" w="16" h="16" texture="Assets/Textures/Items/pumpkin ui obj-resized.png" />
 				</pumpkins>
 			</items>
 		</entities>
@@ -223,8 +236,10 @@
 			<item1 lit="" x="1816" y="200" />
 			<item2 lit="" x="1784" y="200" />
 			<item3 lit="" x="1849" y="200" />
-			<enemy0 alive="" x="312" y="423" />
-			<enemy1 alive="" x="124" y="423" />
+			<enemy0 alive="" x="237" y="343" />
+			<enemy1 alive="" x="826" y="248" />
+			<enemy2 alive="" x="244" y="391" />
+			<enemy3 alive="" x="2228" y="118" />
 		</savedData>
 	</scene>
 	<ui path="Assets/Textures/UI/HelpMenu_ver2.png" />

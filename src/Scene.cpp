@@ -51,17 +51,19 @@ bool Scene::Start()
 	//Load Parallax
 	Engine::GetInstance().map->LoadParalax(configParameters.child("map").child("parallax"));
 
-	//Load Enemies
+	//Load Bats
 	Enemy* batEnemy = (BatEnemy*)Engine::GetInstance().entityManager->CreateEntity(EntityType::BAT_ENEMY);
 	LoadEnemy(batEnemy, configParameters.child("entities").child("enemies").child("flyEnemy").child("bat"), 1);
 
+	Enemy* batEnemy2 = (BatEnemy*)Engine::GetInstance().entityManager->CreateEntity(EntityType::BAT_ENEMY);
+	LoadEnemy(batEnemy2, configParameters.child("entities").child("enemies").child("flyEnemy").child("bat"), 3);
 
-	//Load Skeletons
+	/*Load Skeletons*/
 	Enemy* groundEnemy = (GroundEnemy*)Engine::GetInstance().entityManager->CreateEntity(EntityType::GROUND_ENEMY);
 	LoadEnemy(groundEnemy, configParameters.child("entities").child("enemies").child("groundEnemy").child("skeleton"), 2);
 
-	//Enemy* skeleton2 = (GroundEnemy*)Engine::GetInstance().entityManager->CreateEntity(EntityType::GROUND_ENEMY);
-	//LoadEnemy(groundEnemy, configParameters.child("entities").child("enemies").child("groundEnemy").child("skeleton2"), 3);
+	Enemy* groundEnemy2 = (GroundEnemy*)Engine::GetInstance().entityManager->CreateEntity(EntityType::GROUND_ENEMY);
+	LoadEnemy(groundEnemy2, configParameters.child("entities").child("enemies").child("groundEnemy").child("skeleton"), 4);
 
 
 	//Load Items
@@ -71,7 +73,11 @@ bool Scene::Start()
 	Item* checkPumpkin1 = (Item*)Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM);
 	LoadItem(checkPumpkin1, configParameters.child("entities").child("items").child("pumpkins").child("checkPumpkin1"));
 
+	Item* pumpkin2 = (Item*)Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM);
+	LoadItem(pumpkin2, configParameters.child("entities").child("items").child("pumpkins").child("pumpkin2"));
 
+	Item* pumpkin3 = (Item*)Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM);
+	LoadItem(pumpkin3, configParameters.child("entities").child("items").child("pumpkins").child("pumpkin3"));
 
 	return true;
 }
@@ -131,8 +137,10 @@ bool Scene::PostUpdate()
 	}
 
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F6) == KEY_DOWN) {
+		/*if (configParameters.child("savedData").attribute("saved").as_bool()) {*/
+			LoadState();
 		
-		LoadState();
+		
 	}
 
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN) ret = false;
@@ -162,6 +170,7 @@ Vector2D Scene::GetPlayerPosition()
 
 void Scene::SaveState()
 {
+	configParameters.child("config").child("scene").child("savedData").attribute("saved").set_value(true);
 	Engine::GetInstance().audio.get()->PlayFx(player->saveGame);
 	pugi::xml_document saveFile;
 	pugi::xml_parse_result result = saveFile.load_file("config.xml");

@@ -37,9 +37,11 @@ bool Item::Start() {
 	lit.PushBack({ 0,texH,texW,texH });
 
 
-	pbody = Engine::GetInstance().physics.get()->CreateRectangleSensor((int)position.getX() + (texW / 2), (int)position.getY() + (texH / 2), texW / 2, texH/2, bodyType::STATIC);
+	pbody = Engine::GetInstance().physics.get()->CreateRectangleSensor((int)position.getX() + texW / 2, (int)position.getY() + texH / 2, texW, texH, bodyType::STATIC);
 	
 	currentAnim = &lit;
+
+	alight = false;
 
 	// L08 TODO 7: Assign collider type
 	pbody->ctype = ColliderType::ITEM;
@@ -55,6 +57,14 @@ bool Item::Update(float dt)
 	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - texW / 2);
 	position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2);
 
+	if (player->transformed) {
+		currentAnim = &lit;
+		alight = true;
+	}
+	else {
+		currentAnim = &unlit;
+		alight = false;
+	}
 	
 	Engine::GetInstance().render.get()->DrawTexture(pumpkinTex, (int)position.getX(), (int)position.getY(), &currentAnim->GetCurrentFrame());
 

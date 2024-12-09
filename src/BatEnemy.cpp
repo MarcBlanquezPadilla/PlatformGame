@@ -25,23 +25,13 @@ bool BatEnemy::Start() {
 	drawOffsetX = 0;
 	drawOffsetY = 0;
 
-	//INIT ANIMS
-	AddAnimation(idle, 0, texW, 4);
-	idle.loop = true;
-	idle.speed = 0.2f;
+
+	idle.LoadAnimations(parameters.child("animations").child("idle"));
+	attack.LoadAnimations(parameters.child("animations").child("attack"));
+	hurt.LoadAnimations(parameters.child("animations").child("hurt"));
+	death.LoadAnimations(parameters.child("animations").child("death"));
 	
 
-	AddAnimation(attack, 32, texW, 6);
-	attack.loop = true;
-	attack.speed = 0.2f;
-	
-	AddAnimation(hurt, 64, texW, 4);
-	hurt.loop = false;
-	hurt.speed = 0.2f;
-
-	AddAnimation(death, 96, texW, 7);
-	death.loop = false;
-	death.speed = 0.2f;
 
 	currentAnimation = &idle;
 

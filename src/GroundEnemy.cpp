@@ -18,6 +18,7 @@ GroundEnemy::~GroundEnemy() {
 
 
 bool GroundEnemy::Start() {
+
 	texture = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture").as_string());
 	position.setX(parameters.attribute("x").as_float());
 	position.setY(parameters.attribute("y").as_float());
@@ -44,6 +45,10 @@ bool GroundEnemy::Start() {
 	death.speed = 0.2f;
 	death.loop = false;
 
+	idle.LoadAnimations(parameters.child("animations").child("idle"));
+	walk.LoadAnimations(parameters.child("animations").child("walk"));
+	attack.LoadAnimations(parameters.child("animations").child("attack"));
+	death.LoadAnimations(parameters.child("animations").child("death"));
 
 	currentAnimation = &idle;
 	attacked = false;
@@ -92,6 +97,9 @@ bool GroundEnemy::Start() {
 
 bool GroundEnemy::Update(float dt) {
 
+	/*LOG("x= %f, y = %f", pbody->GetPhysBodyWorldPosition().getX(), pbody->GetPhysBodyWorldPosition().getY());*/
+
+	
 
 	if (!dead) {
 		dist = pbody->GetPhysBodyWorldPosition().distanceEuclidean(player->pbody->GetPhysBodyWorldPosition());

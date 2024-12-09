@@ -4,6 +4,7 @@
 #include "SDL2/SDL.h"
 #include "Animation.h"
 #include "Player.h"
+#include <string.h>
 
 
 
@@ -51,7 +52,8 @@ public:
 
 public:
 
-	bool isPicked = false;
+	
+	std::string name;
 
 private:
 	//L08 TODO 4: Add a physics to an item
