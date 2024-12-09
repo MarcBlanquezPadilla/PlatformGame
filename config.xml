@@ -254,21 +254,7 @@
 			</items>
 		</entities>
 		<savedData saved="true">
-			<player x="1832" y="197" lives="3" transformable="false" transformed="true" />
-			<item0 lit="" x="308" y="423" />
-			<item1 lit="" x="1816" y="200" />
-			<item2 lit="" x="824" y="312" />
-			<item3 lit="" x="728" y="392" />
-			<enemy0 alive="" x="2503" y="220" />
-			<enemy1 alive="" x="812" y="248" />
-			<enemy2 alive="" x="1732" y="201" />
-			<enemy3 alive="" x="163" y="423" />
-			<item4 alight="true" x="1177" y="329" />
-			<item5 alight="true" x="2247" y="265" />
-			<item6 alight="true" x="2026" y="378" />
-			<enemy4 alive="" x="2144" y="119" />
-			<enemy5 alive="" x="1578" y="439" />
-			<item7 alight="true" x="1479" y="440" />
+		
 		</savedData>
 	</scene>
 	<ui path="Assets/Textures/UI/HelpMenu_ver2.png" />
