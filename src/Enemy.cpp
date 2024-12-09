@@ -219,6 +219,11 @@ void Enemy::LoadData(pugi::xml_node enemyNode)
 		state = DEAD;
 		pbody->body->SetEnabled(false);
 	}
+	else
+	{
+		state = PATROL;
+		pbody->body->SetEnabled(true);
+	}
 	
 }
 

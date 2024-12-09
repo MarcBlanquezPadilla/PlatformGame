@@ -59,7 +59,9 @@ bool Particle::Update(float dt)
 			position.setX(pbody->GetPhysBodyWorldPosition().getX() - texW / 2);
 			position.setY(pbody->GetPhysBodyWorldPosition().getY() - texH / 2);
 
-			Engine::GetInstance().render.get()->DrawTexture(texture, position.getX(), position.getY(), &anim.GetCurrentFrame());
+			if (direction.getX() > 0)Engine::GetInstance().render.get()->DrawTexture(texture, position.getX(), position.getY(), &anim.GetCurrentFrame());
+			else Engine::GetInstance().render.get()->DrawTextureFlipped(texture, position.getX(), position.getY(), &anim.GetCurrentFrame());
+			
 		}
 		else if (isAlive && aliveTimer.ReadSec() >= lifeTime)
 		{
@@ -86,7 +88,10 @@ void Particle::SetPosition(Vector2D pos)
 void Particle::Restart(Vector2D pos, Vector2D dir)
 {
 	pbody->body->SetLinearVelocity({ 0,0 });
-	pbody->body->SetTransform({ PIXEL_TO_METERS(pos.getX()) + PIXEL_TO_METERS(posXOffset), PIXEL_TO_METERS(pos.getY())}, 0);
+	float offset = 0;
+	if (dir.getX() > 0) offset = posXOffset;
+	else offset = -posXOffset;
+	pbody->body->SetTransform({ PIXEL_TO_METERS(pos.getX()) + PIXEL_TO_METERS(offset), PIXEL_TO_METERS(pos.getY())}, 0);
 	direction = dir;
 	direction = direction.normalized();
 	isCasted = true;
