@@ -237,8 +237,8 @@ bool Player::Update(float dt)
 				// Apply an initial upward force
 				pbody->body->ApplyLinearImpulseToCenter(b2Vec2(0, -jumpForce), true);
 
-				if (transformed) Engine::GetInstance().audio.get()->PlayFx(pJumpSFX);
-				else Engine::GetInstance().audio.get()->PlayFx(gJumpSFX);
+				if (transformed) Engine::GetInstance().audio.get()->PlayFx(pJumpSFX, 0, 6);
+				else Engine::GetInstance().audio.get()->PlayFx(gJumpSFX, 0, 6);
 
 
 			}

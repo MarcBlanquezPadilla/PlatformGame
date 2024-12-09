@@ -286,6 +286,7 @@ void BatEnemy::OnCollision(PhysBody* physA, PhysBody* physB) {
 		LOG("Collision ITEM");
 		break;
 	case ColliderType::SPYKE:
+		
 		LOG("Collision SPYKE");
 		break;
 
@@ -296,6 +297,10 @@ void BatEnemy::OnCollision(PhysBody* physA, PhysBody* physB) {
 	
 		LOG("Collision ABYSS");
 		break;
+		if (state != DEAD) {
+			DMGEnemy();
+			Engine::GetInstance().audio.get()->PlayFx(batDeathSFX, 0, 3);
+		}
 	
 	case ColliderType::PLAYER:
 		LOG("Collision PLAYER");

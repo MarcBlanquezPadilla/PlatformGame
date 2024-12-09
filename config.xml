@@ -204,8 +204,8 @@
 				</flyEnemy>
 				<paths>
 					<path1>
-						<point x="200" y=" 350" />
-						<point x="300" y=" 350" />
+						<point x="2629" y=" 193" />
+						<point x="2689" y=" 193" />
 					</path1>
 					<path2>
 						<point x="100" y=" 420" />
@@ -219,6 +219,14 @@
 						<point x="2200" y="124" />
 						<point x="2000" y="130" />
 					</path4>
+					<path5>
+						<point x="1618" y="176" />
+						<point x="1696" y="176" />
+					</path5>
+					<path6>
+						<point x="1505" y="432" />
+						<point x="1713" y="432" />
+					</path6>
 				</paths>
 			</enemies>
 			<items>
@@ -232,6 +240,7 @@
 						<pumpkin4 x="1169" y="321" />
 						<pumpkin5 x="2239" y="257" />
 						<pumpkin6 x="2018" y="370" />
+						<pumpkin7 x="1472" y="432" />
 					</instances>
 					<animations>
 						<unlit>
@@ -245,18 +254,21 @@
 			</items>
 		</entities>
 		<savedData saved="true">
-			<player x="1831" y="196" lives="3" transformable="false" transformed="true" />
+			<player x="1832" y="197" lives="3" transformable="false" transformed="true" />
 			<item0 lit="" x="308" y="423" />
 			<item1 lit="" x="1816" y="200" />
 			<item2 lit="" x="824" y="312" />
 			<item3 lit="" x="728" y="392" />
-			<enemy0 alive="" x="349" y="423" />
-			<enemy1 alive="" x="727" y="391" />
-			<enemy2 alive="" x="312" y="423" />
-			<enemy3 alive="" x="2015" y="135" />
+			<enemy0 alive="" x="2503" y="220" />
+			<enemy1 alive="" x="812" y="248" />
+			<enemy2 alive="" x="1732" y="201" />
+			<enemy3 alive="" x="163" y="423" />
 			<item4 alight="true" x="1177" y="329" />
 			<item5 alight="true" x="2247" y="265" />
 			<item6 alight="true" x="2026" y="378" />
+			<enemy4 alive="" x="2144" y="119" />
+			<enemy5 alive="" x="1578" y="439" />
+			<item7 alight="true" x="1479" y="440" />
 		</savedData>
 	</scene>
 	<ui path="Assets/Textures/UI/HelpMenu_ver2.png" />
@@ -279,7 +291,7 @@
 			<batDeathSFX path="Assets/Audio/Fx/BatDeath.ogg" />
 			<swordSFX path="Assets/Audio/Fx/SwordSlash.ogg" />
 			<skeletonDeathSFX path="Assets/Audio/Fx/SkeletonDeath.ogg" />
-			<noSoundSFX path="Assets/Audio/Fx/NoSound.ogg" />
+			<noSound path="Assets/Audio/Fx/NoSound.ogg" />
 		</fx>
 		<music />
 	</audio>

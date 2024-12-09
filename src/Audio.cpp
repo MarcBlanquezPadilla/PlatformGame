@@ -152,7 +152,6 @@ int Audio::LoadFx(const char* path)
 	return ret;
 }
 
-// OLD METHOD (NO CHANNELS)
 bool Audio::PlayFx(int id, int repeat, int channel)
 {
 	bool ret = false;
@@ -170,17 +169,3 @@ bool Audio::PlayFx(int id, int repeat, int channel)
 	return ret;
 }
 
-//how to implement channels so 
-
-//bool Audio::PlayFx(int index, int repeat, int channel)
-//{
-//	bool ret = false;
-//
-//	if (soundFx[index] != nullptr)
-//	{
-//		Mix_PlayChannel(channel, soundFx[index], repeat);
-//		ret = true;
-//	}
-//
-//	return ret;
-//}

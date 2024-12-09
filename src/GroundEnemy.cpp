@@ -301,13 +301,20 @@ void GroundEnemy::OnCollision(PhysBody* physA, PhysBody* physB) {
 		break;
 	case ColliderType::SPYKE:
 		LOG("Skeleton collided with SPYKE");
+		if (state != DEAD) {
+			DMGEnemy();
+			Engine::GetInstance().audio.get()->PlayFx(skeletonDeathSFX, 0, 2);
+		}
 		break;
 
 	case ColliderType::ENEMY:
 		LOG("Skeleton collided with another ENEMY");
 		break;
 	case ColliderType::ABYSS:
-
+		if (state != DEAD) {
+			DMGEnemy();
+			Engine::GetInstance().audio.get()->PlayFx(skeletonDeathSFX, 0, 2);
+		}
 		LOG("Skeleton fell into the ABYSS");
 		break;
 
