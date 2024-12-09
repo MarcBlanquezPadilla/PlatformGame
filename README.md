@@ -1,4 +1,3 @@
-Read Me Template (To Remove):
 # PlatformGame
 
 Group Members: 
