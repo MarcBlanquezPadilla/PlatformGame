@@ -95,6 +95,10 @@ bool Scene::Start()
 	Item* pumpkin7 = (Item*)Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM);
 	LoadItem(pumpkin7, configParameters.child("entities").child("items").child("pumpkins").child("instances").child("pumpkin7"));
 
+	Item* pumpkin8 = (Item*)Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM);
+	LoadItem(pumpkin8, configParameters.child("entities").child("items").child("pumpkins").child("instances").child("pumpkin8"));
+
+
 	return true;
 }
 
@@ -163,10 +167,8 @@ bool Scene::PostUpdate()
 	}
 
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F6) == KEY_DOWN) {
-		/*if (configParameters.child("savedData").attribute("saved").as_bool()) {*/
-			LoadState();
 		
-		
+		LoadState();
 	}
 
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN) ret = false;
@@ -192,10 +194,13 @@ Vector2D Scene::GetPlayerPosition()
 
 void Scene::SaveState()
 {
-	configParameters.child("config").child("scene").child("savedData").attribute("saved").set_value(true);
+	
+	
 	Engine::GetInstance().audio.get()->PlayFx(player->saveGame);
 	pugi::xml_document saveFile;
 	pugi::xml_parse_result result = saveFile.load_file("config.xml");
+
+	saveFile.child("config").child("scene").child("savedData").attribute("saved").set_value(true);
 
 	if (result == NULL)
 	{
@@ -251,6 +256,7 @@ void Scene::LoadState() {
 
 	pugi::xml_document loadFile;
 	pugi::xml_parse_result result = loadFile.load_file("config.xml");
+
 	if (result == NULL) {
 		LOG("Error loading config.xml");
 		return;

@@ -62,7 +62,7 @@ bool Player::Start() {
 	t_hurt.LoadAnimations(parameters.child("animations").child("t_hurt"));
 	t_death.LoadAnimations(parameters.child("animations").child("t_death"));
 
-	jumpForce = parameters.child("propierties").attribute("jumpForce").as_float();
+	jumpForce = parameters.child("propierties").attribute("gJumpForce").as_float();
 	pushForce = parameters.child("propierties").attribute("pushForce").as_float();
 	moveSpeed = parameters.child("propierties").attribute("moveSpeed").as_float();
 	friction = parameters.child("propierties").attribute("friction").as_float();
@@ -173,19 +173,17 @@ bool Player::Update(float dt)
 		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_Z) == KEY_DOWN) {
 			if (!transformed) {
 				transformed = true;
-				float pJumpForce = 0.5f;
-				parameters.child("propierties").attribute("jumpForce").set_value(pJumpForce);
+				jumpForce = parameters.child("propierties").attribute("pJumpForce").as_float();
 				Engine::GetInstance().audio.get()->PlayFx(switchOnSFX);
 			}
-			else {
+			else if(transformed) {
 				transformed = false;
-				float gJumpForce = 0.6f;
-				parameters.child("propierties").attribute("jumpForce").set_value(gJumpForce);
+				jumpForce = parameters.child("propierties").attribute("gJumpForce").as_float();
 				
 				Engine::GetInstance().audio.get()->PlayFx(switchOffSFX);
 			}
-			jumpForce = parameters.child("propierties").attribute("jumpForce").as_float();
-			LOG("jump force = %f", parameters.child("propierties").attribute("jumpForce"));
+			
+			
 		}
 	}
 
@@ -282,7 +280,7 @@ bool Player::Update(float dt)
 		
 		b2Vec2 attackColliderPos = { pbody->body->GetPosition().x + (dir == LEFT ? -PIXEL_TO_METERS(weaponOffset.getX()) : PIXEL_TO_METERS(weaponOffset.getX())), pbody->body->GetPosition().y - PIXEL_TO_METERS(weaponOffset.getY()) };
 		attackCollider->body->SetTransform(attackColliderPos, 0);
-		if (attack1Timer.ReadSec() >= attack1Time/* && t_spell1.HasFinished()*/) {
+		if (attack1Timer.ReadSec() >= attack1Time) {
 
 			playerState = IDLE;
 			t_spell1.Reset();
@@ -362,6 +360,7 @@ bool Player::Update(float dt)
 			currentAnim = &t_fall;
 			break;
 		case ATTACK1:
+			
 			currentAnim = &t_spell1;
 			break;
 
@@ -535,14 +534,9 @@ void Player::OnCollisionEnd(PhysBody* physA, PhysBody* physB)
 
 
 void Player::SetPosition(Vector2D pos) {
-	if (!transformed) {
-		b2Vec2 bodyPos = b2Vec2(PIXEL_TO_METERS(pos.getX()), PIXEL_TO_METERS(pos.getY()));
-		pbody->body->SetTransform(bodyPos, 0);
-	}
-	else {
-		b2Vec2 bodyPos = b2Vec2(PIXEL_TO_METERS(pos.getX()), PIXEL_TO_METERS(pos.getY()));
-		pbody->body->SetTransform(bodyPos, 0);
-	}
+	
+	b2Vec2 bodyPos = b2Vec2(PIXEL_TO_METERS(pos.getX()), PIXEL_TO_METERS(pos.getY()));
+	pbody->body->SetTransform(bodyPos, 0);	
 	
 }
 
