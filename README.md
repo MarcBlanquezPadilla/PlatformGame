@@ -1,6 +1,6 @@
 # PlatformGame
 
-Group Members: 
+Group Members: Kai Caire, Marc Blánquez
 
 Halloween Night (temp title) is a brief Halloween-themed platformer where you're a little ghost that goes trick or treating, while avoiding the dangers of the world around them. Transform back and forth between a ghost to move around, and a pumpkin to attack.
 
