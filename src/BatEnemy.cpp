@@ -6,6 +6,7 @@
 #include "Player.h"
 #include "LOG.h"
 #include "Audio.h"
+#include "tracy/Tracy.hpp"
 
 BatEnemy::BatEnemy()
 {
@@ -79,7 +80,7 @@ bool BatEnemy::Start() {
 }
 
 bool BatEnemy::Update(float dt) {
-
+	ZoneScoped;
 
 	if (!dead) {
 		pbody->body->SetGravityScale(0);

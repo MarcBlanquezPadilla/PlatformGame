@@ -14,6 +14,7 @@
 #include "Map.h"
 #include "Physics.h"
 #include "UI.h"
+#include "tracy/Tracy.hpp"
 
 // Constructor
 Engine::Engine() {
@@ -104,6 +105,7 @@ bool Engine::Awake() {
 
 // Called before the first frame
 bool Engine::Start() {
+    
 
     //Measure the amount of ms that takes to execute the App Start() and LOG the result
     Timer timer = Timer();
@@ -126,6 +128,7 @@ bool Engine::Start() {
 
 // Called each loop iteration
 bool Engine::Update() {
+    ZoneScoped;
 
     bool ret = true;
     PrepareUpdate();

@@ -16,6 +16,7 @@
 #include "GroundEnemy.h"
 #include <string>
 #include "Particle.h"
+#include "tracy/Tracy.hpp"
 
 Scene::Scene() : Module()
 {
@@ -138,7 +139,7 @@ bool Scene::PreUpdate()
 // Called each loop iteration
 bool Scene::Update(float dt)
 {	
-
+	ZoneScoped;
 
 	if (player->position.getX() < POS_TO_START_MOVING_CAMX) {
 		Engine::GetInstance().render.get()->camera.x = (POS_TO_START_MOVING_CAMX + CAM_EXTRA_DISPLACEMENT_X) * -Engine::GetInstance().window.get()->scale;

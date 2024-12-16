@@ -6,6 +6,7 @@
 #include "Scene.h"
 #include "Player.h"
 #include "LOG.h"
+#include "tracy/Tracy.hpp"
 
 GroundEnemy::GroundEnemy()
 {
@@ -99,7 +100,7 @@ bool GroundEnemy::Update(float dt) {
 
 	/*LOG("x= %f, y = %f", pbody->GetPhysBodyWorldPosition().getX(), pbody->GetPhysBodyWorldPosition().getY());*/
 
-	
+	ZoneScoped;
 
 	if (!dead) {
 		dist = pbody->GetPhysBodyWorldPosition().distanceEuclidean(player->pbody->GetPhysBodyWorldPosition());

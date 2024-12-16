@@ -2,6 +2,7 @@
 #include "Window.h"
 #include "Render.h"
 #include "Log.h"
+#include "tracy/Tracy.hpp"
 
 #define VSYNC true
 
@@ -75,6 +76,7 @@ bool Render::Update(float dt)
 
 bool Render::PostUpdate()
 {
+	ZoneScoped;
 	SDL_SetRenderDrawColor(renderer, background.r, background.g, background.g, background.a);
 	SDL_RenderPresent(renderer);
 	return true;

@@ -6,6 +6,7 @@
 #include "Log.h"
 #include "Physics.h"
 #include "Window.h"
+#include "tracy/Tracy.hpp"
 
 #include <math.h>
 
@@ -36,6 +37,7 @@ bool Map::Start() {
 
 bool Map::Update(float dt)
 {
+    ZoneScoped;
     bool ret = true;
 
     for (const auto& paralax : mapData.paralaxs) {

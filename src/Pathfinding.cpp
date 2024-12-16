@@ -5,6 +5,7 @@
 #include "Render.h"
 #include "Scene.h"
 #include "Log.h"
+#include "tracy/Tracy.hpp"
 
 Pathfinding::Pathfinding() {
 
@@ -305,6 +306,8 @@ void Pathfinding::PropagateDijkstra() {
 }
 
 void Pathfinding::PropagateAStar(ASTAR_HEURISTICS heuristic, Vector2D destination, PATH_MOVEMENT_TYPE movementType) { // can calculate path using different heuristics
+
+    ZoneScoped;
 
     bool foundDestination = false;
     Vector2D destinationTile = Engine::GetInstance().map.get()->WorldToMap((int)destination.getX(), (int)destination.getY());
