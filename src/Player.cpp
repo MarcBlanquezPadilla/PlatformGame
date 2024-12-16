@@ -402,16 +402,16 @@ bool Player::Update(float dt)
 	}
 
 	b2Transform pbodyPos = pbody->body->GetTransform();
-	//flip player texture according to direction
+
 	if (!transformed) {
 
-		
+
 		position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - texW / 2);
 		position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2);
 
 		if (dir == RIGHT) {
 			Engine::GetInstance().render.get()->DrawTexture(texture, position.getX(), position.getY(), &currentFrame);
-			
+
 		}
 		else if (dir == LEFT) {
 			Engine::GetInstance().render.get()->DrawTextureFlipped(texture, position.getX(), position.getY(), &currentFrame);
@@ -421,7 +421,7 @@ bool Player::Update(float dt)
 
 		position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - t_texW / 2);
 		position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - t_texH / 2);
-	
+
 		if (dir == RIGHT) {
 
 			Engine::GetInstance().render.get()->DrawTexture(t_texture, position.getX(), position.getY(), &currentFrame);
@@ -431,9 +431,9 @@ bool Player::Update(float dt)
 			Engine::GetInstance().render.get()->DrawTextureFlipped(t_texture, position.getX(), position.getY(), &currentFrame);
 		}
 	}
-	
-	currentAnim->Update();
 
+	currentAnim->Update();
+	
 	return true;
 }
 

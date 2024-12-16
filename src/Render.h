@@ -40,6 +40,9 @@ public:
 	// Set background color
 	void SetBackgroundColor(SDL_Color color);
 
+	//Frustum culling
+	bool InCameraView(int x, int y, int w, int h);
+
 public:
 
 	SDL_Renderer* renderer;

@@ -44,8 +44,8 @@ bool Render::Awake()
 	}
 	else
 	{
-		camera.w = Engine::GetInstance().window.get()->width * scale;
-		camera.h = Engine::GetInstance().window.get()->height * scale;
+		camera.w = Engine::GetInstance().window.get()->width;
+		camera.h = Engine::GetInstance().window.get()->height;
 		camera.x = 0;
 		camera.y = 0;
 	}
@@ -71,6 +71,7 @@ bool Render::PreUpdate()
 
 bool Render::Update(float dt)
 {
+
 	return true;
 }
 
@@ -268,4 +269,28 @@ bool Render::DrawCircle(int x, int y, int radius, Uint8 r, Uint8 g, Uint8 b, Uin
 	}
 
 	return ret;
+}
+
+//Frustum culling
+bool Render::InCameraView(int x, int y, int w, int h)
+{
+	bool inView = false;
+	int cameraConvertedX = camera.x / -Engine::GetInstance().window.get()->scale;
+	int cameraConvertedY = camera.y / -Engine::GetInstance().window.get()->scale;
+
+	int limitX = cameraConvertedX + camera.w / Engine::GetInstance().window.get()->scale;
+	int limitY = cameraConvertedY + camera.h / Engine::GetInstance().window.get()->scale;
+
+	cameraConvertedX -= w;
+	cameraConvertedX -= h;
+
+	if (x > cameraConvertedX && x < limitX)
+	{
+		if (y > cameraConvertedY && y < limitY)
+		{
+			inView = true;
+		}
+	}
+
+	return inView;
 }
