@@ -82,6 +82,11 @@ bool BatEnemy::Start() {
 bool BatEnemy::Update(float dt) {
 	ZoneScoped;
 
+	if (!Engine::GetInstance().render.get()->InCameraView(pbody->GetPosition().getX() - texW, pbody->GetPosition().getY() - texH, texW, texH))
+	{
+		return true;
+	}
+
 	if (!dead) {
 		pbody->body->SetGravityScale(0);
 		//STATES CHANGERS

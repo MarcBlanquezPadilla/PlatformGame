@@ -141,6 +141,11 @@ void Player::Restart()
 
 bool Player::Update(float dt)
 {
+	if (!Engine::GetInstance().render.get()->InCameraView(pbody->GetPosition().getX() - texW, pbody->GetPosition().getY() - texH, texW, texH))
+	{
+		return true;
+	}
+
 	pbody->body->SetAwake(true);
 	
 	currentFrame = currentAnim->GetCurrentFrame();

@@ -53,7 +53,10 @@ bool Item::Start() {
 
 bool Item::Update(float dt)
 {
-
+	if (!Engine::GetInstance().render.get()->InCameraView(pbody->GetPosition().getX() - texW, pbody->GetPosition().getY() - texH, texW, texH))
+	{
+		return true;
+	}
 
 	b2Transform pbodyPos = pbody->body->GetTransform();
 	position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - texW / 2);

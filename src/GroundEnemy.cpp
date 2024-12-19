@@ -98,9 +98,12 @@ bool GroundEnemy::Start() {
 
 bool GroundEnemy::Update(float dt) {
 
-	/*LOG("x= %f, y = %f", pbody->GetPhysBodyWorldPosition().getX(), pbody->GetPhysBodyWorldPosition().getY());*/
-
 	ZoneScoped;
+
+	if (!Engine::GetInstance().render.get()->InCameraView(pbody->GetPosition().getX() - texW, pbody->GetPosition().getY() - texH, texW, texH))
+	{
+		return true;
+	}
 
 	if (!dead) {
 		dist = pbody->GetPhysBodyWorldPosition().distanceEuclidean(player->pbody->GetPhysBodyWorldPosition());
