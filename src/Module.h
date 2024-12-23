@@ -2,9 +2,7 @@
 
 #include <string>
 #include "pugixml.hpp"
-#include "GuiControl.h"
 
-//#include "GuiControl.h"
 
 class GuiControl;
 class Module
