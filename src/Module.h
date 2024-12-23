@@ -5,7 +5,6 @@
 //#include "GuiControl.h"
 
 class GuiControl;
-
 class Module
 {
 public:
