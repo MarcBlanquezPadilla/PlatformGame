@@ -6,6 +6,6 @@
     "sdl2-image",
     "sdl2-mixer",
     "tracy",
-    "sdl-ttf"
+    "sdl2-ttf"
   ]
 }
