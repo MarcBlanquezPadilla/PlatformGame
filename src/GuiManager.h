@@ -4,6 +4,7 @@
 #include "GuiControl.h"
 
 #include <list>
+class GuiControl;
 
 class GuiManager : public Module
 {

@@ -3,6 +3,7 @@
 #include "Window.h"
 #include "Log.h"
 #include "tracy/Tracy.hpp"
+#include "Module.h"
 
 #define MAX_KEYS 300
 
@@ -142,14 +143,12 @@ bool Input::GetWindowEvent(EventWindow ev)
 	return windowEvents[ev];
 }
 
-void Input::GetMousePosition(int& x, int& y)
+Vector2D Input::GetMousePosition()
 {
-	x = mouseX;
-	y = mouseY;
+	return Vector2D(mouseX, mouseY);
 }
 
-void Input::GetMouseMotion(int& x, int& y)
+Vector2D Input::GetMouseMotion()
 {
-	x = mouseMotionX;
-	y = mouseMotionY;
+	return Vector2D(mouseMotionX, mouseMotionY);
 }

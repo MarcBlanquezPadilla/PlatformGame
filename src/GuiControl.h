@@ -60,7 +60,7 @@ public:
 		section = { 0, 0, 0, 0 };
 	}
 
-	// 
+	 
 	void SetObserver(Module* module)
 	{
 		observer = module;

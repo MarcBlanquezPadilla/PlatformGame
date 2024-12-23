@@ -17,6 +17,8 @@
 #include <string>
 #include "Particle.h"
 #include "tracy/Tracy.hpp"
+#include "GuiControl.h"
+#include "GuiManager.h"
 
 Scene::Scene() : Module()
 {

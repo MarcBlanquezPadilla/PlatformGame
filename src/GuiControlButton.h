@@ -20,5 +20,3 @@ private:
 	bool drawBasic = false;
 };
 
-#pragma once
-

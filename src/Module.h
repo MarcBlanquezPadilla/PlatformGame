@@ -2,6 +2,9 @@
 
 #include <string>
 #include "pugixml.hpp"
+//#include "GuiControl.h"
+
+class GuiControl;
 
 class Module
 {
@@ -55,6 +58,11 @@ public:
 	virtual bool LoadParameters(pugi::xml_node parameters)
 	{
 		configParameters = parameters;
+		return true;
+	}
+
+	virtual bool OnGuiMouseClickEvent(GuiControl* control)
+	{
 		return true;
 	}
 

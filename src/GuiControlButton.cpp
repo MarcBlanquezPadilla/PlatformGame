@@ -2,6 +2,7 @@
 #include "Render.h"
 #include "Engine.h"
 #include "Audio.h"
+#include "Input.h"
 
 GuiControlButton::GuiControlButton(int id, SDL_Rect bounds, const char* text) : GuiControl(GuiControlType::BUTTON, id)
 {
@@ -22,7 +23,7 @@ bool GuiControlButton::Update(float dt)
 	if (state != GuiControlState::DISABLED)
 	{
 		// L16: TODO 3: Update the state of the GUiButton according to the mouse position
-		Vector2D mousePos = Engine::GetInstance().input->GetMousePosition();
+		Vector2D mousePos = Engine::GetInstance().input.get()->GetMousePosition();
 
 		//If the position of the mouse if inside the bounds of the button 
 		if (mousePos.getX() > bounds.x && mousePos.getX() < bounds.x + bounds.w && mousePos.getY() > bounds.y && mousePos.getY() < bounds.y + bounds.h) {
@@ -58,7 +59,7 @@ bool GuiControlButton::Update(float dt)
 			break;
 		}
 
-		Engine::GetInstance().render->DrawText(text.c_str(), bounds.x, bounds.y, bounds.w, bounds.h);
+		/*Engine::GetInstance().render->DrawText(text.c_str(), bounds.x, bounds.y, bounds.w, bounds.h);*/
 
 	}
 
