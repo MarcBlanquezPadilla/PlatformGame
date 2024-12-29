@@ -6,10 +6,6 @@
 #include "Player.h"
 #include <string.h>
 
-
-
-struct SDL_Texture;
-
 enum CandyType {
 	LOLLY,
 	SWIRL,
@@ -26,12 +22,15 @@ enum CandyType {
 	PUMPKIN
 };
 
-class Item : public Entity
+
+struct SDL_Texture;
+
+class Candy : public Entity
 {
 public:
 
-	Item();
-	virtual ~Item();
+	Candy();
+	virtual ~Candy();
 
 	bool Awake();
 
@@ -52,7 +51,7 @@ public:
 
 public:
 
-	
+
 	std::string name;
 
 private:
@@ -61,19 +60,15 @@ private:
 
 	Player* player;
 
-	SDL_Texture* candyTex;
 	SDL_Texture* pumpkinTex;
 
 	bool alight;
 
 	const char* texturePath;
 	int texW, texH;
-	Animation lit;
-	Animation unlit;
+
 	Animation* currentAnim;
 
 	pugi::xml_node parameters;
 };
-
-
 

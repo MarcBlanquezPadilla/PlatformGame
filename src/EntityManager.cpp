@@ -4,7 +4,7 @@
 #include "Textures.h"
 #include "Scene.h"
 #include "Log.h"
-#include "Item.h"
+#include "Pumpkin.h"
 #include "BatEnemy.h"
 #include "GroundEnemy.h"
 #include "Particle.h"
@@ -76,7 +76,7 @@ Entity* EntityManager::CreateEntity(EntityType type)
 		entity = new Player();
 		break;
 	case EntityType::ITEM:
-		entity = new Item();
+		entity = new Pumpkin();
 		break;
 	case EntityType::ENEMY:
 		entity = new Enemy();

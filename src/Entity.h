@@ -9,6 +9,7 @@ enum class EntityType
 	PLAYER,
 	SHOT,
 	ITEM,
+	COLLECTABLE,
 	ENEMY,
 	BAT_ENEMY,
 	GROUND_ENEMY,

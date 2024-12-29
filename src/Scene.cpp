@@ -10,7 +10,7 @@
 #include "EntityManager.h"
 #include "Player.h"
 #include "Map.h"
-#include "Item.h"
+#include "Pumpkin.h"
 #include "Physics.h"
 #include "BatEnemy.h"
 #include "GroundEnemy.h"
@@ -72,33 +72,34 @@ bool Scene::Start()
 	Enemy* groundEnemy3 = (GroundEnemy*)Engine::GetInstance().entityManager->CreateEntity(EntityType::GROUND_ENEMY);
 	LoadEnemy(groundEnemy3, configParameters.child("entities").child("enemies").child("groundEnemy").child("skeleton"), 6);
 
+	
 
 	//Load Items
-	Item* pumpkin1 = (Item*)Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM);
+	Pumpkin* pumpkin1 = (Pumpkin*)Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM);
 	LoadItem(pumpkin1, configParameters.child("entities").child("items").child("pumpkins").child("instances").child("pumpkin1"));
 
-	Item* checkPumpkin1 = (Item*)Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM);
+	Pumpkin* checkPumpkin1 = (Pumpkin*)Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM);
 	LoadItem(checkPumpkin1, configParameters.child("entities").child("items").child("pumpkins").child("instances").child("checkPumpkin1"));
 
-	Item* pumpkin2 = (Item*)Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM);
+	Pumpkin* pumpkin2 = (Pumpkin*)Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM);
 	LoadItem(pumpkin2, configParameters.child("entities").child("items").child("pumpkins").child("instances").child("pumpkin2"));
 
-	Item* pumpkin3 = (Item*)Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM);
+	Pumpkin* pumpkin3 = (Pumpkin*)Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM);
 	LoadItem(pumpkin3, configParameters.child("entities").child("items").child("pumpkins").child("instances").child("pumpkin3"));
 
-	Item* pumpkin4 = (Item*)Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM);
+	Pumpkin* pumpkin4 = (Pumpkin*)Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM);
 	LoadItem(pumpkin4, configParameters.child("entities").child("items").child("pumpkins").child("instances").child("pumpkin4"));
 
-	Item* pumpkin5 = (Item*)Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM);
+	Pumpkin* pumpkin5 = (Pumpkin*)Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM);
 	LoadItem(pumpkin5, configParameters.child("entities").child("items").child("pumpkins").child("instances").child("pumpkin5"));
 
-	Item* pumpkin6 = (Item*)Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM);
+	Pumpkin* pumpkin6 = (Pumpkin*)Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM);
 	LoadItem(pumpkin6, configParameters.child("entities").child("items").child("pumpkins").child("instances").child("pumpkin6"));
 
-	Item* pumpkin7 = (Item*)Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM);
+	Pumpkin* pumpkin7 = (Pumpkin*)Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM);
 	LoadItem(pumpkin7, configParameters.child("entities").child("items").child("pumpkins").child("instances").child("pumpkin7"));
 
-	Item* pumpkin8 = (Item*)Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM);
+	Pumpkin* pumpkin8 = (Pumpkin*)Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM);
 	LoadItem(pumpkin8, configParameters.child("entities").child("items").child("pumpkins").child("instances").child("pumpkin8"));
 
 
@@ -114,11 +115,11 @@ void Scene::LoadEnemy(Enemy* enemy, pugi::xml_node parametersNode, int pathNum)
 	enemies.push_back(enemy);
 }
 
-void Scene::LoadItem(Item* item, pugi::xml_node parametersNode) {
+void Scene::LoadItem(Pumpkin* pumpkin, pugi::xml_node parametersNode) {
 
-	item->SetPlayer(player);
-	item->SetParameters(parametersNode);
-	items.push_back(item);
+	pumpkin->SetPlayer(player);
+	pumpkin->SetParameters(parametersNode);
+	pumpkins.push_back(pumpkin);
 }
 
 void Scene::RestartScene()
@@ -232,7 +233,7 @@ void Scene::SaveState()
 	}
 
 	//Items
-	for (int i = 0; i < items.size(); i++)
+	for (int i = 0; i < pumpkins.size(); i++)
 	{
 		std::string nodeChar = "item" + std::to_string(i);
 		pugi::xml_node parent = savedDataNode.child(nodeChar.c_str());
@@ -244,7 +245,7 @@ void Scene::SaveState()
 			parent.append_attribute("y");
 		}
 
-		items[i]->SaveData(parent);
+		pumpkins[i]->SaveData(parent);
 	}
 
 	//Saves the modifications to the XML 

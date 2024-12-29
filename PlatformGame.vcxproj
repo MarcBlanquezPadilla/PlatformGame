@@ -147,6 +147,7 @@
     <None Include="vcpkg.json" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Candy.cpp" />
     <ClCompile Include="src\GroundEnemy.cpp" />
     <ClCompile Include="src\BatEnemy.cpp" />
     <ClCompile Include="src\Audio.cpp" />
@@ -156,7 +157,7 @@
     <ClCompile Include="src\GuiControlButton.cpp" />
     <ClCompile Include="src\GuiManager.cpp" />
     <ClCompile Include="src\Input.cpp" />
-    <ClCompile Include="src\Item.cpp" />
+    <ClCompile Include="src\Pumpkin.cpp" />
     <ClCompile Include="src\Log.cpp" />
     <ClCompile Include="src\Map.cpp" />
     <ClCompile Include="src\Particle.cpp" />
@@ -174,6 +175,7 @@
     <ClCompile Include="src\UI.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Candy.h" />
     <ClInclude Include="src\GroundEnemy.h" />
     <ClInclude Include="src\BatEnemy.h" />
     <ClInclude Include="src\Animation.h" />
@@ -186,7 +188,7 @@
     <ClInclude Include="src\GuiControlButton.h" />
     <ClInclude Include="src\GuiManager.h" />
     <ClInclude Include="src\Input.h" />
-    <ClInclude Include="src\Item.h" />
+    <ClInclude Include="src\Pumpkin.h" />
     <ClInclude Include="src\Log.h" />
     <ClInclude Include="src\Map.h" />
     <ClInclude Include="src\Module.h" />
