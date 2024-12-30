@@ -107,6 +107,9 @@ public:
 	bool reachedCheckPoint;
 	bool hitEnemy;
 	bool shot;
+	bool pickedItem;
+
+	int candyNum;
 
 	Timer hurtTimer;
 	float hurtTime;
@@ -148,8 +151,8 @@ public:
 	Direction dir;
 
 	//audio
-	int saveGame;
-	int loadGame;
+	int saveGameSFX;
+	int loadGameSFX;
 	int atk1SFX;
 	int atk2SFX;
 	int gJumpSFX;
@@ -160,6 +163,10 @@ public:
 	int pHurtSFX;
 	int switchOnSFX;
 	int switchOffSFX;
+	int pickCandySFX;
+	int eatCandySFX;
+	int pourCandySFX;
+	int candySFX;
 	
 	
 	

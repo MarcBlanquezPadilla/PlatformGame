@@ -6,20 +6,10 @@
 #include "Player.h"
 #include <string.h>
 
-enum CandyType {
-	LOLLY,
-	SWIRL,
-	CORN,
-	HEART,
-	SKULL,
-	TIME,
-	PINK,
-	ORANGE,
-	YELLOW,
-	PURPLE,
-	BLUE,
-	GREEN,
-	PUMPKIN
+enum CandyFunction {
+	POINTS = 0,
+	HEALING = 1,
+	TIME = 2
 };
 
 
@@ -51,8 +41,11 @@ public:
 
 public:
 
-
 	std::string name;
+	bool picked;
+	std::string type;
+	CandyFunction function;
+	
 
 private:
 	//L08 TODO 4: Add a physics to an item
@@ -60,15 +53,26 @@ private:
 
 	Player* player;
 
-	SDL_Texture* pumpkinTex;
-
-	bool alight;
-
 	const char* texturePath;
 	int texW, texH;
+	int yAnim;
 
+	//SDL_Texture* swirlTex;
+	//SDL_Texture* lollyTex;
+	//SDL_Texture* cornTex;
+	//SDL_Texture* clockTex;
+	//SDL_Texture* heartTex;
+	SDL_Texture* candyTex;
+
+	//Animations
+	Animation floating;
 	Animation* currentAnim;
 
+	//SFX
+	int gotCandy;
+
 	pugi::xml_node parameters;
+
+	
 };
 

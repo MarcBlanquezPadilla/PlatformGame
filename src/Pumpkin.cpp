@@ -8,7 +8,7 @@
 #include "Log.h"
 #include "Physics.h"
 
-Pumpkin::Pumpkin() : Entity(EntityType::ITEM)
+Pumpkin::Pumpkin() : Entity(EntityType::PUMPKIN)
 {
 	name = "item";
 }
@@ -46,7 +46,7 @@ bool Pumpkin::Start() {
 	alight = false;
 
 	// L08 TODO 7: Assign collider type
-	pbody->ctype = ColliderType::ITEM;
+	pbody->ctype =ColliderType::PUMPKIN;
 
 	return true;
 }

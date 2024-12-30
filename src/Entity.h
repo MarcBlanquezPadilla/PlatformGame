@@ -8,8 +8,8 @@ enum class EntityType
 {
 	PLAYER,
 	SHOT,
-	ITEM,
-	COLLECTABLE,
+	PUMPKIN,
+	CANDY,
 	ENEMY,
 	BAT_ENEMY,
 	GROUND_ENEMY,

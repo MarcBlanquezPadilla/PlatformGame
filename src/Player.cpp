@@ -10,6 +10,7 @@
 #include "Physics.h"
 #include "Particle.h"
 #include "EntityManager.h"
+#include "Candy.h"
 
 
  
@@ -82,6 +83,9 @@ bool Player::Start() {
 	transformed = false;
 	reachedCheckPoint = false;
 	shot = false;
+	pickedItem = false;
+
+	candyNum = 0;
 
 	pugi::xml_document audioFile;
 	pugi::xml_parse_result result = audioFile.load_file("config.xml");
@@ -94,10 +98,13 @@ bool Player::Start() {
 	pDeathSFX = Engine::GetInstance().audio.get()->LoadFx(audioFile.child("config").child("audio").child("fx").child("pDeathSFX").attribute("path").as_string());
 	atk1SFX = Engine::GetInstance().audio.get()->LoadFx(audioFile.child("config").child("audio").child("fx").child("atk1SFX").attribute("path").as_string());
 	atk2SFX = Engine::GetInstance().audio.get()->LoadFx(audioFile.child("config").child("audio").child("fx").child("atk2SFX").attribute("path").as_string());
+	pickCandySFX = Engine::GetInstance().audio.get()->LoadFx(audioFile.child("config").child("audio").child("fx").child("pickCandy").attribute("path").as_string());
+	pourCandySFX = Engine::GetInstance().audio.get()->LoadFx(audioFile.child("config").child("audio").child("fx").child("pourCandy").attribute("path").as_string());
+	eatCandySFX = Engine::GetInstance().audio.get()->LoadFx(audioFile.child("config").child("audio").child("fx").child("eatCandy").attribute("path").as_string());
 	switchOnSFX = Engine::GetInstance().audio.get()->LoadFx(audioFile.child("config").child("audio").child("fx").child("switchOnSFX").attribute("path").as_string());
 	switchOffSFX = Engine::GetInstance().audio.get()->LoadFx(audioFile.child("config").child("audio").child("fx").child("switchOffSFX").attribute("path").as_string());
-	saveGame = Engine::GetInstance().audio.get()->LoadFx(audioFile.child("config").child("audio").child("fx").child("saveGame").attribute("path").as_string());
-	loadGame = Engine::GetInstance().audio.get()->LoadFx(audioFile.child("config").child("audio").child("fx").child("loadGame").attribute("path").as_string());
+	saveGameSFX = Engine::GetInstance().audio.get()->LoadFx(audioFile.child("config").child("audio").child("fx").child("saveGame").attribute("path").as_string());
+	loadGameSFX = Engine::GetInstance().audio.get()->LoadFx(audioFile.child("config").child("audio").child("fx").child("loadGame").attribute("path").as_string());
 
 	currentAnim = &idle;
 
@@ -462,8 +469,13 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 	case ColliderType::PLATFORM:
 		LOG("Collision PLATFORM");
 		break;
-	case ColliderType::ITEM:
-		LOG("Collision ITEM");
+	case ColliderType::CANDY:
+		LOG("Collision CANDY");
+		pickedItem = true;
+		
+		break;
+	case ColliderType::PUMPKIN:
+		LOG("Collision PUMPKIN");
 		transformable = true;
 		break;
 	case ColliderType::SPYKE:
@@ -503,7 +515,8 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		reachedCheckPoint = true;
 		Engine::GetInstance().scene.get()->SaveState();
 		break;
-	
+		
+
 	case ColliderType::UNKNOWN:
 		LOG("Collision UNKNOWN");
 		break;
@@ -520,9 +533,9 @@ void Player::OnCollisionEnd(PhysBody* physA, PhysBody* physB)
 	case ColliderType::PLATFORM:
 		LOG("End Collision PLATFORM");
 		break;
-	case ColliderType::ITEM:
+	case ColliderType::PUMPKIN:
 		transformable = false;
-		LOG("End Collision ITEM");
+		LOG("End Collision PUMPKIN");
 		break;
 	case ColliderType::LADDER:
 		LOG("End Collision LADDER");

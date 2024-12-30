@@ -300,7 +300,7 @@ void GroundEnemy::OnCollision(PhysBody* physA, PhysBody* physB) {
 			Engine::GetInstance().audio.get()->PlayFx(skeletonDeathSFX, 0, 2);
 		}
 		break;
-	case ColliderType::ITEM:
+	case ColliderType::PUMPKIN:
 		LOG("Skeleton collided with ITEM");
 		break;
 	case ColliderType::SPYKE:

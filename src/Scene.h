@@ -18,6 +18,7 @@ class BatEnemy;
 class GroundEnemy;
 class Enemy;
 class Pumpkin;
+class Candy;
 
 class Scene : public Module
 {
@@ -55,6 +56,8 @@ public:
 
 	void LoadItem(Pumpkin* pumpkins, pugi::xml_node parametersNode);
 
+	void LoadItem(Candy* candy, pugi::xml_node parametersNode);
+
 	void LoadState();
 
 	void SaveState();
@@ -66,6 +69,7 @@ private:
 
 	std::vector<Enemy*> enemies;
 	std::vector<Pumpkin*> pumpkins;
+	std::vector<Candy*> candies;
 
 
 };

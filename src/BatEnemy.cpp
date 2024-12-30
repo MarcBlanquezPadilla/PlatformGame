@@ -262,7 +262,7 @@ void BatEnemy::OnCollision(PhysBody* physA, PhysBody* physB) {
 			Engine::GetInstance().audio.get()->PlayFx(batDeathSFX, 0, 3);
 		}
 		break;
-	case ColliderType::ITEM:
+	case ColliderType::PUMPKIN:
 		LOG("Collision ITEM");
 		break;
 	case ColliderType::SPYKE:

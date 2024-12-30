@@ -27,7 +27,7 @@ enum class ColliderType {
 	PLAYER,
 	WEAPON,
 	SHOT,
-	ITEM,
+	PUMPKIN,
 	PLATFORM, 
 	SPYKE,
 	ABYSS,
@@ -35,6 +35,7 @@ enum class ColliderType {
 	LADDER,
 	ENEMY,
 	CHECKPOINT,
+	CANDY,
 	UNKNOWN
 	// ..
 };

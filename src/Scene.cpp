@@ -19,6 +19,7 @@
 #include "tracy/Tracy.hpp"
 #include "GuiControl.h"
 #include "GuiManager.h"
+#include "Candy.h"
 
 Scene::Scene() : Module()
 {
@@ -74,34 +75,43 @@ bool Scene::Start()
 
 	
 
-	//Load Items
-	Pumpkin* pumpkin1 = (Pumpkin*)Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM);
+	//Load Pumpkins
+	Pumpkin* pumpkin1 = (Pumpkin*)Engine::GetInstance().entityManager->CreateEntity(EntityType::PUMPKIN);
 	LoadItem(pumpkin1, configParameters.child("entities").child("items").child("pumpkins").child("instances").child("pumpkin1"));
 
-	Pumpkin* checkPumpkin1 = (Pumpkin*)Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM);
+	Pumpkin* checkPumpkin1 = (Pumpkin*)Engine::GetInstance().entityManager->CreateEntity(EntityType::PUMPKIN);
 	LoadItem(checkPumpkin1, configParameters.child("entities").child("items").child("pumpkins").child("instances").child("checkPumpkin1"));
 
-	Pumpkin* pumpkin2 = (Pumpkin*)Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM);
+	Pumpkin* pumpkin2 = (Pumpkin*)Engine::GetInstance().entityManager->CreateEntity(EntityType::PUMPKIN);
 	LoadItem(pumpkin2, configParameters.child("entities").child("items").child("pumpkins").child("instances").child("pumpkin2"));
 
-	Pumpkin* pumpkin3 = (Pumpkin*)Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM);
+	Pumpkin* pumpkin3 = (Pumpkin*)Engine::GetInstance().entityManager->CreateEntity(EntityType::PUMPKIN);
 	LoadItem(pumpkin3, configParameters.child("entities").child("items").child("pumpkins").child("instances").child("pumpkin3"));
 
-	Pumpkin* pumpkin4 = (Pumpkin*)Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM);
+	Pumpkin* pumpkin4 = (Pumpkin*)Engine::GetInstance().entityManager->CreateEntity(EntityType::PUMPKIN);
 	LoadItem(pumpkin4, configParameters.child("entities").child("items").child("pumpkins").child("instances").child("pumpkin4"));
 
-	Pumpkin* pumpkin5 = (Pumpkin*)Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM);
+	Pumpkin* pumpkin5 = (Pumpkin*)Engine::GetInstance().entityManager->CreateEntity(EntityType::PUMPKIN);
 	LoadItem(pumpkin5, configParameters.child("entities").child("items").child("pumpkins").child("instances").child("pumpkin5"));
 
-	Pumpkin* pumpkin6 = (Pumpkin*)Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM);
+	Pumpkin* pumpkin6 = (Pumpkin*)Engine::GetInstance().entityManager->CreateEntity(EntityType::PUMPKIN);
 	LoadItem(pumpkin6, configParameters.child("entities").child("items").child("pumpkins").child("instances").child("pumpkin6"));
 
-	Pumpkin* pumpkin7 = (Pumpkin*)Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM);
+	Pumpkin* pumpkin7 = (Pumpkin*)Engine::GetInstance().entityManager->CreateEntity(EntityType::PUMPKIN);
 	LoadItem(pumpkin7, configParameters.child("entities").child("items").child("pumpkins").child("instances").child("pumpkin7"));
 
-	Pumpkin* pumpkin8 = (Pumpkin*)Engine::GetInstance().entityManager->CreateEntity(EntityType::ITEM);
+	Pumpkin* pumpkin8 = (Pumpkin*)Engine::GetInstance().entityManager->CreateEntity(EntityType::PUMPKIN);
 	LoadItem(pumpkin8, configParameters.child("entities").child("items").child("pumpkins").child("instances").child("pumpkin8"));
 
+	//Load Items
+	Candy* corn1 = (Candy*)Engine::GetInstance().entityManager->CreateEntity(EntityType::CANDY);
+	LoadItem(corn1, configParameters.child("entities").child("items").child("candies").child("instances").child("corn1"));
+
+	Candy* swirl1 = (Candy*)Engine::GetInstance().entityManager->CreateEntity(EntityType::CANDY);
+	LoadItem(swirl1, configParameters.child("entities").child("items").child("candies").child("instances").child("swirl1"));
+
+	Candy* heart1 = (Candy*)Engine::GetInstance().entityManager->CreateEntity(EntityType::CANDY);
+	LoadItem(heart1, configParameters.child("entities").child("items").child("candies").child("instances").child("heart1"));
 
 	return true;
 }
@@ -120,6 +130,13 @@ void Scene::LoadItem(Pumpkin* pumpkin, pugi::xml_node parametersNode) {
 	pumpkin->SetPlayer(player);
 	pumpkin->SetParameters(parametersNode);
 	pumpkins.push_back(pumpkin);
+}
+
+void Scene::LoadItem(Candy* candy, pugi::xml_node parametersNode) {
+
+	candy->SetPlayer(player);
+	candy->SetParameters(parametersNode);
+	candies.push_back(candy);
 }
 
 void Scene::RestartScene()
@@ -198,7 +215,7 @@ void Scene::SaveState()
 {
 	
 	
-	Engine::GetInstance().audio.get()->PlayFx(player->saveGame);
+	Engine::GetInstance().audio.get()->PlayFx(player->saveGameSFX);
 	pugi::xml_document saveFile;
 	pugi::xml_parse_result result = saveFile.load_file("config.xml");
 
@@ -254,7 +271,7 @@ void Scene::SaveState()
 
 void Scene::LoadState() {
 
-	Engine::GetInstance().audio.get()->PlayFx(player->loadGame);
+	/*Engine::GetInstance().audio.get()->PlayFx(player->loadGame);*/
 
 	pugi::xml_document loadFile;
 	pugi::xml_parse_result result = loadFile.load_file("config.xml");

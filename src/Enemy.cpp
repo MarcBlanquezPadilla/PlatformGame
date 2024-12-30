@@ -178,8 +178,8 @@ void Enemy::OnCollision(PhysBody* physA, PhysBody* physB) {
 		LOG("Enemy was hit by SHOT");
 
 		break;
-	case ColliderType::ITEM:
-		LOG("Collision ITEM");
+	case ColliderType::PUMPKIN:
+		LOG("Collision PUMPKIN");
 		break;
 	case ColliderType::SPYKE:
 		LOG("Collision SPYKE");
@@ -209,7 +209,7 @@ void Enemy::OnCollisionEnd(PhysBody* physA, PhysBody* physB)
 	case ColliderType::PLATFORM:
 		LOG("End Collision PLATFORM");
 		break;
-	case ColliderType::ITEM:
+	case ColliderType::PUMPKIN:
 
 		LOG("End Collision ITEM");
 		break;

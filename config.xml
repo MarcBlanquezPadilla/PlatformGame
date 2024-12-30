@@ -230,6 +230,22 @@
 				</paths>
 			</enemies>
 			<items>
+				<candies>
+					<properties w="16" h="16" texture="Assets/Textures/Items/candySheet.png" />
+					<instances>
+						<corn1 x="368" y="304" type="corn" />
+						<swirl1 x="608" y="320" type="swirl" />
+						<heart1 x="1000" y="416" type="heart" />
+					</instances>
+					<animations>
+						<floating loop="true" speed="0.1f">
+							<frame x="0" y="0" w="16" h="16" />
+							<frame x="16" y="0" w="16" h="16" />
+							<frame x="32" y="0" w="16" h="16" />
+							<frame x="48" y="0" w="16" h="16" />
+						</floating>
+					</animations>
+				</candies>
 				<pumpkins>
 					<properties w="16" h="16" texture="Assets/Textures/Items/pumpkin ui obj-resized.png" />
 					<instances>
@@ -255,12 +271,12 @@
 			</items>
 		</entities>
 		<savedData saved="true">
-			<player x="25" y="358" lives="3" transformable="false" transformed="false" />
-			<enemy0 dead="false" x="849" y="248" />
-			<enemy1 dead="false" x="1689" y="183" />
-			<enemy2 dead="false" x="190" y="423" />
-			<enemy3 dead="false" x="2113" y="119" />
-			<enemy4 dead="false" x="1598" y="439" />
+			<player x="1799" y="187" lives="11" transformable="false" transformed="false" />
+			<enemy0 dead="false" x="8" y="248" />
+			<enemy1 dead="false" x="1522" y="202" />
+			<enemy2 dead="false" x="161" y="423" />
+			<enemy3 dead="false" x="2016" y="135" />
+			<enemy4 dead="false" x="1516" y="439" />
 			<item0 alight="true" x="308" y="423" />
 			<item1 alight="true" x="1816" y="200" />
 			<item2 alight="true" x="824" y="312" />
@@ -285,6 +301,9 @@
 			<pHurtSFX path="Assets/Audio/Fx/BonkSFX.ogg" />
 			<gDeathSFX path="Assets/Audio/Fx/SinkOMO.ogg" />
 			<pDeathSFX path="Assets/Audio/Fx/PumpkinCrack.ogg" />
+      <pickCandy path ="Assets/Audio/Fx/OMO_pickedItem.ogg"/>
+      <pourCandy path ="Assets/Audio/Fx/candyPour.ogg"/>
+      <eatCandy path ="Assets/Audio/Fx/candyEat.ogg"/>
 			<saveGame path="Assets/Audio/Fx/SaveGame.ogg" />
 			<loadGame path="Assets/Audio/Fx/LoadGame.ogg" />
 			<batWingsSFX path="Assets/Audio/Fx/BatWings.ogg" />

@@ -5,6 +5,7 @@
 #include "Scene.h"
 #include "Log.h"
 #include "Pumpkin.h"
+#include "Candy.h"
 #include "BatEnemy.h"
 #include "GroundEnemy.h"
 #include "Particle.h"
@@ -75,7 +76,10 @@ Entity* EntityManager::CreateEntity(EntityType type)
 	case EntityType::PLAYER:
 		entity = new Player();
 		break;
-	case EntityType::ITEM:
+	case EntityType::CANDY:
+		entity = new Candy();
+		break;
+	case EntityType::PUMPKIN:
 		entity = new Pumpkin();
 		break;
 	case EntityType::ENEMY:
