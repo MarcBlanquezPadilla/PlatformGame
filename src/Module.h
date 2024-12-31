@@ -65,11 +65,34 @@ public:
 		return true;
 	}
 
+
+	void Enable()
+	{
+		if (!isEnabled)
+		{
+			isEnabled = true;
+			Start();
+		}
+	}
+
+	void Disable()
+	{
+		// TODO 0: Call CleanUp() for disabling a module
+		if (isEnabled)
+		{
+			isEnabled = false;
+			CleanUp();
+		}
+	}
+
+	inline bool IsEnabled() const { return isEnabled; }
+
 public:
 
 	std::string name;
 	bool active;
 	//L05 TODO 4a: Declare a pugi::xml_node to store the module configuration parameters
 	pugi::xml_node configParameters;
+	bool isEnabled = true;
 
 };

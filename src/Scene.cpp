@@ -214,7 +214,6 @@ Vector2D Scene::GetPlayerPosition()
 void Scene::SaveState()
 {
 	
-	
 	Engine::GetInstance().audio.get()->PlayFx(player->saveGameSFX);
 	pugi::xml_document saveFile;
 	pugi::xml_parse_result result = saveFile.load_file("config.xml");
@@ -249,10 +248,10 @@ void Scene::SaveState()
 		enemies[i]->SaveData(parent);
 	}
 
-	//Items
+	//Pumpkins
 	for (int i = 0; i < pumpkins.size(); i++)
 	{
-		std::string nodeChar = "item" + std::to_string(i);
+		std::string nodeChar = "pumpkin" + std::to_string(i);
 		pugi::xml_node parent = savedDataNode.child(nodeChar.c_str());
 
 		if (!parent) {
@@ -263,6 +262,24 @@ void Scene::SaveState()
 		}
 
 		pumpkins[i]->SaveData(parent);
+	}
+
+
+	//Candies
+	for (int i = 0; i < candies.size(); i++)
+	{
+		std::string nodeChar = "candy" + std::to_string(i);
+		pugi::xml_node parent = savedDataNode.child(nodeChar.c_str());
+
+		if (!parent) {
+			parent = savedDataNode.append_child(nodeChar.c_str());
+			parent.append_attribute("x");
+			parent.append_attribute("y");
+			parent.append_attribute("type");
+			parent.append_attribute("picked");
+		}
+
+		candies[i]->SaveData(parent);
 	}
 
 	//Saves the modifications to the XML 

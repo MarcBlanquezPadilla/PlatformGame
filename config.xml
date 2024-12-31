@@ -271,12 +271,12 @@
 			</items>
 		</entities>
 		<savedData saved="true">
-			<player x="1799" y="187" lives="11" transformable="false" transformed="false" />
-			<enemy0 dead="false" x="8" y="248" />
-			<enemy1 dead="false" x="1522" y="202" />
-			<enemy2 dead="false" x="161" y="423" />
-			<enemy3 dead="false" x="2016" y="135" />
-			<enemy4 dead="false" x="1516" y="439" />
+			<player x="1799" y="192" lives="2" transformable="false" transformed="true" />
+			<enemy0 dead="false" x="544" y="-1552" />
+			<enemy1 dead="true" x="1577" y="246" />
+			<enemy2 dead="false" x="151" y="423" />
+			<enemy3 dead="false" x="2047" y="135" />
+			<enemy4 dead="true" x="1670" y="439" />
 			<item0 alight="true" x="308" y="423" />
 			<item1 alight="true" x="1816" y="200" />
 			<item2 alight="true" x="824" y="312" />
@@ -286,6 +286,18 @@
 			<item6 alight="true" x="2026" y="378" />
 			<item7 alight="true" x="1479" y="440" />
 			<item8 alight="true" x="1575" y="265" />
+			<pumpkin0 alight="true" x="308" y="423" />
+			<pumpkin1 alight="true" x="1816" y="200" />
+			<pumpkin2 alight="true" x="824" y="312" />
+			<pumpkin3 alight="true" x="728" y="392" />
+			<pumpkin4 alight="true" x="1177" y="329" />
+			<pumpkin5 alight="true" x="2247" y="265" />
+			<pumpkin6 alight="true" x="2026" y="378" />
+			<pumpkin7 alight="true" x="1479" y="440" />
+			<pumpkin8 alight="true" x="1575" y="265" />
+			<candy0 x="376" y="312" type="corn" picked="true" />
+			<candy1 x="616" y="328" type="swirl" picked="true" />
+			<candy2 x="1008" y="423" type="heart" picked="false" />
 		</savedData>
 	</scene>
 	<ui path="Assets/Textures/UI/HelpMenu_ver2.png" />
@@ -301,9 +313,9 @@
 			<pHurtSFX path="Assets/Audio/Fx/BonkSFX.ogg" />
 			<gDeathSFX path="Assets/Audio/Fx/SinkOMO.ogg" />
 			<pDeathSFX path="Assets/Audio/Fx/PumpkinCrack.ogg" />
-      <pickCandy path ="Assets/Audio/Fx/OMO_pickedItem.ogg"/>
-      <pourCandy path ="Assets/Audio/Fx/candyPour.ogg"/>
-      <eatCandy path ="Assets/Audio/Fx/candyEat.ogg"/>
+			<pickCandy path="Assets/Audio/Fx/OMO_pickedItem.ogg" />
+			<pourCandy path="Assets/Audio/Fx/candyPour.ogg" />
+			<eatCandy path="Assets/Audio/Fx/candyEat.ogg" />
 			<saveGame path="Assets/Audio/Fx/SaveGame.ogg" />
 			<loadGame path="Assets/Audio/Fx/LoadGame.ogg" />
 			<batWingsSFX path="Assets/Audio/Fx/BatWings.ogg" />

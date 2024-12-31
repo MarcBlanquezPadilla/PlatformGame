@@ -111,6 +111,12 @@
     <ClCompile Include="src\Candy.cpp">
       <Filter>Source Files\Game</Filter>
     </ClCompile>
+    <ClCompile Include="src\ModuleFadeToBlack.cpp">
+      <Filter>Source Files\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MainMenu.cpp">
+      <Filter>Source Files\Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Audio.h">
@@ -198,6 +204,12 @@
       <Filter>Source Files\Engine</Filter>
     </ClInclude>
     <ClInclude Include="src\Candy.h">
+      <Filter>Source Files\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ModuleFadeToBlack.h">
+      <Filter>Source Files\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MainMenu.h">
       <Filter>Source Files\Game</Filter>
     </ClInclude>
   </ItemGroup>

@@ -122,16 +122,22 @@ void Candy::SetPlayer(Player* _player) {
 	player = _player;
 }
 
-void Candy::SaveData(pugi::xml_node itemNode)
+void Candy::SaveData(pugi::xml_node candyNode)
 {
-	itemNode.attribute("alight").set_value(true);
-	itemNode.attribute("x").set_value(pbody->GetPhysBodyWorldPosition().getX());
-	itemNode.attribute("y").set_value(pbody->GetPhysBodyWorldPosition().getY());
+	
+	candyNode.attribute("x").set_value(pbody->GetPhysBodyWorldPosition().getX());
+	candyNode.attribute("y").set_value(pbody->GetPhysBodyWorldPosition().getY());
+	candyNode.attribute("type").set_value(type.c_str());
+	candyNode.attribute("picked").set_value(picked);
 }
 
 
-void Candy::LoadData(pugi::xml_node itemNode)
+void Candy::LoadData(pugi::xml_node candyNode)
 {
-	pbody->SetPhysPositionWithWorld(itemNode.attribute("x").as_float(), itemNode.attribute("y").as_float());
-
+	pbody->SetPhysPositionWithWorld(candyNode.attribute("x").as_float(), candyNode.attribute("y").as_float());
+	picked = candyNode.attribute("picked").as_bool();
+	if (picked) 
+		pbody->body->SetEnabled(false);
+	else 
+		pbody->body->SetEnabled(true);
 }

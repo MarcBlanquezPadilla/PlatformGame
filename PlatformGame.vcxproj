@@ -157,6 +157,8 @@
     <ClCompile Include="src\GuiControlButton.cpp" />
     <ClCompile Include="src\GuiManager.cpp" />
     <ClCompile Include="src\Input.cpp" />
+    <ClCompile Include="src\MainMenu.cpp" />
+    <ClCompile Include="src\ModuleFadeToBlack.cpp" />
     <ClCompile Include="src\Pumpkin.cpp" />
     <ClCompile Include="src\Log.cpp" />
     <ClCompile Include="src\Map.cpp" />
@@ -188,6 +190,8 @@
     <ClInclude Include="src\GuiControlButton.h" />
     <ClInclude Include="src\GuiManager.h" />
     <ClInclude Include="src\Input.h" />
+    <ClInclude Include="src\MainMenu.h" />
+    <ClInclude Include="src\ModuleFadeToBlack.h" />
     <ClInclude Include="src\Pumpkin.h" />
     <ClInclude Include="src\Log.h" />
     <ClInclude Include="src\Map.h" />
