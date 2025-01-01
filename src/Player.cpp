@@ -18,6 +18,7 @@
 Player::Player() : Entity(EntityType::PLAYER)
 {
 	name = "Player";
+	
 }
 
 Player::~Player() {
@@ -38,6 +39,7 @@ bool Player::Awake() {
 bool Player::Start() {
 
 	//L03: TODO 2: Initialize Player parameters
+	/*active = true;*/
 	texture = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture").as_string());
 	texW = parameters.attribute("w").as_int();
 	texH = parameters.attribute("h").as_int();
@@ -109,13 +111,16 @@ bool Player::Start() {
 	currentAnim = &idle;
 
 	//PLAYER PHYSICS
-	pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX(), (int)position.getY(), GHOST_W, bodyType::DYNAMIC);
+	if (!hasCollider) {
+		pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX(), (int)position.getY(), GHOST_W, bodyType::DYNAMIC);
 
-	pbody->listener = this;
-	pbody->ctype = ColliderType::PLAYER;
-	pbody->body->SetLinearDamping(friction);
-	pbody->body->SetGravityScale(gravity);
-
+		pbody->listener = this;
+		pbody->ctype = ColliderType::PLAYER;
+		pbody->body->SetLinearDamping(friction);
+		pbody->body->SetGravityScale(gravity);
+		hasCollider = true;
+	}
+	
 	//ATTACK COLLIDER
 	ATKcolliderW = 35;
 	ATKcolliderH = 27;
@@ -457,6 +462,8 @@ bool Player::PostUpdate(float dt) {
 bool Player::CleanUp()
 {
 	LOG("Cleanup player");
+	
+
 	Engine::GetInstance().textures.get()->UnLoad(texture);
 	
 	return true;
@@ -516,7 +523,7 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		Engine::GetInstance().scene.get()->SaveState();
 		break;
 		
-
+	
 	case ColliderType::UNKNOWN:
 		LOG("Collision UNKNOWN");
 		break;

@@ -10,7 +10,6 @@
 #include "Map.h"
 #include "Player.h"
 #include "Audio.h"
-//#include "EntityManager.h"
 
 Enemy::Enemy() : Entity(EntityType::ENEMY)
 {

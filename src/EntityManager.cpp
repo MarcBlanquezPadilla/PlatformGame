@@ -10,7 +10,7 @@
 #include "GroundEnemy.h"
 #include "Particle.h"
 
-EntityManager::EntityManager() : Module()
+EntityManager::EntityManager(bool startEnabled) : Module(startEnabled)
 {
 	name = "entitymanager";
 }

@@ -5,16 +5,16 @@
 
 
 class GuiControl;
+
 class Module
 {
 public:
-
-	Module() : active(false)
-	{}
+	
+	Module(bool startEnabled) : active(startEnabled) {}
 
 	void Init()
 	{
-		active = true;
+		/*active = true;*/
 	}
 
 	// Called before render is available
@@ -68,9 +68,9 @@ public:
 
 	void Enable()
 	{
-		if (!isEnabled)
+		if (!active)
 		{
-			isEnabled = true;
+			active = true;
 			Start();
 		}
 	}
@@ -78,14 +78,14 @@ public:
 	void Disable()
 	{
 		// TODO 0: Call CleanUp() for disabling a module
-		if (isEnabled)
+		if (active)
 		{
-			isEnabled = false;
+			active = false;
 			CleanUp();
 		}
 	}
 
-	inline bool IsEnabled() const { return isEnabled; }
+	inline bool IsActive() const { return active; }
 
 public:
 
@@ -93,6 +93,7 @@ public:
 	bool active;
 	//L05 TODO 4a: Declare a pugi::xml_node to store the module configuration parameters
 	pugi::xml_node configParameters;
-	bool isEnabled = true;
+
+	
 
 };

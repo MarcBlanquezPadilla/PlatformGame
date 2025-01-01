@@ -4,7 +4,9 @@
 #include "SDL2/SDL.h"
 #include "SDL2/SDL_mixer.h"
 
-Audio::Audio() : Module()
+
+
+Audio::Audio(bool startEnabled) : Module(startEnabled)
 {
 	music = NULL;
 	name = "audio";

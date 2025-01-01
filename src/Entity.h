@@ -22,7 +22,7 @@ class Entity
 {
 public:
 
-	Entity(EntityType type) : type(type), active(true) {}
+	Entity(EntityType type) : type(type), active(false) {}
 
 	virtual bool Awake()
 	{
@@ -31,6 +31,7 @@ public:
 
 	virtual bool Start()
 	{
+		
 		return true;
 	}
 
@@ -41,6 +42,8 @@ public:
 
 	virtual bool CleanUp()
 	{
+		
+		active = false;
 		return true;
 	}
 

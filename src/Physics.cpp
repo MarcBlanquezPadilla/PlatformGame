@@ -11,7 +11,7 @@
 #include "box2D/box2d.h"
 #include "tracy/Tracy.hpp"
 
-Physics::Physics() : Module()
+Physics::Physics(bool startEnabled) : Module(startEnabled)
 {
 	// Initialise all the internal class variables, at least to NULL pointer
 	world = NULL;

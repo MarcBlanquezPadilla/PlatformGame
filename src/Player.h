@@ -108,6 +108,7 @@ public:
 	bool hitEnemy;
 	bool shot;
 	bool pickedItem;
+	bool hasCollider = false;
 
 	int candyNum;
 

@@ -3,6 +3,8 @@
 #include "Module.h"
 #include "Player.h"
 #include <vector>
+#include "Audio.h"
+#include "SDL2/SDL_mixer.h"
 
 #define POS_TO_START_MOVING_CAMX 100
 #define POS_TO_STOP_MOVING_CAMX 2180
@@ -19,12 +21,22 @@ class GroundEnemy;
 class Enemy;
 class Pumpkin;
 class Candy;
+class EntityManager;
+
+
+enum GameState {
+	MAIN_MENU,
+	LVL1,
+	LVL2,
+	WIN_SCREEN,
+	LOSE_SCREEN
+};
 
 class Scene : public Module
 {
 public:
 
-	Scene();
+	Scene(bool startEnabled);
 
 	// Destructor
 	virtual ~Scene();
@@ -62,14 +74,19 @@ public:
 
 	void SaveState();
 
+public:
+	GameState state;
+	bool musicPlays = false;
+
 private:
 	
 	//L03: TODO 3b: Declare a Player attribute
 	Player* player;
-
+	
 	std::vector<Enemy*> enemies;
 	std::vector<Pumpkin*> pumpkins;
 	std::vector<Candy*> candies;
+	pugi::xml_node musicNode;
 
 
 };

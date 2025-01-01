@@ -7,7 +7,7 @@
 #include "Physics.h"
 
 
-UI::UI() : Module()
+UI::UI(bool startEnabled) : Module(startEnabled)
 {
 
 }

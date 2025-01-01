@@ -9,7 +9,7 @@ class UI : public Module
 {
 public:
 
-	UI();
+	UI(bool startEnabled);
 
 	// Destructor
 	virtual ~UI();

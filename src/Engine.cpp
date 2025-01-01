@@ -14,6 +14,9 @@
 #include "Map.h"
 #include "Physics.h"
 #include "UI.h"
+#include "FadeToBlack.h"
+#include "GuiManager.h"
+#include "MainMenu.h"
 #include "tracy/Tracy.hpp"
 
 // Constructor
@@ -31,16 +34,19 @@ Engine::Engine() {
     // L4: TODO 1: Add the EntityManager Module to the Engine
     
     // Modules
-    window = std::make_shared<Window>();
-    input = std::make_shared<Input>();
-    render = std::make_shared<Render>();
-    textures = std::make_shared<Textures>();
-    audio = std::make_shared<Audio>();
-    physics = std::make_shared<Physics>();
-    scene = std::make_shared<Scene>();
-    map = std::make_shared<Map>();
-    entityManager = std::make_shared<EntityManager>();
-    ui = std::make_shared<UI>();
+    window = std::make_shared<Window>(true);
+    input = std::make_shared<Input>(true);
+    render = std::make_shared<Render>(true);
+    textures = std::make_shared<Textures>(true);
+    audio = std::make_shared<Audio>(true);
+    physics = std::make_shared<Physics>(true);
+    mainMenu = std::make_shared<MainMenu>(true);
+    scene = std::make_shared<Scene>(false);
+    entityManager = std::make_shared<EntityManager>(true);
+    map = std::make_shared<Map>(true);
+    guiManager = std::make_shared<GuiManager>(true);
+    fade = std::make_shared<FadeToBlack>(true);
+    ui = std::make_shared<UI>(true);
 
     // Ordered for awake / Start / Update
     // Reverse order of CleanUp
@@ -51,10 +57,12 @@ Engine::Engine() {
     // L08: TODO 2: Add Physics module
     AddModule(std::static_pointer_cast<Module>(physics));
     AddModule(std::static_pointer_cast<Module>(map));
+    AddModule(std::static_pointer_cast<Module>(mainMenu));
     AddModule(std::static_pointer_cast<Module>(scene));
     AddModule(std::static_pointer_cast<Module>(entityManager));
     AddModule(std::static_pointer_cast<Module>(ui));
-
+    AddModule(std::static_pointer_cast<Module>(guiManager));
+    AddModule(std::static_pointer_cast<Module>(fade));
     // Render last 
     AddModule(std::static_pointer_cast<Module>(render));
 
@@ -94,7 +102,7 @@ bool Engine::Awake() {
         module.get()->LoadParameters(configFile.child("config").child(module.get()->name.c_str()));
         result =  module.get()->Awake();
         if (!result) {
-			break;
+			continue;
 		}
     }
 
@@ -241,7 +249,8 @@ bool Engine::PreUpdate()
     //Iterates the module list and calls PreUpdate on each module
     bool result = true;
     for (const auto& module : moduleList) {
-        result = module.get()->PreUpdate();
+        if (module.get()->active)
+            result = module.get()->PreUpdate();
         if (!result) {
             break;
         }
@@ -256,7 +265,8 @@ bool Engine::DoUpdate()
     //Iterates the module list and calls Update on each module
     bool result = true;
     for (const auto& module : moduleList) {
-        result = module.get()->Update(dt);
+        if(module.get()->active)
+            result = module.get()->Update(dt);
         if (!result) {
             break;
         }
@@ -271,7 +281,8 @@ bool Engine::PostUpdate()
     //Iterates the module list and calls PostUpdate on each module
     bool result = true;
     for (const auto& module : moduleList) {
-        result = module.get()->PostUpdate();
+        if (module.get()->active)
+            result = module.get()->PostUpdate();
         if (!result) {
             break;
         }

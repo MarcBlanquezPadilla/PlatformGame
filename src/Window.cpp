@@ -2,7 +2,7 @@
 #include "Log.h"
 #include "Engine.h"
 
-Window::Window() : Module()
+Window::Window(bool startEnabled) : Module(startEnabled)
 {
 	window = NULL;
 	name = "window";

@@ -271,7 +271,7 @@
 			</items>
 		</entities>
 		<savedData saved="true">
-			<player x="1799" y="192" lives="2" transformable="false" transformed="true" />
+      <player x="1799" y="192" lives="2" transformable="false" transformed="true" />
 			<enemy0 dead="false" x="544" y="-1552" />
 			<enemy1 dead="true" x="1577" y="246" />
 			<enemy2 dead="false" x="151" y="423" />
@@ -302,6 +302,10 @@
 	</scene>
 	<ui path="Assets/Textures/UI/HelpMenu_ver2.png" />
 	<audio>
+    <music>
+      <menuMus path="Assets/Audio/Music/Nothing As It Seems.ogg"/>
+      <lvl1Mus path="Assets/Audio/Music/Haunted Towers.ogg"/>
+    </music>
 		<fx>
 			<gJumpSFX path="Assets/Audio/Fx/ghostJump.ogg" />
 			<pJumpSFX path="Assets/Audio/Fx/pumpkinJump.ogg" />

@@ -28,13 +28,14 @@ enum class ColliderType {
 	WEAPON,
 	SHOT,
 	PUMPKIN,
-	PLATFORM, 
+	PLATFORM,
 	SPYKE,
 	ABYSS,
 	MAPLIMITS,
 	LADDER,
 	ENEMY,
 	CHECKPOINT,
+	LEVELEND,
 	CANDY,
 	UNKNOWN
 	// ..
@@ -70,7 +71,7 @@ class Physics : public Module, public b2ContactListener // TODO
 public:
 
 	// Constructors & Destructors
-	Physics();
+	Physics(bool startEnabled);
 	~Physics();
 
 	// Main module steps

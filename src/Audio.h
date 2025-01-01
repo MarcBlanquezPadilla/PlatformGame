@@ -13,7 +13,7 @@ class Audio : public Module
 {
 public:
 
-	Audio();
+	Audio(bool startEnabled);
 
 	// Destructor
 	virtual ~Audio();
@@ -37,6 +37,7 @@ private:
 
 	_Mix_Music* music;
 	std::list<Mix_Chunk*> fx;
+	
 
 
 	// An array of all the loaded sound effects

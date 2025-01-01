@@ -20,10 +20,14 @@
 #include "GuiControl.h"
 #include "GuiManager.h"
 #include "Candy.h"
+#include "MainMenu.h"
 
-Scene::Scene() : Module()
+Scene::Scene(bool startEnabled) : Module(startEnabled)
 {
+	
 	name = "scene";
+	state = MAIN_MENU;
+	/*active = false;*/
 	
 }
 
@@ -34,14 +38,19 @@ Scene::~Scene()
 // Called before render is available
 bool Scene::Awake()
 {
-	LOG("Loading Scene");
 	bool ret = true;
-
+	/*if (!active) {
+		return false;
+	}*/
+	LOG("Loading Scene");
+	
 	//L04: TODO 3b: Instantiate the player using the entity manager
+	
 	player = (Player*)Engine::GetInstance().entityManager->CreateEntity(EntityType::PLAYER);
 	player->SetParameters(configParameters.child("entities").child("player"));
-	
+
 	Engine::GetInstance().map.get()->SetParameters(configParameters.child("scene").child("map"));
+	
 
 	return ret;
 }
@@ -49,7 +58,16 @@ bool Scene::Awake()
 // Called before the first frame
 bool Scene::Start()
 {
-	//Load map. 
+	
+	std::list<Entity*> entities = Engine::GetInstance().entityManager.get()->entities;
+	for (const auto& entity: entities) {
+		entity->Enable();
+		
+	}
+	Engine::GetInstance().entityManager.get()->Enable();
+	
+	/*player->Enable();*/
+	//Load Map
 	Engine::GetInstance().map->Load(configParameters.child("map").attribute("path").as_string(), configParameters.child("map").attribute("name").as_string());
 
 	//Load Parallax
@@ -113,6 +131,11 @@ bool Scene::Start()
 	Candy* heart1 = (Candy*)Engine::GetInstance().entityManager->CreateEntity(EntityType::CANDY);
 	LoadItem(heart1, configParameters.child("entities").child("items").child("candies").child("instances").child("heart1"));
 
+	//PlayMusic
+	
+
+
+
 	return true;
 }
 
@@ -143,7 +166,7 @@ void Scene::RestartScene()
 {
 	player->Restart();
 
-	for (int i = 0; i < enemies.size(); i++)
+	for (int i = 0; i < enemies.size()/2; i++)
 	{
 		enemies[i]->Restart();
 	}
@@ -153,6 +176,7 @@ void Scene::RestartScene()
 // Called each loop iteration
 bool Scene::PreUpdate()
 {
+	
 	return true;
 }
 
@@ -160,6 +184,16 @@ bool Scene::PreUpdate()
 bool Scene::Update(float dt)
 {	
 	ZoneScoped;
+
+	/*if (!active) return true;*/
+	if (!musicPlays) {
+		pugi::xml_document configFile;
+		pugi::xml_parse_result result = configFile.load_file("config.xml");
+		musicNode = configFile.child("config").child("audio").child("music");
+		Engine::GetInstance().audio.get()->PlayMusic(musicNode.child("lvl1Mus").attribute("path").as_string());
+		musicPlays = true;
+	}
+	
 
 	if (player->position.getX() < POS_TO_START_MOVING_CAMX) {
 		Engine::GetInstance().render.get()->camera.x = (POS_TO_START_MOVING_CAMX + CAM_EXTRA_DISPLACEMENT_X) * -Engine::GetInstance().window.get()->scale;
@@ -180,6 +214,7 @@ bool Scene::Update(float dt)
 // Called each loop iteration
 bool Scene::PostUpdate()
 {
+	
 	bool ret = true;
 
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F5) == KEY_DOWN)
@@ -200,8 +235,15 @@ bool Scene::PostUpdate()
 // Called before quitting
 bool Scene::CleanUp()
 {
-	LOG("Freeing scene");
+	
+	Mix_HaltMusic();
+	/*std::list<Entity*> entities = Engine::GetInstance().entityManager.get()->entities;
+	for (const auto& entity : entities) {
+		entity->Disable();
+	}*/
+	Engine::GetInstance().entityManager.get()->Disable();
 
+	LOG("Freeing scene");
 	return true;
 }
 
