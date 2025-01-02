@@ -37,14 +37,16 @@ public:
 	GuiControl(GuiControlType type, int id) : type(type), id(id), state(GuiControlState::NORMAL) {}
 
 	// Constructor
-	GuiControl(GuiControlType type, SDL_Rect bounds, const char* text) :
+	GuiControl(GuiControlType type, SDL_Rect bounds, const char* text, SDL_Texture* tex) :
 		type(type),
 		state(GuiControlState::NORMAL),
 		bounds(bounds),
 		text(text)
+		
+
 	{
 		color.r = 255; color.g = 255; color.b = 255;
-		texture = NULL;
+		texture = tex;
 	}
 
 	// Called each loop iteration
@@ -74,6 +76,7 @@ public:
 
 public:
 
+	bool active;
 	int id;
 	GuiControlType type;
 	GuiControlState state;

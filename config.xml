@@ -14,6 +14,16 @@
 		<resizable value="false" />
 		<fullscreen_window value="false" />
 	</window>
+	<mainmenu>
+		<bg path="Assets/Textures/Menus/Title Screen/title screen pixel bg.png" />
+		<buttons defaultTex="Assets/Textures/Menus/Title Screen/title screen button sheet rescaled.png">
+			<newGameBt x="40" y="34" w="192" h="32" texture="Assets/Textures/Menus/Title Screen/New Game Button Sheet.png" />
+			<continueBt x="40" y="74" w="192" h="32" texture="Assets/Textures/Menus/Title Screen/Continue Button Sheet.png" />
+			<optionsBt x="40" y="114" w="192" h="32" texture="Assets/Textures/Menus/Title Screen/Options Button Sheet.png" />
+			<creditsBt x="-72" y="280" w="192" h="32" texture="Assets/Textures/Menus/Title Screen/Credits Button Sheet.png" />
+			<exitBt x="519" y="20" w="192" h="32" texture="Assets/Textures/Menus/Title Screen/Exit Button Sheet.png" />
+		</buttons>
+	</mainmenu>
 	<scene>
 		<map path="Assets/Maps/" name="Mapa.tmx">
 			<parallax>
@@ -271,12 +281,12 @@
 			</items>
 		</entities>
 		<savedData saved="true">
-      <player x="1799" y="192" lives="2" transformable="false" transformed="true" />
-			<enemy0 dead="false" x="544" y="-1552" />
-			<enemy1 dead="true" x="1577" y="246" />
-			<enemy2 dead="false" x="151" y="423" />
-			<enemy3 dead="false" x="2047" y="135" />
-			<enemy4 dead="true" x="1670" y="439" />
+			<player x="626" y="326" lives="3" transformable="false" transformed="false" />
+			<enemy0 dead="false" x="836" y="248" />
+			<enemy1 dead="false" x="1624" y="183" />
+			<enemy2 dead="false" x="186" y="423" />
+			<enemy3 dead="false" x="2200" y="119" />
+			<enemy4 dead="false" x="1512" y="439" />
 			<item0 alight="true" x="308" y="423" />
 			<item1 alight="true" x="1816" y="200" />
 			<item2 alight="true" x="824" y="312" />
@@ -302,10 +312,10 @@
 	</scene>
 	<ui path="Assets/Textures/UI/HelpMenu_ver2.png" />
 	<audio>
-    <music>
-      <menuMus path="Assets/Audio/Music/Nothing As It Seems.ogg"/>
-      <lvl1Mus path="Assets/Audio/Music/Haunted Towers.ogg"/>
-    </music>
+		<music>
+			<menuMus path="Assets/Audio/Music/Nothing As It Seems.ogg" />
+			<lvl1Mus path="Assets/Audio/Music/Haunted Towers.ogg" />
+		</music>
 		<fx>
 			<gJumpSFX path="Assets/Audio/Fx/ghostJump.ogg" />
 			<pJumpSFX path="Assets/Audio/Fx/pumpkinJump.ogg" />

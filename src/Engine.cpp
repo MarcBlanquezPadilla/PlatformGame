@@ -42,11 +42,11 @@ Engine::Engine() {
     physics = std::make_shared<Physics>(true);
     mainMenu = std::make_shared<MainMenu>(true);
     scene = std::make_shared<Scene>(false);
-    entityManager = std::make_shared<EntityManager>(true);
+    entityManager = std::make_shared<EntityManager>(false);
     map = std::make_shared<Map>(true);
     guiManager = std::make_shared<GuiManager>(true);
     fade = std::make_shared<FadeToBlack>(true);
-    ui = std::make_shared<UI>(true);
+    ui = std::make_shared<UI>(false);
 
     // Ordered for awake / Start / Update
     // Reverse order of CleanUp
@@ -123,7 +123,8 @@ bool Engine::Start() {
     //Iterates the module list and calls Start on each module
     bool result = true;
     for (const auto& module : moduleList) {
-        result = module.get()->Start();
+        if(module->active)
+            result = module.get()->Start();
         if (!result) {
             break;
         }

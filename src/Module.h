@@ -2,6 +2,7 @@
 
 #include <string>
 #include "pugixml.hpp"
+#include "Log.h"
 
 
 class GuiControl;
@@ -15,6 +16,7 @@ public:
 	void Init()
 	{
 		/*active = true;*/
+		LOG("module active: %d", active);
 	}
 
 	// Called before render is available

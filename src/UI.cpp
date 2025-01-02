@@ -5,11 +5,12 @@
 #include "Render.h"
 #include "Window.h"
 #include "Physics.h"
+#include "Scene.h"
 
 
 UI::UI(bool startEnabled) : Module(startEnabled)
 {
-
+	name = "UI";
 }
 
 // Destructor
@@ -36,6 +37,7 @@ bool UI::Start()
 	pugi::xml_parse_result result = configFile.load_file("config.xml");
 	helpMenu = Engine::GetInstance().textures.get()->Load(configFile.child("config").child("ui").attribute("path").as_string());
 
+	
 
 	if (helpMenu == nullptr)
 	{
@@ -55,6 +57,9 @@ bool UI::PreUpdate()
 // Called each loop iteration
 bool UI::Update(float dt)
 {
+	
+	Render* render = Engine::GetInstance().render.get();
+	Window* window = Engine::GetInstance().window.get();
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_H) == KEY_DOWN)
 	{
 		help = !help;
@@ -62,11 +67,17 @@ bool UI::Update(float dt)
 
 	if (help)
 	{
-		Render* render = Engine::GetInstance().render.get();
-		Window* window = Engine::GetInstance().window.get();
-		render->DrawTexture(helpMenu,-render->camera.x/window->scale + HELP_MENU_X_DISPLACEMENT, -render->camera.y/ window->scale + HELP_MENU_Y_DISPLACEMENT);
+		render->DrawTexture(helpMenu, -render->camera.x / window->scale + HELP_MENU_X_DISPLACEMENT, -render->camera.y / window->scale + HELP_MENU_Y_DISPLACEMENT);
 	}
 
+	std::string livesText = "Lives: " + std::to_string(Engine::GetInstance().scene.get()->player->lives);
+	std::string ptsText = "Collected Candies: " + std::to_string(Engine::GetInstance().scene.get()->player->pickedCandies);
+	std::string timerText = "Time: " + std::to_string((int)Engine::GetInstance().scene.get()->lvl1Timer.ReadSec()) + " s";
+	render->DrawText(livesText.c_str(), 20, 20, 100, 20);
+	render->DrawText(ptsText.c_str(), 150, 20, 200, 20);
+	render->DrawText(timerText.c_str(), 375, 20, 100, 20);
+	
+	
 
 	return true;
 }

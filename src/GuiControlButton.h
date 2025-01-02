@@ -8,7 +8,7 @@ class GuiControlButton : public GuiControl
 
 public:
 
-	GuiControlButton(int id, SDL_Rect bounds, const char* text);
+	GuiControlButton(int id, SDL_Rect bounds, const char* text,  SDL_Texture* tex);
 	virtual ~GuiControlButton();
 
 	// Called each loop iteration
@@ -18,5 +18,7 @@ private:
 
 	bool canClick = true;
 	bool drawBasic = false;
+	TTF_Font* font;
+
 };
 

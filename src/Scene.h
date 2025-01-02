@@ -77,11 +77,13 @@ public:
 public:
 	GameState state;
 	bool musicPlays = false;
+	Player* player;
+	Timer lvl1Timer;
 
 private:
 	
 	//L03: TODO 3b: Declare a Player attribute
-	Player* player;
+	
 	
 	std::vector<Enemy*> enemies;
 	std::vector<Pumpkin*> pumpkins;

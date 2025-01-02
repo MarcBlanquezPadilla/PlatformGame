@@ -11,6 +11,7 @@
 #include "Particle.h"
 #include "EntityManager.h"
 #include "Candy.h"
+#include "MainMenu.h"
 
 
  
@@ -32,6 +33,7 @@ bool Player::Awake() {
 	initPos.x = 25;
 	initPos.y = 350;
 	position = Vector2D(initPos.x, initPos.y);
+	renderable = false;
 
 	return true;
 }
@@ -40,6 +42,7 @@ bool Player::Start() {
 
 	//L03: TODO 2: Initialize Player parameters
 	/*active = true;*/
+	renderable = true;
 	texture = Engine::GetInstance().textures.get()->Load(parameters.attribute("texture").as_string());
 	texW = parameters.attribute("w").as_int();
 	texH = parameters.attribute("h").as_int();
@@ -87,7 +90,7 @@ bool Player::Start() {
 	shot = false;
 	pickedItem = false;
 
-	candyNum = 0;
+	pickedCandies = 0;
 
 	pugi::xml_document audioFile;
 	pugi::xml_parse_result result = audioFile.load_file("config.xml");
@@ -145,10 +148,13 @@ bool Player::Start() {
 
 void Player::Restart()
 {
-	playerState = (state)parameters.child("propierties").attribute("playerState").as_int();
-	dir = (Direction)parameters.child("propierties").attribute("direction").as_int();
-	lives = parameters.attribute("lives").as_int();
-	SetPosition({ parameters.attribute("x").as_float(), parameters.attribute("y").as_float() });
+	if (active) {
+		playerState = (state)parameters.child("propierties").attribute("playerState").as_int();
+		dir = (Direction)parameters.child("propierties").attribute("direction").as_int();
+		lives = parameters.attribute("lives").as_int();
+		SetPosition({ parameters.attribute("x").as_float(), parameters.attribute("y").as_float() });
+	}
+	
 }
 
 bool Player::Update(float dt)
@@ -420,34 +426,37 @@ bool Player::Update(float dt)
 
 	b2Transform pbodyPos = pbody->body->GetTransform();
 
-	if (!transformed) {
+	if (renderable) {
+		if (!transformed) {
 
 
-		position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - texW / 2);
-		position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2);
+			position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - texW / 2);
+			position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - texH / 2);
 
-		if (dir == RIGHT) {
-			Engine::GetInstance().render.get()->DrawTexture(texture, position.getX(), position.getY(), &currentFrame);
+			if (dir == RIGHT) {
+				Engine::GetInstance().render.get()->DrawTexture(texture, position.getX(), position.getY(), &currentFrame);
 
+			}
+			else if (dir == LEFT) {
+				Engine::GetInstance().render.get()->DrawTextureFlipped(texture, position.getX(), position.getY(), &currentFrame);
+			}
 		}
-		else if (dir == LEFT) {
-			Engine::GetInstance().render.get()->DrawTextureFlipped(texture, position.getX(), position.getY(), &currentFrame);
+		else {
+
+			position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - t_texW / 2);
+			position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - t_texH / 2);
+
+			if (dir == RIGHT) {
+
+				Engine::GetInstance().render.get()->DrawTexture(t_texture, position.getX(), position.getY(), &currentFrame);
+			}
+			else if (dir == LEFT) {
+
+				Engine::GetInstance().render.get()->DrawTextureFlipped(t_texture, position.getX(), position.getY(), &currentFrame);
+			}
 		}
 	}
-	else {
-
-		position.setX(METERS_TO_PIXELS(pbodyPos.p.x) - t_texW / 2);
-		position.setY(METERS_TO_PIXELS(pbodyPos.p.y) - t_texH / 2);
-
-		if (dir == RIGHT) {
-
-			Engine::GetInstance().render.get()->DrawTexture(t_texture, position.getX(), position.getY(), &currentFrame);
-		}
-		else if (dir == LEFT) {
-
-			Engine::GetInstance().render.get()->DrawTextureFlipped(t_texture, position.getX(), position.getY(), &currentFrame);
-		}
-	}
+	
 
 	currentAnim->Update();
 	
@@ -463,7 +472,8 @@ bool Player::CleanUp()
 {
 	LOG("Cleanup player");
 	
-
+	renderable = false;
+	active = false;
 	Engine::GetInstance().textures.get()->UnLoad(texture);
 	
 	return true;
@@ -479,6 +489,7 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 	case ColliderType::CANDY:
 		LOG("Collision CANDY");
 		pickedItem = true;
+		pickedCandies++;
 		
 		break;
 	case ColliderType::PUMPKIN:
@@ -567,20 +578,26 @@ void Player::SetPosition(Vector2D pos) {
 
 void Player::SaveData(pugi::xml_node playerNode)
 {
-	playerNode.attribute("x").set_value(pbody->GetPhysBodyWorldPosition().getX());
-	playerNode.attribute("y").set_value(pbody->GetPhysBodyWorldPosition().getY());
-	playerNode.attribute("lives").set_value(lives);
-	playerNode.attribute("transformed").set_value(transformed);
+	if (active) {
+		playerNode.attribute("x").set_value(pbody->GetPhysBodyWorldPosition().getX());
+		playerNode.attribute("y").set_value(pbody->GetPhysBodyWorldPosition().getY());
+		playerNode.attribute("lives").set_value(lives);
+		playerNode.attribute("transformed").set_value(transformed);
+	}
+	
 }
 
 
 void Player::LoadData(pugi::xml_node playerNode)
 {
+	
 	position.setX(playerNode.attribute("x").as_int());
 	position.setY(playerNode.attribute("y").as_int());
 	lives = playerNode.attribute("lives").as_int();
 	transformed = playerNode.attribute("transformed").as_bool();
 	SetPosition(position);
+	
+	
 }
 
 void Player::DMGPlayer(PhysBody* physA, PhysBody* physB) {

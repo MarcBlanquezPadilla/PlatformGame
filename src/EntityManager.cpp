@@ -28,7 +28,7 @@ bool EntityManager::Awake()
 	//Iterates over the entities and calls the Awake
 	for(const auto entity : entities)
 	{
-		if (entity->active == false) continue;
+		/*if (entity->active == false) continue;*/
 		ret = entity->Awake();
 	}
 
@@ -127,6 +127,8 @@ bool EntityManager::Update(float dt)
 	for(const auto entity : entities)
 	{
 		if (entity->active == false) continue;
+
+		
 		ret = entity->Update(dt);
 	}
 	return ret;

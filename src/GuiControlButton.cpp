@@ -4,13 +4,18 @@
 #include "Audio.h"
 #include "Input.h"
 
-GuiControlButton::GuiControlButton(int id, SDL_Rect bounds, const char* text) : GuiControl(GuiControlType::BUTTON, id)
+GuiControlButton::GuiControlButton(int id, SDL_Rect bounds, const char* text, SDL_Texture* btTex) : GuiControl(GuiControlType::BUTTON, id)
 {
 	this->bounds = bounds;
 	this->text = text;
+	
+	this->texture = btTex;
+	/*this->font = _font;*/
 
 	canClick = true;
 	drawBasic = false;
+	this->active = true;
+	state = GuiControlState::NORMAL;
 }
 
 GuiControlButton::~GuiControlButton()
@@ -20,9 +25,10 @@ GuiControlButton::~GuiControlButton()
 
 bool GuiControlButton::Update(float dt)
 {
-	if (state != GuiControlState::DISABLED)
-	{
-		// L16: TODO 3: Update the state of the GUiButton according to the mouse position
+	/*if (state != GuiControlState::DISABLED)*/
+	
+	// L16: TODO 3: Update the state of the GUiButton according to the mouse position
+	if (state != GuiControlState::DISABLED) {
 		Vector2D mousePos = Engine::GetInstance().input.get()->GetMousePosition();
 
 		//If the position of the mouse if inside the bounds of the button 
@@ -41,27 +47,36 @@ bool GuiControlButton::Update(float dt)
 		else {
 			state = GuiControlState::NORMAL;
 		}
+	}
+	
 
-		//L16: TODO 4: Draw the button according the GuiControl State
-		switch (state)
-		{
-		case GuiControlState::DISABLED:
-			Engine::GetInstance().render->DrawRectangle(bounds, 200, 200, 200, 255, true, false);
-			break;
-		case GuiControlState::NORMAL:
-			Engine::GetInstance().render->DrawRectangle(bounds, 0, 0, 255, 255, true, false);
-			break;
-		case GuiControlState::FOCUSED:
-			Engine::GetInstance().render->DrawRectangle(bounds, 0, 0, 20, 255, true, false);
-			break;
-		case GuiControlState::PRESSED:
-			Engine::GetInstance().render->DrawRectangle(bounds, 0, 255, 0, 255, true, false);
-			break;
+	//L16: TODO 4: Draw the button according the GuiControl State
+	switch (state)
+	{
+	case GuiControlState::DISABLED:
+		section = {0, 32, 192, 32};
+		break;
+	case GuiControlState::NORMAL:
+		section = {0, 0, 192, 32};
+		break;
+	case GuiControlState::FOCUSED:
+		section = {0, 64, 192, 32};
+		break;
+	case GuiControlState::PRESSED:
+		section = {0, 96, 192, 32};
+		break;
+	}
+
+	if (active) {
+		if (texture != nullptr) {
+			Engine::GetInstance().render.get()->DrawTexture(texture, bounds.x, bounds.y, &section);
 		}
 
-		/*Engine::GetInstance().render->DrawText(text.c_str(), bounds.x, bounds.y, bounds.w, bounds.h);*/
-
+		Engine::GetInstance().render->DrawText(text.c_str(), bounds.x * 2 + bounds.w / 2, bounds.y * 2 + bounds.h / 2, bounds.w, bounds.h);
 	}
+	
+		
+	
 
 	return false;
 }

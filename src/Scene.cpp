@@ -21,6 +21,7 @@
 #include "GuiManager.h"
 #include "Candy.h"
 #include "MainMenu.h"
+#include "UI.h"
 
 Scene::Scene(bool startEnabled) : Module(startEnabled)
 {
@@ -46,9 +47,9 @@ bool Scene::Awake()
 	
 	//L04: TODO 3b: Instantiate the player using the entity manager
 	
+	
 	player = (Player*)Engine::GetInstance().entityManager->CreateEntity(EntityType::PLAYER);
 	player->SetParameters(configParameters.child("entities").child("player"));
-
 	Engine::GetInstance().map.get()->SetParameters(configParameters.child("scene").child("map"));
 	
 
@@ -58,15 +59,11 @@ bool Scene::Awake()
 // Called before the first frame
 bool Scene::Start()
 {
+	Engine::GetInstance().entityManager.get()->Enable();	
+	Engine::GetInstance().ui->Enable();
+
 	
-	std::list<Entity*> entities = Engine::GetInstance().entityManager.get()->entities;
-	for (const auto& entity: entities) {
-		entity->Enable();
-		
-	}
-	Engine::GetInstance().entityManager.get()->Enable();
 	
-	/*player->Enable();*/
 	//Load Map
 	Engine::GetInstance().map->Load(configParameters.child("map").attribute("path").as_string(), configParameters.child("map").attribute("name").as_string());
 
@@ -131,10 +128,14 @@ bool Scene::Start()
 	Candy* heart1 = (Candy*)Engine::GetInstance().entityManager->CreateEntity(EntityType::CANDY);
 	LoadItem(heart1, configParameters.child("entities").child("items").child("candies").child("instances").child("heart1"));
 
-	//PlayMusic
-	
+	std::list<Entity*> entities = Engine::GetInstance().entityManager.get()->entities;
+	for (const auto& entity : entities) {
+		entity->Enable();
+		entity->active = true;
+		entity->renderable = true;
+	}
 
-
+	lvl1Timer.Start();
 
 	return true;
 }
@@ -185,13 +186,18 @@ bool Scene::Update(float dt)
 {	
 	ZoneScoped;
 
-	/*if (!active) return true;*/
+	//PlayMusic
 	if (!musicPlays) {
+		
 		pugi::xml_document configFile;
 		pugi::xml_parse_result result = configFile.load_file("config.xml");
 		musicNode = configFile.child("config").child("audio").child("music");
+		
 		Engine::GetInstance().audio.get()->PlayMusic(musicNode.child("lvl1Mus").attribute("path").as_string());
+		Mix_VolumeMusic(MIX_MAX_VOLUME / 5);
+		
 		musicPlays = true;
+		
 	}
 	
 
@@ -207,6 +213,9 @@ bool Scene::Update(float dt)
 	}
 	else if (player->position.getY() < POS_TO_STOP_MOVING_CAMY) Engine::GetInstance().render.get()->camera.y = (POS_TO_STOP_MOVING_CAMY + CAM_EXTRA_DISPLACEMENT_X) * -Engine::GetInstance().window.get()->scale;
 	else Engine::GetInstance().render.get()->camera.y = (player->position.getY() + CAM_EXTRA_DISPLACEMENT_Y) * -Engine::GetInstance().window.get()->scale;
+
+
+	
 
 	return true;
 }
@@ -237,11 +246,11 @@ bool Scene::CleanUp()
 {
 	
 	Mix_HaltMusic();
-	/*std::list<Entity*> entities = Engine::GetInstance().entityManager.get()->entities;
-	for (const auto& entity : entities) {
-		entity->Disable();
-	}*/
+	player->Disable();
+	/*for(const auto& entities)*/
 	Engine::GetInstance().entityManager.get()->Disable();
+	Engine::GetInstance().ui->Disable();
+	
 
 	LOG("Freeing scene");
 	return true;
@@ -275,7 +284,7 @@ void Scene::SaveState()
 	player->SaveData(savedDataNode.child("player"));
 
 	//Enemies
-	for (int i = 0; i < enemies.size(); i++)
+	for (int i = 0; i < enemies.size()/2; i++)
 	{
 		std::string nodeChar = "enemy" + std::to_string(i);
 		pugi::xml_node parent = savedDataNode.child(nodeChar.c_str());
@@ -291,7 +300,7 @@ void Scene::SaveState()
 	}
 
 	//Pumpkins
-	for (int i = 0; i < pumpkins.size(); i++)
+	for (int i = 0; i < pumpkins.size()/2; i++)
 	{
 		std::string nodeChar = "pumpkin" + std::to_string(i);
 		pugi::xml_node parent = savedDataNode.child(nodeChar.c_str());
@@ -308,7 +317,7 @@ void Scene::SaveState()
 
 
 	//Candies
-	for (int i = 0; i < candies.size(); i++)
+	for (int i = 0; i < candies.size()/2; i++)
 	{
 		std::string nodeChar = "candy" + std::to_string(i);
 		pugi::xml_node parent = savedDataNode.child(nodeChar.c_str());

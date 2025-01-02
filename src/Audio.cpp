@@ -41,6 +41,7 @@ bool Audio::Awake()
 		ret = true;
 	}
 
+	
 	// Initialize SDL_mixer
 	if(Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
 	{
@@ -99,6 +100,8 @@ bool Audio::PlayMusic(const char* path, float fadeTime)
 		// this call blocks until fade out is done
 		Mix_FreeMusic(music);
 	}
+
+	Mix_VolumeMusic(MIX_MAX_VOLUME / 5);
 
 	music = Mix_LoadMUS(path);
 

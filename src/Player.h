@@ -124,9 +124,11 @@ public:
 
 
 	pugi::xml_node parameters;
+	pugi::xml_node savedDataNode;
 
 
 	int lives;
+	int pickedCandies;
 
 	Animation* currentAnim = nullptr;
 
