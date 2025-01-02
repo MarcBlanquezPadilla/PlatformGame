@@ -5,6 +5,7 @@
 //#include "GuiControl.h"
 #include "GuiControlButton.h"
 #include <list>
+#include <map>
 
 
 struct SDL_Texture;
@@ -39,12 +40,12 @@ public:
 public:
 	// The scene sprite sheet loaded into an SDL_Texture
 	pugi::xml_document configFile;
-	GuiControlButton *newGameBt, *continueBt, *optionsBt, *creditsBt, *exitBt;
 	pugi::xml_node rootNode;
 	SDL_Texture* bgTex, * btTex;
 	TTF_Font* btFont;
-	std::list<GuiControlButton*> btList;
 	bool quit = false;
 	bool saved;
+
+	std::map<std::string, GuiControlButton*> buttons;
 
 };

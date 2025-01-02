@@ -186,6 +186,13 @@ bool Scene::Update(float dt)
 {	
 	ZoneScoped;
 
+	if (loadScene)
+	{
+		//LOG("ENTRO");
+		LoadState();
+		loadScene = false;
+	}
+
 	//PlayMusic
 	if (!musicPlays) {
 		
@@ -339,8 +346,6 @@ void Scene::SaveState()
 
 void Scene::LoadState() {
 
-	/*Engine::GetInstance().audio.get()->PlayFx(player->loadGame);*/
-
 	pugi::xml_document loadFile;
 	pugi::xml_parse_result result = loadFile.load_file("config.xml");
 
@@ -371,4 +376,9 @@ void Scene::LoadState() {
 	}
 
 	loadFile.save_file("config.xml");
+}
+
+void Scene::SetLoadState(bool b)
+{
+	loadScene = b;
 }

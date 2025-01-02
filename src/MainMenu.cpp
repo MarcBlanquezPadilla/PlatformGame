@@ -30,13 +30,13 @@ MainMenu::~MainMenu()
 bool MainMenu::Start()
 {
 	LOG("Loading background assets");
-
 	
 	bool ret = true;
 	configFile.load_file("config.xml");
 	
 	pugi::xml_parse_result result = configFile.load_file("config.xml");
-	pugi::xml_node musicNode = configFile.child("config").child("audio").child("music");
+	rootNode = configFile.child("config");	
+	pugi::xml_node musicNode = rootNode.child("audio").child("music");
 
 	btTex = Engine::GetInstance().textures.get()->Load(configParameters.child("buttons").attribute("defaultTex").as_string());
 	int texW, texH;
@@ -46,22 +46,20 @@ bool MainMenu::Start()
 
 	pugi::xml_node buttonNode = configFile.child("config").child("mainmenu").child("buttons");
 
-	btList.push_back(newGameBt);
-	btList.push_back(continueBt);
-	btList.push_back(optionsBt);
-	btList.push_back(creditsBt);
-	btList.push_back(exitBt);
-
-	int i = 1;
-	pugi::xml_node child = buttonNode.first_child();
-	for (auto& bt : btList) {
-		bt = (GuiControlButton*)Engine::GetInstance().guiManager.get()->CreateGuiControl(GuiControlType::BUTTON, i, "", {0, 0, 0, 0}, this, {0,0,0,0});
+	buttons.clear();
+	for (pugi::xml_node child : buttonNode.children())
+	{
 		std::string buttonName = child.name();
+		GuiControlButton* bt = (GuiControlButton*)Engine::GetInstance().guiManager.get()->CreateGuiControl(GuiControlType::BUTTON, buttonName.c_str(), "", {0, 0, 0, 0}, this, {0,0,0,0});
 		SetButtonParameters(bt, buttonName, buttonNode);
-		i++;
-		child = child.next_sibling();
+		buttons[buttonName] = bt;
+		LOG("%s, %d", buttons[buttonName]->name, buttons[buttonName]->id);
 	}
 	
+	saved = rootNode.child("scene").child("savedData").attribute("saved").as_bool();
+	LOG("%d", (int)saved);
+	if (!saved)
+		buttons["continueBt"]->state = GuiControlState::DISABLED();
 	
 	Engine::GetInstance().render.get()->camera.x = 0;
 	Engine::GetInstance().render.get()->camera.y = 0;
@@ -73,7 +71,7 @@ bool MainMenu::Start()
 	bgTex = Engine::GetInstance().textures.get()->Load(configParameters.child("bg").attribute("path").as_string());
 	
 	rootNode = configFile.child("config");
-
+	
 	return ret;
 }
 
@@ -81,11 +79,10 @@ bool MainMenu::Update(float dt)
 {
 	
 	Engine::GetInstance().render.get()->DrawTexture(bgTex, 0, 0, NULL);
-	for (const auto& bt : btList)
+	for (const auto& bt : buttons)
 	{
-		
-		OnGuiMouseClickEvent(bt);
-		bt->Update(dt);
+		OnGuiMouseClickEvent(bt.second);
+		bt.second->Update(dt);
 	}
 
 	//Engine::GetInstance().scene.get()->player->SetPosition({ 640 / 2, 320 / 2 + 75});
@@ -113,8 +110,8 @@ bool MainMenu::CleanUp() {
 	creditsBt->active = false;
 	optionsBt->active = false;
 	exitBt->active = false;*/
-	for (const auto& bt : btList) {
-		bt->active = false;
+	for (const auto& bt : buttons) {
+		bt.second->active = false;
 	}
 	Engine::GetInstance().textures.get()->UnLoad(btTex);
 	return true;
@@ -124,7 +121,7 @@ bool MainMenu::OnGuiMouseClickEvent(GuiControl* control) {
 	
 	saved = rootNode.child("scene").child("savedData").attribute("saved").as_bool();
 	switch (control->id) {
-	case 1:
+	case GuiControlId::NEW_GAME:
 		if(control->state == GuiControlState::PRESSED){
 			Engine::GetInstance().fade.get()->Fade((Module*)this, (Module*)Engine::GetInstance().scene.get(), 30);
 			rootNode.child("scene").child("savedData").attribute("saved").set_value(false);
@@ -134,25 +131,21 @@ bool MainMenu::OnGuiMouseClickEvent(GuiControl* control) {
 			control->state == GuiControlState::DISABLED();*/
 		
 		break;
-	case 2:
-		if (!saved) 
-			control->state = GuiControlState::DISABLED();
-		else if (control->state == GuiControlState::PRESSED) {
+	case GuiControlId::CONTINUE:
+		if (control->state == GuiControlState::PRESSED) {
 			Engine::GetInstance().fade.get()->Fade((Module*)this, (Module*)Engine::GetInstance().scene.get(), 30);
-			/*rootNode.child("scene").child("savedData").attribute("saved").set_value(true);*/
-			/*Engine::GetInstance().scene.get()->player->LoadData(Engine::GetInstance().scene.get()->configParameters.child("savedData").child("player"));*/
-			/*Engine::GetInstance().scene.get()->player->SetParameters(configFile.child("scene").child("savedData").child("player"));*/
+			Engine::GetInstance().scene.get()->SetLoadState(true);
 		}
 			
 		
 		break;
-	case 3:
+	case GuiControlId::OPTIONS:
 		
 		break;
-	case 4:
+	case GuiControlId::CREDITS:
 			
 		break;
-	case 5:
+	case GuiControlId::QUIT:
 		if (control->state == GuiControlState::PRESSED) {
 			quit = true;
 		}
@@ -167,7 +160,8 @@ bool MainMenu::OnGuiMouseClickEvent(GuiControl* control) {
 
 void MainMenu::SetButtonParameters(GuiControlButton* bt, std::string btName, pugi::xml_node buttonParameters) {
 	
-	
+	bt->id = (GuiControlId)buttonParameters.child(btName.c_str()).attribute("id").as_int();
+
 	bt->bounds.x = buttonParameters.child(btName.c_str()).attribute("x").as_int();
 	bt->bounds.y = buttonParameters.child(btName.c_str()).attribute("y").as_int();
 	bt->bounds.w = buttonParameters.child(btName.c_str()).attribute("w").as_int();

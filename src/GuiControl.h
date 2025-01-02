@@ -29,15 +29,26 @@ enum class GuiControlState
 	SELECTED
 };
 
+enum class GuiControlId
+{
+	DEFAULT,
+	NEW_GAME,
+	CONTINUE,
+	OPTIONS,
+	CREDITS,
+	QUIT,
+};
+
 class GuiControl
 {
 public:
 
 	// Constructor
-	GuiControl(GuiControlType type, int id) : type(type), id(id), state(GuiControlState::NORMAL) {}
+	GuiControl(GuiControlType type, GuiControlId id = GuiControlId::DEFAULT, const char* name="") : type(type), id(id), name(name), state(GuiControlState::NORMAL) {}
 
 	// Constructor
-	GuiControl(GuiControlType type, SDL_Rect bounds, const char* text, SDL_Texture* tex) :
+	GuiControl(GuiControlType type, const char* name, SDL_Rect bounds, const char* text, SDL_Texture* tex) :
+		name(name),
 		type(type),
 		state(GuiControlState::NORMAL),
 		bounds(bounds),
@@ -77,7 +88,8 @@ public:
 public:
 
 	bool active;
-	int id;
+	GuiControlId id;
+	std::string name;
 	GuiControlType type;
 	GuiControlState state;
 

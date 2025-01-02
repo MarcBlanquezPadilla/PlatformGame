@@ -74,6 +74,8 @@ public:
 
 	void SaveState();
 
+	void SetLoadState(bool load);
+
 public:
 	GameState state;
 	bool musicPlays = false;
@@ -89,6 +91,6 @@ private:
 	std::vector<Pumpkin*> pumpkins;
 	std::vector<Candy*> candies;
 	pugi::xml_node musicNode;
-
-
+	
+	bool loadScene = false;
 };

@@ -4,7 +4,7 @@
 #include "Audio.h"
 #include "Input.h"
 
-GuiControlButton::GuiControlButton(int id, SDL_Rect bounds, const char* text, SDL_Texture* btTex) : GuiControl(GuiControlType::BUTTON, id)
+GuiControlButton::GuiControlButton(const char* name, SDL_Rect bounds, const char* text, SDL_Texture* btTex) : GuiControl(GuiControlType::BUTTON, id, name)
 {
 	this->bounds = bounds;
 	this->text = text;

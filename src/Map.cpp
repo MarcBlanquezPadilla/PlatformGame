@@ -361,7 +361,6 @@ bool Map::LoadParalax(pugi::xml_node paralaxLayerNode)
         }
     }
 
-    LOG("%d", (int)AllLoaded);
     return AllLoaded;
 }
 

@@ -287,7 +287,7 @@ bool Render::InCameraView(int x, int y, int w, int h)
 	int limitY = cameraConvertedY + camera.h / Engine::GetInstance().window.get()->scale;
 
 	cameraConvertedX -= w;
-	cameraConvertedX -= h;
+	cameraConvertedY -= h;
 
 	if (x > cameraConvertedX && x < limitX)
 	{

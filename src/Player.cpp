@@ -631,8 +631,6 @@ void Player::DMGPlayer(PhysBody* physA, PhysBody* physB) {
 				
 			physA->body->SetLinearVelocity(b2Vec2_zero);
 			physA->body->ApplyLinearImpulseToCenter(b2Vec2(pushForce * pushDir.x, pushForce * pushDir.y), true);
-				
-
 		}
 	}
 }
