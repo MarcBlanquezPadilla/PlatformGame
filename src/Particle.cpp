@@ -49,8 +49,7 @@ bool Particle::Update(float dt)
 			aliveTimer.Start();
 			pbody->body->SetEnabled(true);
 		}
-
-		if (isAlive && aliveTimer.ReadSec() < lifeTime)
+		else if (isAlive && aliveTimer.ReadSec() < lifeTime)
 		{
 			anim.Update();
 

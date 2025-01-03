@@ -159,19 +159,19 @@ void Player::Restart()
 
 bool Player::Update(float dt)
 {
+	//FRUSTRUM
 	if (!Engine::GetInstance().render.get()->InCameraView(pbody->GetPosition().getX() - texW, pbody->GetPosition().getY() - texH, texW, texH))
 	{
 		return true;
 	}
 
-	pbody->body->SetAwake(true);
-	
-	currentFrame = currentAnim->GetCurrentFrame();
-
+	//ATTACK COLLIDERS
+	shoot->Update(dt);
 	if (playerState != ATTACK1) {
 		attackCollider->body->SetEnabled(false);
 	}
 
+	//TELEPORT TO START
 	if (tpToStart)
 	{
 		b2Vec2 initPosInMeters = { PIXEL_TO_METERS(initPos.x), PIXEL_TO_METERS(initPos.y) };
@@ -181,6 +181,12 @@ bool Player::Update(float dt)
 		tpToStart = false;
 	}
 
+	pbody->body->SetAwake(true);
+	
+	currentFrame = currentAnim->GetCurrentFrame();
+
+	velocity = b2Vec2_zero;
+
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F10) == KEY_DOWN)
 	{
 		godMode = !godMode;
@@ -188,9 +194,6 @@ bool Player::Update(float dt)
 		pbody->body->SetLinearVelocity(godMode == true ? b2Vec2_zero : pbody->body->GetLinearVelocity());
 		LOG("God mode = %d", (int)godMode);
 	}
-
-
-	velocity = b2Vec2_zero;
 
 	if (transformable || godMode) {
 		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_Z) == KEY_DOWN) {
@@ -205,8 +208,6 @@ bool Player::Update(float dt)
 				
 				Engine::GetInstance().audio.get()->PlayFx(switchOffSFX);
 			}
-			
-			
 		}
 	}
 
@@ -321,7 +322,6 @@ bool Player::Update(float dt)
 			shot = false;
 			t_spell2.Reset();
 		}
-
 		if (attack2Timer.ReadSec() >= attack2Time/* && t_spell2.HasFinished()*/) {
 			
 			playerState = IDLE;
@@ -590,14 +590,12 @@ void Player::SaveData(pugi::xml_node playerNode)
 
 void Player::LoadData(pugi::xml_node playerNode)
 {
-	
 	position.setX(playerNode.attribute("x").as_int());
 	position.setY(playerNode.attribute("y").as_int());
 	lives = playerNode.attribute("lives").as_int();
 	transformed = playerNode.attribute("transformed").as_bool();
+	if (transformed) jumpForce = parameters.child("propierties").attribute("pJumpForce").as_float();
 	SetPosition(position);
-	
-	
 }
 
 void Player::DMGPlayer(PhysBody* physA, PhysBody* physB) {

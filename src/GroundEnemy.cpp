@@ -276,7 +276,6 @@ bool GroundEnemy::Update(float dt) {
 
 	}
 	
-
 	return true;
 }
 

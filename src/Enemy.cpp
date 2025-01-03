@@ -227,5 +227,4 @@ void Enemy::DMGEnemy() {
 	deathTimer.Start();
 	death.Reset();
 	state = DEAD;
-	/*dead = true;*/
 }

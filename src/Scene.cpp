@@ -291,7 +291,7 @@ void Scene::SaveState()
 	player->SaveData(savedDataNode.child("player"));
 
 	//Enemies
-	for (int i = 0; i < enemies.size()/2; i++)
+	for (int i = 0; i < enemies.size(); i++)
 	{
 		std::string nodeChar = "enemy" + std::to_string(i);
 		pugi::xml_node parent = savedDataNode.child(nodeChar.c_str());
@@ -307,7 +307,7 @@ void Scene::SaveState()
 	}
 
 	//Pumpkins
-	for (int i = 0; i < pumpkins.size()/2; i++)
+	for (int i = 0; i < pumpkins.size(); i++)
 	{
 		std::string nodeChar = "pumpkin" + std::to_string(i);
 		pugi::xml_node parent = savedDataNode.child(nodeChar.c_str());
@@ -324,7 +324,7 @@ void Scene::SaveState()
 
 
 	//Candies
-	for (int i = 0; i < candies.size()/2; i++)
+	for (int i = 0; i < candies.size(); i++)
 	{
 		std::string nodeChar = "candy" + std::to_string(i);
 		pugi::xml_node parent = savedDataNode.child(nodeChar.c_str());
