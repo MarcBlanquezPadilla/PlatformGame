@@ -25750,7 +25750,7 @@
   <object id="318" x="1936" y="352" width="80" height="32"/>
  </objectgroup>
  <objectgroup id="14" name="MapLimits">
-  <object id="192" x="2724" y="-68" width="156" height="552"/>
+  <object id="192" x="2720" y="-68" width="160" height="552"/>
   <object id="280" x="-156" y="-68" width="156" height="548"/>
  </objectgroup>
  <objectgroup id="13" name="Abyss">
