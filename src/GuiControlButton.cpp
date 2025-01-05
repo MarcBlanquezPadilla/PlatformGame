@@ -3,6 +3,7 @@
 #include "Engine.h"
 #include "Audio.h"
 #include "Input.h"
+#include "MainMenu.h"
 
 GuiControlButton::GuiControlButton(const char* name, SDL_Rect bounds, const char* text, SDL_Texture* btTex) : GuiControl(GuiControlType::BUTTON, id, name)
 {
@@ -15,7 +16,9 @@ GuiControlButton::GuiControlButton(const char* name, SDL_Rect bounds, const char
 	canClick = true;
 	drawBasic = false;
 	this->active = true;
-	state = GuiControlState::NORMAL;
+	/*state = GuiControlState::NORMAL;*/
+
+
 }
 
 GuiControlButton::~GuiControlButton()
@@ -54,16 +57,16 @@ bool GuiControlButton::Update(float dt)
 	switch (state)
 	{
 	case GuiControlState::DISABLED:
-		section = {0, 32, 192, 32};
+		section = { 0, bounds.h, bounds.w, bounds.h };
 		break;
 	case GuiControlState::NORMAL:
-		section = {0, 0, 192, 32};
+		section = { 0, 0, bounds.w, bounds.h };
 		break;
 	case GuiControlState::FOCUSED:
-		section = {0, 64, 192, 32};
+		section = { 0, bounds.h * 2,  bounds.w, bounds.h };
 		break;
 	case GuiControlState::PRESSED:
-		section = {0, 96, 192, 32};
+		section = { 0, bounds.h * 3,  bounds.w, bounds.h };
 		break;
 	}
 

@@ -5,6 +5,7 @@
 #include <vector>
 #include "Audio.h"
 #include "SDL2/SDL_mixer.h"
+#include "GuiControl.h"
 
 #define POS_TO_START_MOVING_CAMX 100
 #define POS_TO_STOP_MOVING_CAMX 2180
@@ -22,6 +23,9 @@ class Enemy;
 class Pumpkin;
 class Candy;
 class EntityManager;
+class GuiControlButton;
+class GuiControlSlider;
+class GuiControlCheckBox;
 
 
 enum GameState {
@@ -79,8 +83,16 @@ public:
 public:
 	GameState state;
 	bool musicPlays = false;
+	bool paused = false;
 	Player* player;
 	Timer lvl1Timer;
+	float lvl1Volume;
+
+	GuiControlButton* resumeBt, * settingsBt, * backToTitleBt, * exitBt, *backBt;
+	GuiControlSlider* musicSlider, * sfxSlider;
+	GuiControlCheckBox* fullScreenCheckBox;
+	SDL_Texture* pausePanel;
+	
 
 private:
 	
@@ -93,4 +105,5 @@ private:
 	pugi::xml_node musicNode;
 	
 	bool loadScene = false;
+	
 };

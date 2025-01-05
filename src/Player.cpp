@@ -165,203 +165,206 @@ bool Player::Update(float dt)
 		return true;
 	}
 
-	//ATTACK COLLIDERS
-	shoot->Update(dt);
-	if (playerState != ATTACK1) {
-		attackCollider->body->SetEnabled(false);
-	}
-
-	//TELEPORT TO START
-	if (tpToStart)
-	{
-		b2Vec2 initPosInMeters = { PIXEL_TO_METERS(initPos.x), PIXEL_TO_METERS(initPos.y) };
-		if (reachedCheckPoint) Engine::GetInstance().scene.get()->LoadState();
-		else Engine::GetInstance().scene.get()->RestartScene();
-
-		tpToStart = false;
-	}
-
-	pbody->body->SetAwake(true);
-	
-	currentFrame = currentAnim->GetCurrentFrame();
-
-	velocity = b2Vec2_zero;
-
-	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F10) == KEY_DOWN)
-	{
-		godMode = !godMode;
-		pbody->body->SetGravityScale(godMode == true || canClimb == true || playerState == DEAD ? 0 : gravity);
-		pbody->body->SetLinearVelocity(godMode == true ? b2Vec2_zero : pbody->body->GetLinearVelocity());
-		LOG("God mode = %d", (int)godMode);
-	}
-
-	if (transformable || godMode) {
-		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_Z) == KEY_DOWN) {
-			if (!transformed) {
-				transformed = true;
-				jumpForce = parameters.child("propierties").attribute("pJumpForce").as_float();
-				Engine::GetInstance().audio.get()->PlayFx(switchOnSFX);
-			}
-			else if(transformed) {
-				transformed = false;
-				jumpForce = parameters.child("propierties").attribute("gJumpForce").as_float();
-				
-				Engine::GetInstance().audio.get()->PlayFx(switchOffSFX);
-			}
-		}
-	}
-
-	if (playerState !=HURT && playerState != DEAD && playerState != ATTACK1 && playerState != ATTACK2)
-	{
-		playerState = IDLE;
-		
-
-		// Move left
-		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
-			velocity.x = -moveSpeed * 16;
-			playerState = WALK;
-			dir = LEFT;
+	if (!Engine::GetInstance().scene.get()->paused) {
+		//ATTACK COLLIDERS
+		shoot->Update(dt);
+		if (playerState != ATTACK1) {
+			attackCollider->body->SetEnabled(false);
 		}
 
-		// Move right
-		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
-			velocity.x = moveSpeed * 16;
-			playerState = WALK;
-			dir = RIGHT;
-		}
-
-		if (godMode || canClimb)
+		//TELEPORT TO START
+		if (tpToStart)
 		{
-			velocity.y = 0;
-			if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
-				velocity.y = -moveSpeed * 16;
+			b2Vec2 initPosInMeters = { PIXEL_TO_METERS(initPos.x), PIXEL_TO_METERS(initPos.y) };
+			if (reachedCheckPoint) Engine::GetInstance().scene.get()->LoadState();
+			else Engine::GetInstance().scene.get()->RestartScene();
+
+			tpToStart = false;
+		}
+
+		pbody->body->SetAwake(true);
+
+		currentFrame = currentAnim->GetCurrentFrame();
+
+		velocity = b2Vec2_zero;
+
+		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F10) == KEY_DOWN)
+		{
+			godMode = !godMode;
+			pbody->body->SetGravityScale(godMode == true || canClimb == true || playerState == DEAD ? 0 : gravity);
+			pbody->body->SetLinearVelocity(godMode == true ? b2Vec2_zero : pbody->body->GetLinearVelocity());
+			LOG("God mode = %d", (int)godMode);
+		}
+
+		if (transformable || godMode) {
+			if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_Z) == KEY_DOWN) {
+				if (!transformed) {
+					transformed = true;
+					jumpForce = parameters.child("propierties").attribute("pJumpForce").as_float();
+					Engine::GetInstance().audio.get()->PlayFx(switchOnSFX);
+				}
+				else if (transformed) {
+					transformed = false;
+					jumpForce = parameters.child("propierties").attribute("gJumpForce").as_float();
+
+					Engine::GetInstance().audio.get()->PlayFx(switchOffSFX);
+				}
+			}
+		}
+
+		if (playerState != HURT && playerState != DEAD && playerState != ATTACK1 && playerState != ATTACK2)
+		{
+			playerState = IDLE;
+
+
+			// Move left
+			if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
+				velocity.x = -moveSpeed * 16;
 				playerState = WALK;
+				dir = LEFT;
 			}
 
 			// Move right
-			if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
-				velocity.y = moveSpeed * 16;
+			if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
+				velocity.x = moveSpeed * 16;
 				playerState = WALK;
+				dir = RIGHT;
 			}
-			
-		}
-		else {
-			if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN && VALUE_NEAR_TO_0(pbody->body->GetLinearVelocity().y)) {
-				// Apply an initial upward force
-				pbody->body->ApplyLinearImpulseToCenter(b2Vec2(0, -jumpForce), true);
 
-				if (transformed) Engine::GetInstance().audio.get()->PlayFx(pJumpSFX, 0, 6);
-				else Engine::GetInstance().audio.get()->PlayFx(gJumpSFX, 0, 6);
+			if (godMode || canClimb)
+			{
+				velocity.y = 0;
+				if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
+					velocity.y = -moveSpeed * 16;
+					playerState = WALK;
+				}
 
+				// Move right
+				if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
+					velocity.y = moveSpeed * 16;
+					playerState = WALK;
+				}
 
 			}
-			
+			else {
+				if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN && VALUE_NEAR_TO_0(pbody->body->GetLinearVelocity().y)) {
+					// Apply an initial upward force
+					pbody->body->ApplyLinearImpulseToCenter(b2Vec2(0, -jumpForce), true);
+
+					if (transformed) Engine::GetInstance().audio.get()->PlayFx(pJumpSFX, 0, 6);
+					else Engine::GetInstance().audio.get()->PlayFx(gJumpSFX, 0, 6);
 
 
-			
-			velocity = { velocity.x, pbody->body->GetLinearVelocity().y };
+				}
+
+
+
+
+				velocity = { velocity.x, pbody->body->GetLinearVelocity().y };
+			}
+
+			pbody->body->SetLinearVelocity(velocity);
+
+			if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_X) == KEY_DOWN && transformed && playerState != ATTACK1 && VALUE_NEAR_TO_0(pbody->body->GetLinearVelocity().y)) {
+
+
+				playerState = ATTACK1;
+				Engine::GetInstance().audio.get()->PlayFx(atk1SFX);
+				attack1Timer.Start();
+				pbody->body->SetLinearVelocity({ 0, velocity.y });
+				b2Vec2 attackColliderPos = { pbody->body->GetPosition().x + (dir == LEFT ? -PIXEL_TO_METERS(weaponOffset.getX()) : PIXEL_TO_METERS(weaponOffset.getX())), pbody->body->GetPosition().y - PIXEL_TO_METERS(weaponOffset.getY()) };
+				attackCollider->body->SetTransform(attackColliderPos, 0);
+				attackCollider->body->SetEnabled(true);
+			}
+
+
+			if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_C) == KEY_DOWN && transformed && playerState != ATTACK2 && shootCooldownTimer.ReadSec() > shootCooldown && VALUE_NEAR_TO_0(pbody->body->GetLinearVelocity().y)) {
+
+				playerState = ATTACK2;
+				attack2Timer.Start();
+				pbody->body->SetLinearVelocity({ 0, velocity.y });
+				Engine::GetInstance().audio.get()->PlayFx(atk2SFX);
+				shot = true;
+				shootCooldownTimer.Start();
+			}
+
+			if (pbody->body->GetLinearVelocity().y < -0.0001)
+			{
+				playerState = JUMP;
+			}
+
+			if (pbody->body->GetLinearVelocity().y > 0.0001)
+			{
+				playerState = FALL;
+			}
+
+
+
 		}
+		else if (playerState == ATTACK1) {
 
-		pbody->body->SetLinearVelocity(velocity);
-
-		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_X) == KEY_DOWN && transformed && playerState != ATTACK1 &&VALUE_NEAR_TO_0(pbody->body->GetLinearVelocity().y)) {
-
-
-			playerState = ATTACK1;
-			Engine::GetInstance().audio.get()->PlayFx(atk1SFX);
-			attack1Timer.Start();
-			pbody->body->SetLinearVelocity({ 0, velocity.y });
 			b2Vec2 attackColliderPos = { pbody->body->GetPosition().x + (dir == LEFT ? -PIXEL_TO_METERS(weaponOffset.getX()) : PIXEL_TO_METERS(weaponOffset.getX())), pbody->body->GetPosition().y - PIXEL_TO_METERS(weaponOffset.getY()) };
 			attackCollider->body->SetTransform(attackColliderPos, 0);
-			attackCollider->body->SetEnabled(true);
-		}
+			if (attack1Timer.ReadSec() >= attack1Time) {
 
+				playerState = IDLE;
+				t_spell1.Reset();
 
-		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_C) == KEY_DOWN && transformed && playerState != ATTACK2 && shootCooldownTimer.ReadSec() > shootCooldown && VALUE_NEAR_TO_0(pbody->body->GetLinearVelocity().y)) {
-
-			playerState = ATTACK2;
-			attack2Timer.Start();
-			pbody->body->SetLinearVelocity({ 0, velocity.y });
-			Engine::GetInstance().audio.get()->PlayFx(atk2SFX);
-			shot = true;
-			shootCooldownTimer.Start();
-		}
-
-		if (pbody->body->GetLinearVelocity().y < -0.0001)
-		{
-			playerState = JUMP;
-		}
-
-		if (pbody->body->GetLinearVelocity().y > 0.0001)
-		{
-			playerState = FALL;
-		}
-
-		
-
-	}
-	else if (playerState == ATTACK1) {
-		
-		b2Vec2 attackColliderPos = { pbody->body->GetPosition().x + (dir == LEFT ? -PIXEL_TO_METERS(weaponOffset.getX()) : PIXEL_TO_METERS(weaponOffset.getX())), pbody->body->GetPosition().y - PIXEL_TO_METERS(weaponOffset.getY()) };
-		attackCollider->body->SetTransform(attackColliderPos, 0);
-		if (attack1Timer.ReadSec() >= attack1Time) {
-
-			playerState = IDLE;
-			t_spell1.Reset();
-			
-		}
-		if (attack1Timer.ReadSec() >= 0.4) {
-			attackCollider->body->SetEnabled(false);
-		}
-		
-	}
-	else if (playerState == ATTACK2) {
-
-		if (shot) {
-			shoot->Restart({ pbody->GetPhysBodyWorldPosition().getX(), pbody->GetPhysBodyWorldPosition().getY() }, { (float)(dir == LEFT ? -1 : 1), (float)0 });
-			shot = false;
-			t_spell2.Reset();
-		}
-		if (attack2Timer.ReadSec() >= attack2Time/* && t_spell2.HasFinished()*/) {
-			
-			playerState = IDLE;
-			t_spell2.Reset();
-		}
-	}
-	else if (playerState == HURT) {
-		
-		if (hurtTimer.ReadSec() >= hurtTime) {
-			playerState = IDLE;
-			hurt.Reset();
-			t_hurt.Reset();
-		}
-		else
-		{
-			velocity = pbody->body->GetLinearVelocity();
-			pbody->body->SetLinearVelocity(velocity);
-		}
-	}
-	else if (playerState == DEAD) {
-
-		pbody->body->SetLinearVelocity(b2Vec2_zero);
-		if (respawnTimer.ReadSec() >= respawnTime) 
-		{
-			tpToStart = true;
-			playerState = IDLE;
-			dir = RIGHT;
-			
-			
-
-			pbody->body->SetGravityScale(godMode == true || canClimb == true || playerState == DEAD ? 0 : gravity);
-			
-			if (lives <= 0) {
-				lives = parameters.attribute("lives").as_int();
+			}
+			if (attack1Timer.ReadSec() >= 0.4) {
+				attackCollider->body->SetEnabled(false);
 			}
 
-			death.Reset();
-			t_death.Reset();
+		}
+		else if (playerState == ATTACK2) {
+
+			if (shot) {
+				shoot->Restart({ pbody->GetPhysBodyWorldPosition().getX(), pbody->GetPhysBodyWorldPosition().getY() }, { (float)(dir == LEFT ? -1 : 1), (float)0 });
+				shot = false;
+				t_spell2.Reset();
+			}
+			if (attack2Timer.ReadSec() >= attack2Time/* && t_spell2.HasFinished()*/) {
+
+				playerState = IDLE;
+				t_spell2.Reset();
+			}
+		}
+		else if (playerState == HURT) {
+
+			if (hurtTimer.ReadSec() >= hurtTime) {
+				playerState = IDLE;
+				hurt.Reset();
+				t_hurt.Reset();
+			}
+			else
+			{
+				velocity = pbody->body->GetLinearVelocity();
+				pbody->body->SetLinearVelocity(velocity);
+			}
+		}
+		else if (playerState == DEAD) {
+
+			pbody->body->SetLinearVelocity(b2Vec2_zero);
+			if (respawnTimer.ReadSec() >= respawnTime)
+			{
+				tpToStart = true;
+				playerState = IDLE;
+				dir = RIGHT;
+
+
+
+				pbody->body->SetGravityScale(godMode == true || canClimb == true || playerState == DEAD ? 0 : gravity);
+
+				if (lives <= 0) {
+					lives = parameters.attribute("lives").as_int();
+				}
+
+				death.Reset();
+				t_death.Reset();
+			}
 		}
 	}
+	
 
 	
 	if (transformed) {

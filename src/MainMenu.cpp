@@ -9,10 +9,12 @@
 #include "Log.h"
 #include "GuiControl.h"
 #include "GuiControlButton.h"
+#include "GuiControlSlider.h"
 #include "GuiManager.h"
 #include "EntityManager.h"
 #include "Scene.h"
 #include "Player.h"
+
 
 
 
@@ -43,6 +45,7 @@ bool MainMenu::Start()
 	Engine::GetInstance().textures.get()->GetSize(btTex, texW, texH);
 
 	btFont = TTF_OpenFont("Assets/Fonts/Corvid Conspirator v1.1.ttf", 30);
+	
 
 	pugi::xml_node buttonNode = configFile.child("config").child("mainmenu").child("buttons");
 
@@ -51,11 +54,21 @@ bool MainMenu::Start()
 	{
 		std::string buttonName = child.name();
 		GuiControlButton* bt = (GuiControlButton*)Engine::GetInstance().guiManager.get()->CreateGuiControl(GuiControlType::BUTTON, buttonName.c_str(), "", {0, 0, 0, 0}, this, {0,0,0,0});
-		SetButtonParameters(bt, buttonName, buttonNode);
+		SetGuiParameters(bt, buttonName, buttonNode);
 		buttons[buttonName] = bt;
 		LOG("%s, %d", buttons[buttonName]->name, buttons[buttonName]->id);
 	}
 	
+	pugi::xml_node sliderNode = configFile.child("config").child("mainmenu").child("optionsMenu").child("sliders");
+
+	musicSlider = (GuiControlSlider*)Engine::Engine::GetInstance().guiManager.get()->CreateGuiControl(GuiControlType::SLIDER, "musicSlider", "", { 0,0,0,0 }, this, { 0,0,0,0 });
+	SetGuiParameters(musicSlider, "musicSlider", sliderNode);
+
+	sfxSlider = (GuiControlSlider*)Engine::Engine::GetInstance().guiManager.get()->CreateGuiControl(GuiControlType::SLIDER, "sfxSlider", "", { 0,0,0,0 }, this, { 0,0,0,0 });
+	SetGuiParameters(sfxSlider, "sfxSlider", sliderNode);
+	
+
+
 	saved = rootNode.child("scene").child("savedData").attribute("saved").as_bool();
 	LOG("%d", (int)saved);
 	if (!saved)
@@ -69,7 +82,15 @@ bool MainMenu::Start()
 	Mix_VolumeMusic(MIX_MAX_VOLUME/5);
 
 	bgTex = Engine::GetInstance().textures.get()->Load(configParameters.child("bg").attribute("path").as_string());
+	///*pausePanel = Engine::GetInstance().textures.get()->Load(configParameters.child("bg").attribute("path").as_string());*/
+	optPanel = Engine::GetInstance().textures.get()->Load(configParameters.child("optionsMenu").child("optPanel").attribute("path").as_string());
+	optPanelX = configParameters.child("optionsMenu").child("optPanel").attribute("x").as_int();
+	optPanelY = configParameters.child("optionsMenu").child("optPanel").attribute("y").as_int();
 	
+
+	//call it from scene-- wait you can't, it's disabled!
+	//pause menu from scene
+	//opt menu from main menu
 	rootNode = configFile.child("config");
 	
 	return ret;
@@ -77,21 +98,17 @@ bool MainMenu::Start()
 
 bool MainMenu::Update(float dt)
 {
-	
+	_dt = dt;
+
 	Engine::GetInstance().render.get()->DrawTexture(bgTex, 0, 0, NULL);
 	for (const auto& bt : buttons)
 	{
 		OnGuiMouseClickEvent(bt.second);
+		/*if(bt.second->id != GuiControlId::BACK)*/
 		bt.second->Update(dt);
 	}
+	
 
-	//Engine::GetInstance().scene.get()->player->SetPosition({ 640 / 2, 320 / 2 + 75});
-	//Engine::GetInstance().scene.get()->player->playerState = IDLE;
-	///*Engine::GetInstance().scene.get()->player->texW *= 2;
-	//Engine::GetInstance().scene.get()->player->texH *= 2;*/
-	//Engine::GetInstance().scene.get()->player->Update(dt);
-	
-	
 	if (quit) return false;
 	
 	
@@ -101,19 +118,52 @@ bool MainMenu::Update(float dt)
 // Update: draw background
 bool MainMenu::PostUpdate()
 {
+	if (settingsOpen/* && pressed*/) {
+		/*OnGuiMouseClickEvent(musicSlider);*/
+		
+
+		SDL_Rect windowRect = { 0,0,1280,720 };
+		Engine::GetInstance().render.get()->DrawRectangle(windowRect, 0, 0, 0, 150, true, false);
+		Engine::GetInstance().render.get()->DrawTexture(optPanel, optPanelX, optPanelY);
+		
+		for (const auto& bt : buttons)
+		{
+			if (bt.second->id != GuiControlId::OPTIONS && bt.second->id != GuiControlId::BACK)
+				bt.second->state = GuiControlState::DISABLED;
+			buttons["backBt"]->active = true;
+			OnGuiMouseClickEvent(buttons["backBt"]);
+			buttons["backBt"]->Update(_dt);
+			
+		}
+		/*pressed = false;*/
+		/*musicSlider->active = true;
+		musicSlider->Update(dt);*/
+	}
+	else if(buttons["backBt"]->active) {
+		buttons["backBt"]->active = false;
+		for (const auto& bt : buttons)
+		{
+			if (bt.second->id != GuiControlId::BACK) {
+				bt.second->state = GuiControlState::NORMAL;
+			}
+				
+		}
+		
+		
+	}
+	
 	return true;
 }
 
 bool MainMenu::CleanUp() {
-	/*newGameBt->active = false;
-	continueBt->active = false;
-	creditsBt->active = false;
-	optionsBt->active = false;
-	exitBt->active = false;*/
+
 	for (const auto& bt : buttons) {
 		bt.second->active = false;
 	}
+	/*musicSlider->active = false;*/
 	Engine::GetInstance().textures.get()->UnLoad(btTex);
+	Engine::GetInstance().textures.get()->UnLoad(optPanel);
+	Engine::GetInstance().textures.get()->UnLoad(pausePanel);
 	return true;
 }
 
@@ -136,12 +186,23 @@ bool MainMenu::OnGuiMouseClickEvent(GuiControl* control) {
 			Engine::GetInstance().fade.get()->Fade((Module*)this, (Module*)Engine::GetInstance().scene.get(), 30);
 			Engine::GetInstance().scene.get()->SetLoadState(true);
 		}
-			
 		
 		break;
 	case GuiControlId::OPTIONS:
+		if (control->state == GuiControlState::PRESSED) {
+			if (!settingsOpen) settingsOpen = true;
+			
+		}
+		/*else if (control->state == GuiControlState::PRESSED && pressed) {
+			
+			if (settingsOpen) settingsOpen = false;
+		}*/
 		
 		break;
+	case GuiControlId::BACK:
+		if (control->state == GuiControlState::PRESSED) {
+			if(settingsOpen) settingsOpen = false;
+		}
 	case GuiControlId::CREDITS:
 			
 		break;
@@ -158,14 +219,23 @@ bool MainMenu::OnGuiMouseClickEvent(GuiControl* control) {
 	return true;
 }
 
-void MainMenu::SetButtonParameters(GuiControlButton* bt, std::string btName, pugi::xml_node buttonParameters) {
+void MainMenu::SetGuiParameters(GuiControl* bt, std::string btName, pugi::xml_node parameters) {
 	
-	bt->id = (GuiControlId)buttonParameters.child(btName.c_str()).attribute("id").as_int();
+	bt->id = (GuiControlId)parameters.child(btName.c_str()).attribute("id").as_int();
+	if (bt->type == GuiControlType::SLIDER) {
+		/*bt->texture = parameters.child()*/
+		bt->bounds.x = parameters.child(btName.c_str()).attribute("circleX").as_int();
+		bt->bounds.y = parameters.child(btName.c_str()).attribute("circleY").as_int();
+		
+	}
+	else{
 
-	bt->bounds.x = buttonParameters.child(btName.c_str()).attribute("x").as_int();
-	bt->bounds.y = buttonParameters.child(btName.c_str()).attribute("y").as_int();
-	bt->bounds.w = buttonParameters.child(btName.c_str()).attribute("w").as_int();
-	bt->bounds.h = buttonParameters.child(btName.c_str()).attribute("h").as_int();
+	}
 
-	bt->texture = Engine::GetInstance().textures.get()->Load(buttonParameters.child(btName.c_str()).attribute("texture").as_string());
+	bt->bounds.x = parameters.child(btName.c_str()).attribute("x").as_int();
+	bt->bounds.y = parameters.child(btName.c_str()).attribute("y").as_int();
+	bt->bounds.w = parameters.child(btName.c_str()).attribute("w").as_int();
+	bt->bounds.h = parameters.child(btName.c_str()).attribute("h").as_int();
+
+	bt->texture = Engine::GetInstance().textures.get()->Load(parameters.child(btName.c_str()).attribute("texture").as_string());
 }

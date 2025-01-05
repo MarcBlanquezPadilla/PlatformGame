@@ -18,7 +18,7 @@ private:
 
 	bool canClick = true;
 	bool drawBasic = false;
-	TTF_Font* font;
+	/*TTF_Font* font;*/
 
 };
 

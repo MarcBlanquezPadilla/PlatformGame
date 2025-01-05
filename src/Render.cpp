@@ -4,6 +4,7 @@
 #include "Log.h"
 #include "tracy/Tracy.hpp"
 
+
 #define VSYNC true
 
 Render::Render(bool startEnabled) : Module(startEnabled)
@@ -76,7 +77,9 @@ bool Render::PreUpdate()
 
 bool Render::Update(float dt)
 {
-
+	//if (Engine::GetInstance().GetDebug()) {
+	//	DrawRectangle(camera, 0, 0, 255, 255, false, false);
+	//}
 	return true;
 }
 

@@ -37,6 +37,15 @@ enum class GuiControlId
 	OPTIONS,
 	CREDITS,
 	QUIT,
+	BACK,
+
+	MUSIC,
+	SFX,
+	FULLSCREEN,
+	
+	RESUME,
+	BACKTOTITLE,
+	
 };
 
 class GuiControl
@@ -44,7 +53,7 @@ class GuiControl
 public:
 
 	// Constructor
-	GuiControl(GuiControlType type, GuiControlId id = GuiControlId::DEFAULT, const char* name="") : type(type), id(id), name(name), state(GuiControlState::NORMAL) {}
+	GuiControl(GuiControlType type, GuiControlId id = GuiControlId::DEFAULT, const char* name= "") : type(type), id(id), name(name), state(GuiControlState::NORMAL) {}
 
 	// Constructor
 	GuiControl(GuiControlType type, const char* name, SDL_Rect bounds, const char* text, SDL_Texture* tex) :
@@ -59,6 +68,8 @@ public:
 		color.r = 255; color.g = 255; color.b = 255;
 		texture = tex;
 	}
+
+
 
 	// Called each loop iteration
 	virtual bool Update(float dt)

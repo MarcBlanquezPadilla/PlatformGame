@@ -4,6 +4,7 @@
 #include "Animation.h"
 //#include "GuiControl.h"
 #include "GuiControlButton.h"
+#include "GuiControlSlider.h"
 #include <list>
 #include <map>
 
@@ -35,16 +36,25 @@ public:
 
 	bool OnGuiMouseClickEvent(GuiControl* control);
 
-	void SetButtonParameters(GuiControlButton* bt, std::string btName, pugi::xml_node buttonParameters);
+	void SetGuiParameters(GuiControl* bt, std::string btName, pugi::xml_node buttonParameters);
 
 public:
 	// The scene sprite sheet loaded into an SDL_Texture
 	pugi::xml_document configFile;
 	pugi::xml_node rootNode;
-	SDL_Texture* bgTex, * btTex;
+	SDL_Texture* bgTex, * btTex, *optPanel, *pausePanel;
 	TTF_Font* btFont;
 	bool quit = false;
 	bool saved;
+	bool settingsOpen = false;
+	bool pressed = false;
+	float titleVolume;
+	int optPanelX, optPanelY;
+	float _dt;
+
+
+	GuiControlSlider* musicSlider, * sfxSlider;
+	GuiControlButton* backBt;
 
 	std::map<std::string, GuiControlButton*> buttons;
 

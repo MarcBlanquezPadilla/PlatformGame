@@ -62,7 +62,7 @@ bool Scene::Start()
 	Engine::GetInstance().entityManager.get()->Enable();	
 	Engine::GetInstance().ui->Enable();
 
-	
+	paused = false;
 	
 	//Load Map
 	Engine::GetInstance().map->Load(configParameters.child("map").attribute("path").as_string(), configParameters.child("map").attribute("name").as_string());
@@ -134,6 +134,10 @@ bool Scene::Start()
 		entity->active = true;
 		entity->renderable = true;
 	}
+
+	//Load PauseMenu
+	pausePanel = Engine::GetInstance().textures.get()->Load("Assets/Textures/Menus/Pause/pause-panel.png");
+	
 
 	lvl1Timer.Start();
 
@@ -208,20 +212,25 @@ bool Scene::Update(float dt)
 	}
 	
 
-	if (player->position.getX() < POS_TO_START_MOVING_CAMX) {
-		Engine::GetInstance().render.get()->camera.x = (POS_TO_START_MOVING_CAMX + CAM_EXTRA_DISPLACEMENT_X) * -Engine::GetInstance().window.get()->scale;
+	if (!paused) {
+		
+
+		
+	
+	
+		if (player->position.getX() < POS_TO_START_MOVING_CAMX) {
+			Engine::GetInstance().render.get()->camera.x = (POS_TO_START_MOVING_CAMX + CAM_EXTRA_DISPLACEMENT_X) * -Engine::GetInstance().window.get()->scale;
+		}
+		else if (player->position.getX() > POS_TO_STOP_MOVING_CAMX) Engine::GetInstance().render.get()->camera.x = (POS_TO_STOP_MOVING_CAMX + CAM_EXTRA_DISPLACEMENT_X) * -Engine::GetInstance().window.get()->scale;
+		else Engine::GetInstance().render.get()->camera.x = (player->position.getX() + CAM_EXTRA_DISPLACEMENT_X) * -Engine::GetInstance().window.get()->scale;
+
+		//camera y
+		if (player->position.getY() > POS_TO_START_MOVING_CAMY) {
+			Engine::GetInstance().render.get()->camera.y = (POS_TO_START_MOVING_CAMY + CAM_EXTRA_DISPLACEMENT_Y) * -Engine::GetInstance().window.get()->scale;
+		}
+		else if (player->position.getY() < POS_TO_STOP_MOVING_CAMY) Engine::GetInstance().render.get()->camera.y = (POS_TO_STOP_MOVING_CAMY + CAM_EXTRA_DISPLACEMENT_X) * -Engine::GetInstance().window.get()->scale;
+		else Engine::GetInstance().render.get()->camera.y = (player->position.getY() + CAM_EXTRA_DISPLACEMENT_Y) * -Engine::GetInstance().window.get()->scale;
 	}
-	else if (player->position.getX() > POS_TO_STOP_MOVING_CAMX) Engine::GetInstance().render.get()->camera.x = (POS_TO_STOP_MOVING_CAMX + CAM_EXTRA_DISPLACEMENT_X) * -Engine::GetInstance().window.get()->scale;
-	else Engine::GetInstance().render.get()->camera.x = (player->position.getX() + CAM_EXTRA_DISPLACEMENT_X) * -Engine::GetInstance().window.get()->scale;
-
-	//camera y
-	if (player->position.getY() > POS_TO_START_MOVING_CAMY) {
-		Engine::GetInstance().render.get()->camera.y = (POS_TO_START_MOVING_CAMY + CAM_EXTRA_DISPLACEMENT_Y) * -Engine::GetInstance().window.get()->scale;
-	}
-	else if (player->position.getY() < POS_TO_STOP_MOVING_CAMY) Engine::GetInstance().render.get()->camera.y = (POS_TO_STOP_MOVING_CAMY + CAM_EXTRA_DISPLACEMENT_X) * -Engine::GetInstance().window.get()->scale;
-	else Engine::GetInstance().render.get()->camera.y = (player->position.getY() + CAM_EXTRA_DISPLACEMENT_Y) * -Engine::GetInstance().window.get()->scale;
-
-
 	
 
 	return true;
@@ -243,14 +252,32 @@ bool Scene::PostUpdate()
 		LoadState();
 	}
 
-	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN) ret = false;
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN) {
+		paused = !paused;
+	}
+
+	if (paused) {
+		int pausePanelX = configParameters.child("pauseMenu").child("pausePanel").attribute("x").as_int();
+		int pausePanelY = configParameters.child("pauseMenu").child("pausePanel").attribute("y").as_int();
+		int pausePanelW = configParameters.child("pauseMenu").child("pausePanel").attribute("w").as_int();
+		int pausePanelH = configParameters.child("pauseMenu").child("pausePanel").attribute("h").as_int();
+
+		SDL_Rect camera = Engine::GetInstance().render.get()->camera;
+		int windowScale = Engine::GetInstance().window.get()->GetScale();
+		Engine::GetInstance().render.get()->DrawRectangle({ -camera.x / windowScale , -camera.y / windowScale, 1280, 720 }, 0,0,0,150, true, true);
+		Engine::GetInstance().render.get()->DrawTexture(pausePanel, -camera.x / windowScale + HELP_MENU_X_DISPLACEMENT, -camera.y / windowScale + HELP_MENU_Y_DISPLACEMENT);
+		
+	}
 
 	return ret;
+
+
 }
 
 // Called before quitting
 bool Scene::CleanUp()
 {
+	Engine::GetInstance().textures.get()->UnLoad(pausePanel);
 	
 	Mix_HaltMusic();
 	player->Disable();
