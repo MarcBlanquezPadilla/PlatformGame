@@ -15,14 +15,6 @@ GuiControlSlider::GuiControlSlider(const char* name, const char* text, SDL_Rect 
     this->unit = bounds.w / 100.0f;
     this->texture = circleTex;
     this->sliderTexture = barTex;
-    //if (id == 1)
-    //{
-    //    value = Engine::GetInstance().guiManager.get()->musicVolume;
-    //}
-    //else if (id == 2)
-    //{
-    //    value = Engine::GetInstance().guiManager.get()->fxVolume;
-    //}
 
     value = round(value);
     this->active = false;
@@ -72,95 +64,9 @@ bool GuiControlSlider::Update(float dt)
         }
         else state = GuiControlState::NORMAL;
 
-        //    switch (state)
-        //    {
-        //    case GuiControlState::DISABLED:
-        //        break;
-
-        //    case GuiControlState::NORMAL:
-
-        //        Engine::GetInstance().render.get()->DrawRectangle(bounds, 0, 100, 50, 255, false, false);
-        //        Engine::GetInstance().render.get()->DrawRectangle({sliderPosX, bounds.y, 20,20}, 200, 200, 200, 255, true, false);
-
-        //        if (sliderPosX - bounds.x >= 0)
-        //            Engine::GetInstance().render.get()->DrawRectangle({ bounds.x,bounds.y, sliderPosX - bounds.x,20 }, 0, 100, 50, 255, true, false);
-        //        break;
-
-        //    case GuiControlState::FOCUSED:
-
-        //        Engine::GetInstance().render.get()->DrawRectangle(bounds, 0, 100, 50, 255, false, false);
-        //        Engine::GetInstance().render.get()->DrawRectangle({ sliderPosX, bounds.y, 20,20 }, 200, 200, 200, 255, true, false);
-        //        if (sliderPosX - bounds.x >= 0)
-        //            Engine::GetInstance().render.get()->DrawRectangle({ bounds.x,bounds.y, sliderPosX - bounds.x,20 }, 0, 100, 50, 255, true, false);
-
-        //        break;
-
-        //    case GuiControlState::PRESSED:
-
-        //        Engine::GetInstance().render.get()->DrawRectangle(bounds, 0, 100, 50, 255, false, false);
-        //        Engine::GetInstance().render.get()->DrawRectangle({ sliderPosX, bounds.y,  20,20 }, 200, 200, 200, 255, true, false);
-        //        if (sliderPosX - bounds.x >= 0)
-        //            Engine::GetInstance().render.get()->DrawRectangle({ bounds.x,bounds.y, sliderPosX - bounds.x,20 }, 0, 100, 50, 255, true, false);
-
-        //        Engine::GetInstance().scene.get()->lvl1Volume = value2;
-        //        break;
-
-        //    case GuiControlState::SELECTED:
-        //        /*if (id == 2)*/
-        //        Engine::GetInstance().render.get()->DrawRectangle(bounds, 0, 100, 50, 255, false, false);
-        //        Engine::GetInstance().render.get()->DrawRectangle({ sliderPosX, bounds.y, 20,20 }, 200, 200, 200, 255, true, false);
-        //        if (sliderPosX - bounds.x >= 0)
-        //            Engine::GetInstance().render.get()->DrawRectangle({ bounds.x,bounds.y, sliderPosX - bounds.x,20 }, 0, 100, 50, 255, true, false);
-
-        //        NotifyObserver();
-        //        break;
-
-        //    default:
-        //        break;
-        //    }
-        //    Engine::GetInstance().render.get()->DrawText(text.c_str(), bounds.x, bounds.y - 20, bounds.w, bounds.h);
-        //}
-
-        //Engine::GetInstance().scene.get()->lvl1Volume = value2;
-        //Engine::GetInstance().mainMenu.get()->titleVolume = value2;
+        
 
         return false;
     }
 }
 
-//bool GuiControlSlider::Draw(Render* render)
-//{
-//    // Draw the right button depending on state
-//
-//
-//
-//    return false;
-//}
-//
-//bool GuiControlSlider::Draw()
-//{
-//    int scale = Engine::GetInstance().window.get()->GetScale();
-//
-//    SDL_Rect drawBounds = SDL_Rect({ bounds.x * scale, bounds.y * scale, bounds.w * scale, bounds.h * scale });
-//
-//    switch (state)
-//    {
-//    case GuiControlState::DISABLED:
-//        Engine::GetInstance().render.get()->DrawRectangle(drawBounds, 255, 0, 0, 128, true, false);
-//        break;
-//    case GuiControlState::FOCUSED:
-//        Engine::GetInstance().render.get()->DrawRectangle(drawBounds, 0, 255, 0, 128, true, false);
-//        break;
-//    case GuiControlState::NORMAL:
-//        Engine::GetInstance().render.get()->DrawRectangle(drawBounds, 0, 0, 255, 128, true, false);
-//        break;
-//    case GuiControlState::PRESSED:
-//        Engine::GetInstance().render.get()->DrawRectangle(drawBounds, 255, 255, 0, 128, true, false);
-//        break;
-//    case GuiControlState::SELECTED:
-//        Engine::GetInstance().render.get()->DrawRectangle(drawBounds, 0, 255, 255, 128, true, false);
-//        break;
-//    }
-//
-//    return true;
-//}

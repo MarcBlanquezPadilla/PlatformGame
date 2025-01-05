@@ -2,7 +2,6 @@
 
 #include "Module.h"
 #include "Animation.h"
-//#include "GuiControl.h"
 #include "GuiControlButton.h"
 
 #include "GuiControlSlider.h"
@@ -40,6 +39,8 @@ public:
 
 	void SetGuiParameters(GuiControl* bt, std::string btName, pugi::xml_node buttonParameters);
 
+	/*void ShowSettings();*/
+
 public:
 	// The scene sprite sheet loaded into an SDL_Texture
 	pugi::xml_document configFile;
@@ -56,7 +57,7 @@ public:
 	float _dt;
 
 
-	GuiControlSlider* musicSlider, * sfxSlider;
+	GuiControlSlider* musicSlider, *sfxSlider;
 	GuiControlButton* backBt;
 
 	std::map<std::string, GuiControlButton*> buttons;

@@ -19,8 +19,12 @@
 #include "tracy/Tracy.hpp"
 #include "GuiControl.h"
 #include "GuiManager.h"
+#include "GuiControlButton.h"
 #include "Candy.h"
 #include "MainMenu.h"
+#include "FadeToBlack.h"
+#include "Settings.h"
+
 #include "UI.h"
 
 Scene::Scene(bool startEnabled) : Module(startEnabled)
@@ -63,12 +67,20 @@ bool Scene::Start()
 	Engine::GetInstance().ui->Enable();
 
 	paused = false;
+
 	
 	//Load Map
 	Engine::GetInstance().map->Load(configParameters.child("map").attribute("path").as_string(), configParameters.child("map").attribute("name").as_string());
 
 	//Load Parallax
 	Engine::GetInstance().map->LoadParalax(configParameters.child("map").child("parallax"));
+
+
+	//Load HelpMenu
+	help = false;
+	helpPos.setX(configParameters.child("helpMenu").attribute("x").as_int());
+	helpPos.setY(configParameters.child("helpMenu").attribute("y").as_int());
+	helpMenu = Engine::GetInstance().textures.get()->Load(configParameters.child("helpMenu").attribute("path").as_string());
 
 	//Load Bats
 
@@ -136,9 +148,25 @@ bool Scene::Start()
 	}
 
 	//Load PauseMenu
-	pausePanel = Engine::GetInstance().textures.get()->Load("Assets/Textures/Menus/Pause/pause-panel.png");
+	pausePos.setX(configParameters.child("pauseMenu").child("pausePanel").attribute("x").as_int());
+	pausePos.setY(configParameters.child("pauseMenu").child("pausePanel").attribute("y").as_int());
+	pausePanel = Engine::GetInstance().textures.get()->Load(configParameters.child("pauseMenu").child("pausePanel").attribute("texture").as_string());
 	
+	pugi::xml_node pauseBtNode = configParameters.child("pauseMenu").child("buttons");
+	
+	pauseButtons.clear();
+	for (pugi::xml_node child : pauseBtNode.children())
+	{
+		std::string buttonName = child.name();
+		GuiControlButton* bt = (GuiControlButton*)Engine::GetInstance().guiManager.get()->CreateGuiControl(GuiControlType::BUTTON, buttonName.c_str(), "", { 0, 0, 0, 0 }, this, { 0,0,0,0 });
+		this->SetGuiParameters(bt, buttonName, pauseBtNode);
+		pauseButtons[buttonName] = bt;
+		LOG("%s, %d", pauseButtons[buttonName]->name, pauseButtons[buttonName]->id);
+		bt->active = false;
+	}
 
+	currentTime = 0;
+	stoppedTimer = false;
 	lvl1Timer.Start();
 
 	return true;
@@ -190,6 +218,8 @@ bool Scene::Update(float dt)
 {	
 	ZoneScoped;
 
+	_dt = dt;
+
 	if (loadScene)
 	{
 		//LOG("ENTRO");
@@ -210,13 +240,22 @@ bool Scene::Update(float dt)
 		musicPlays = true;
 		
 	}
-	
 
+	if (paused) {
+		if (!stoppedTimer) {
+			stoppedTimer = true;
+			currentTime += lvl1Timer.ReadSec();
+		}
+		
+	}
+	else if(stoppedTimer) {
+		stoppedTimer = false;
+		lvl1Timer.Start();
+	}
+	
+	
 	if (!paused) {
 		
-
-		
-	
 	
 		if (player->position.getX() < POS_TO_START_MOVING_CAMX) {
 			Engine::GetInstance().render.get()->camera.x = (POS_TO_START_MOVING_CAMX + CAM_EXTRA_DISPLACEMENT_X) * -Engine::GetInstance().window.get()->scale;
@@ -231,7 +270,8 @@ bool Scene::Update(float dt)
 		else if (player->position.getY() < POS_TO_STOP_MOVING_CAMY) Engine::GetInstance().render.get()->camera.y = (POS_TO_STOP_MOVING_CAMY + CAM_EXTRA_DISPLACEMENT_X) * -Engine::GetInstance().window.get()->scale;
 		else Engine::GetInstance().render.get()->camera.y = (player->position.getY() + CAM_EXTRA_DISPLACEMENT_Y) * -Engine::GetInstance().window.get()->scale;
 	}
-	
+
+
 
 	return true;
 }
@@ -251,27 +291,62 @@ bool Scene::PostUpdate()
 		
 		LoadState();
 	}
-
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_H) == KEY_DOWN) {
+		help = !help;
+	}
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN) {
 		paused = !paused;
 	}
 
-	if (paused) {
-		int pausePanelX = configParameters.child("pauseMenu").child("pausePanel").attribute("x").as_int();
-		int pausePanelY = configParameters.child("pauseMenu").child("pausePanel").attribute("y").as_int();
-		int pausePanelW = configParameters.child("pauseMenu").child("pausePanel").attribute("w").as_int();
-		int pausePanelH = configParameters.child("pauseMenu").child("pausePanel").attribute("h").as_int();
+	Render* render = Engine::GetInstance().render.get();
+	Window* window = Engine::GetInstance().window.get();
 
-		SDL_Rect camera = Engine::GetInstance().render.get()->camera;
-		int windowScale = Engine::GetInstance().window.get()->GetScale();
-		Engine::GetInstance().render.get()->DrawRectangle({ -camera.x / windowScale , -camera.y / windowScale, 1280, 720 }, 0,0,0,150, true, true);
-		Engine::GetInstance().render.get()->DrawTexture(pausePanel, -camera.x / windowScale + HELP_MENU_X_DISPLACEMENT, -camera.y / windowScale + HELP_MENU_Y_DISPLACEMENT);
+	
+	
+	
+
+	if (!Engine::GetInstance().settings.get()->settingsOpen) {
+		std::string timerText;
+		std::string livesText = "Lives: " + std::to_string(player->lives);
+		std::string ptsText = "Collected Candies: " + std::to_string(player->pickedCandies);
+		if (paused) timerText = "Time: " + std::to_string((int)currentTime) + " s";
+		else timerText = "Time: " + std::to_string((int)currentTime + (int)lvl1Timer.ReadSec()) + " s";
+		render->DrawText(livesText.c_str(), 20, 20, 100, 20);
+		render->DrawText(ptsText.c_str(), 150, 20, 200, 20);
+		render->DrawText(timerText.c_str(), 375, 20, 100, 20);
+	}
+
+	if (paused && !Engine::GetInstance().settings.get()->settingsOpen) {
+
+		
+		Engine::GetInstance().render.get()->DrawRectangle({ -render->camera.x / window->scale , -render->camera.y / window->scale, window->width, window->height }, 0,0,0,200, true, true);
+		Engine::GetInstance().render.get()->DrawTexture(pausePanel, -render->camera.x / window->scale + pausePos.getX(), -render->camera.y / window->scale + pausePos.getY());
+		
+		for (auto& bt : pauseButtons) {
+			bt.second->active = true;
+			OnGuiMouseClickEvent(bt.second);
+			bt.second->Update(_dt);
+		}
+
+		if (Engine::GetInstance().settings.get()->settingsOpen) 
+			for (const auto& bt : pauseButtons) 
+				bt.second->state = GuiControlState::DISABLED;
+		else 
+			for (const auto& bt : pauseButtons) 
+				bt.second->state = GuiControlState::NORMAL;
+	}
+	else {
+		for (const auto& bt : pauseButtons) 
+			bt.second->active = false;
 		
 	}
 
+	if (help)
+		render->DrawTexture(helpMenu, -render->camera.x / window->scale + helpPos.getX(), -render->camera.y / window->scale + helpPos.getY());
+
+	if (quit) return false;
+	
 	return ret;
-
-
 }
 
 // Called before quitting
@@ -279,6 +354,10 @@ bool Scene::CleanUp()
 {
 	Engine::GetInstance().textures.get()->UnLoad(pausePanel);
 	
+
+	for (const auto& bt : pauseButtons) {
+		bt.second->active = false;
+	}
 	Mix_HaltMusic();
 	player->Disable();
 	/*for(const auto& entities)*/
@@ -403,9 +482,64 @@ void Scene::LoadState() {
 	}
 
 	loadFile.save_file("config.xml");
+
 }
 
 void Scene::SetLoadState(bool b)
 {
 	loadScene = b;
 }
+
+
+bool Scene::OnGuiMouseClickEvent(GuiControl* control) {
+
+	switch (control->id) {
+	case GuiControlId::RESUME:
+		if (control->state == GuiControlState::PRESSED) {
+			paused = false;
+		}
+
+		break;
+	case GuiControlId::OPTIONS:
+		if (control->state == GuiControlState::PRESSED) {
+			if (!Engine::GetInstance().settings.get()->settingsOpen) {
+				Engine::GetInstance().settings.get()->settingsOpen = true;
+			}
+		}
+		break;
+
+	case GuiControlId::BACKTOTITLE:
+		if (control->state == GuiControlState::PRESSED) {
+			Engine::GetInstance().fade.get()->Fade((Module*)this, (Module*)Engine::GetInstance().mainMenu.get(), 30);
+			break;
+		}
+	case GuiControlId::QUIT:
+		if (control->state == GuiControlState::PRESSED) {
+			quit = true;
+		}
+		break;
+
+	}
+
+	
+
+	return true;
+}
+
+void Scene::SetGuiParameters(GuiControl* bt, std::string btName, pugi::xml_node parameters) {
+
+	bt->id = (GuiControlId)parameters.child(btName.c_str()).attribute("id").as_int();
+	//if (bt->type == GuiControlType::SLIDER) {
+	//	/*bt->texture = parameters.child()*/
+	//	bt->bounds.x = parameters.child(btName.c_str()).attribute("circleX").as_int();
+	//	bt->bounds.y = parameters.child(btName.c_str()).attribute("circleY").as_int();
+	//}
+	bt->bounds.x = parameters.child(btName.c_str()).attribute("x").as_int();
+	bt->bounds.y = parameters.child(btName.c_str()).attribute("y").as_int();
+	bt->bounds.w = parameters.child(btName.c_str()).attribute("w").as_int();
+	bt->bounds.h = parameters.child(btName.c_str()).attribute("h").as_int();
+
+	bt->texture = Engine::GetInstance().textures.get()->Load(parameters.child(btName.c_str()).attribute("texture").as_string());
+}
+
+

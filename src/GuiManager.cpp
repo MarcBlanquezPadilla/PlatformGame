@@ -64,7 +64,8 @@ bool GuiManager::Update(float dt)
 {
 	for (const auto& control : guiControlsList)
 	{
-		control->Update(dt);
+		if(control->type != GuiControlType::CHECKBOX)
+			control->Update(dt);
 	}
 
 	return true;

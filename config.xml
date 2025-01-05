@@ -22,16 +22,17 @@
 			<optionsBt id="3" x="40" y="114" w="192" h="32" texture="Assets/Textures/Menus/Title Screen/Options Button Sheet.png" />
 			<creditsBt id="4" x="-72" y="280" w="192" h="32" texture="Assets/Textures/Menus/Title Screen/Credits Button Sheet.png" />
 			<exitBt id="5" x="519" y="20" w="192" h="32" texture="Assets/Textures/Menus/Title Screen/Exit Button Sheet.png" />
-			<backBt id="6" x="-105" y="277" w="233" h="39" texture="Assets/Textures/Menus/Options/back.png" />
 		</buttons>
-		<optionsMenu>
-			<optPanel x="144" y="16" w="361" h="284" path="Assets/Textures/Menus/Options/settings-panel.png" />
-			<sliders barW="233" barH="12" barPath="Assets/Textures/Menus/Options/slider.png" circleW="35" circleH="35" circlePath="Assets/Textures/Menus/Options/pumpkinBt.png" />
+	</mainmenu>
+	<settings>
+		<optPanel x="144" y="16" w="361" h="284" path="Assets/Textures/Menus/Options/settings-panel.png" />
+		<sliders barW="233" barH="12" barTexture="Assets/Textures/Menus/Options/slider.png" circleW="35" circleH="35" texture="Assets/Textures/Menus/Options/pumpkinBt.png">
 			<musicSlider id="7" barX="215" circleX="230" barY="128" circleY="117" />
 			<sfxSlider id="8" barX="215" circleX="230" barY="193" circleY="182" />
-			<checkBox id="9" x="215" y="239" w="52" h="26" path="Assets/Textures/Menus/Options/checkBox_sheet.png" />
-		</optionsMenu>
-	</mainmenu>
+		</sliders>
+		<fullScreenBox id="9" x="215" y="239" w="52" h="26" texture="Assets/Textures/Menus/Options/checkBox_sheet.png" />
+		<backBt id="6" x="-105" y="277" w="233" h="39" texture="Assets/Textures/Menus/Options/back.png" />
+	</settings>
 	<scene>
 		<map path="Assets/Maps/" name="Mapa.tmx">
 			<parallax>
@@ -44,6 +45,7 @@
 				<layer name="sky" path="Assets/Textures/Parallax/SkyX2.png" marginX="0" marginY="0" spacing="0" width="640" height="360" slowX="1" repeatNum="6" slowY="1" />
 			</parallax>
 		</map>
+		<helpMenu x="140" y="9" w="379" h="295" path="Assets/Textures/Menus/Help/HelpMenu_ver2.png" />
 		<entities>
 			<player x="25" y="350" w="64" h="64" t_w="64" t_h="64" lives="3" texture="Assets/Textures/GhostCharacter/Ghost_Sheet_Resized.png" t_texture="Assets/Textures/Pumpkin Head/pumpkinhead_sheet2.png">
 				<propierties gJumpForce="0.6f" pJumpForce="0.5f" pushForce="0.5f" moveSpeed="0.2f" friction="2.0f" gravity="1.2f" attack1Time="0.8f" attack2Time="1.0f" hurtTime="1.0f" respawnTime=" 2.0f" playerState="0" direction="1" shootCooldown="5" />
@@ -289,7 +291,6 @@
 			</items>
 		</entities>
 		<savedData saved="true">
-
 			<player x="25" y="358" lives="3" transformable="false" transformed="false" />
 			<enemy0 dead="false" x="760" y="248" />
 			<enemy1 dead="false" x="1624" y="183" />
@@ -310,16 +311,15 @@
 			<candy2 x="1008" y="423" type="heart" picked="false" />
 		</savedData>
 		<pauseMenu>
-			<pausePanel x="144" y="16" w="361" h="284" path="Assets/Textures/Menus/Pause/pause-panel.png" />
+			<pausePanel x="144" y="16" w="361" h="284" texture="Assets/Textures/Menus/Pause/pause-panel.png" />
 			<buttons>
-				<resumeBt x="213" y="92" w="233" h="155" path="Assets/Textures/Menus/Pause/resume resized.png" />
-				<optionsBt x="213" y="140" w="233" h="155" path="Assets/Textures/Menus/Pause/options resized.png" />
-				<backToTitleBt x="213" y="188" w="233" h="155" path="Assets/Textures/Menus/Pause/back to title.png" />
-				<exitBt x="213" y="236" w="233" h="155" path="Assets/Textures/Menus/Pause/exit centered.png" />
+				<resumeBt id="10" x="213" y="92" w="233" h="39" texture="Assets/Textures/Menus/Pause/resume resized.png" />
+				<optionsBt id="3" x="213" y="140" w="233" h="39" texture="Assets/Textures/Menus/Pause/options resized.png" />
+				<backToTitleBt id="11" x="213" y="188" w="233" h="39" texture="Assets/Textures/Menus/Pause/back to title.png" />
+				<exitBt id="5" x="213" y="236" w="233" h="39" texture="Assets/Textures/Menus/Pause/exit centered.png" />
 			</buttons>
 		</pauseMenu>
 	</scene>
-	<ui path="Assets/Textures/UI/HelpMenu_ver2.png" />
 	<audio>
 		<music>
 			<menuMus path="Assets/Audio/Music/Nothing As It Seems.ogg" />

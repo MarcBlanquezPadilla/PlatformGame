@@ -99,6 +99,9 @@ public:
 public:
 
 	bool active;
+
+	bool useCamera;
+	
 	GuiControlId id;
 	std::string name;
 	GuiControlType type;

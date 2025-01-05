@@ -5,6 +5,9 @@
 #define HELP_MENU_X_DISPLACEMENT 125
 #define HELP_MENU_Y_DISPLACEMENT 10
 
+#define PAUSE_MENU_X_DISPLACEMENT 150
+#define PAUSE_MENU_Y_DISPLACEMENT 10
+
 class UI : public Module
 {
 public:

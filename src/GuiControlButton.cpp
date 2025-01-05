@@ -4,6 +4,7 @@
 #include "Audio.h"
 #include "Input.h"
 #include "MainMenu.h"
+#include "Window.h"
 
 GuiControlButton::GuiControlButton(const char* name, SDL_Rect bounds, const char* text, SDL_Texture* btTex) : GuiControl(GuiControlType::BUTTON, id, name)
 {
@@ -53,11 +54,14 @@ bool GuiControlButton::Update(float dt)
 	}
 	
 
+	SDL_Rect camera = Engine::GetInstance().render.get()->camera;
+	int windowScale = Engine::GetInstance().window.get()->GetScale();
+
 	//L16: TODO 4: Draw the button according the GuiControl State
 	switch (state)
 	{
 	case GuiControlState::DISABLED:
-		section = { 0, bounds.h, bounds.w, bounds.h };
+		section = { 0, bounds.h, bounds.w, bounds.h};
 		break;
 	case GuiControlState::NORMAL:
 		section = { 0, 0, bounds.w, bounds.h };
@@ -70,16 +74,17 @@ bool GuiControlButton::Update(float dt)
 		break;
 	}
 
+	if (useCamera) {
+		
+	}
+
 	if (active) {
 		if (texture != nullptr) {
-			Engine::GetInstance().render.get()->DrawTexture(texture, bounds.x, bounds.y, &section);
+			Engine::GetInstance().render.get()->DrawTexture(texture, -camera.x / windowScale + bounds.x, -camera.y / windowScale + bounds.y, &section);
 		}
 
 		Engine::GetInstance().render->DrawText(text.c_str(), bounds.x * 2 + bounds.w / 2, bounds.y * 2 + bounds.h / 2, bounds.w, bounds.h);
 	}
-	
-		
-	
 
 	return false;
 }

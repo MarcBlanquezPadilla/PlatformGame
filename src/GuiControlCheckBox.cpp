@@ -1,22 +1,23 @@
 #include "GuiControlCheckBox.h"
 #include "Render.h"
+#include "Window.h"
 #include "Engine.h"
 #include "Audio.h"
 #include "Input.h"
 
-GuiControlCheckBox::GuiControlCheckBox(const char* name, SDL_Rect bounds, const char* text, SDL_Texture* btTex) : GuiControl(GuiControlType::BUTTON, id, name)
+GuiControlCheckBox::GuiControlCheckBox(const char* name, SDL_Rect bounds, const char* text, SDL_Texture* boxTex) : GuiControl(GuiControlType::CHECKBOX, id, name)
 {
 	this->bounds = bounds;
 	this->text = text;
 
-	this->texture = btTex;
+	this->texture = boxTex;
 	/*this->font = _font;*/
 
 	//canClick = true;
 	//drawBasic = false;
 	this->active = true;
 	state = GuiControlState::NORMAL;
-	isChecked = false;
+	this->isChecked = false;
 }
 
 GuiControlCheckBox::~GuiControlCheckBox()
@@ -26,7 +27,6 @@ GuiControlCheckBox::~GuiControlCheckBox()
 
 bool GuiControlCheckBox::Update(float dt)
 {
-	/*if (state != GuiControlState::DISABLED)*/
 
 	// L16: TODO 3: Update the state of the GUiButton according to the mouse position
 	if (state != GuiControlState::DISABLED) {
@@ -37,47 +37,83 @@ bool GuiControlCheckBox::Update(float dt)
 
 			state = GuiControlState::FOCUSED;
 
-			if (Engine::GetInstance().input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_REPEAT) {
+			if (Engine::GetInstance().input.get()->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_REPEAT)
+			{
 				state = GuiControlState::PRESSED;
 			}
 
-			if (Engine::GetInstance().input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP) {
-				NotifyObserver();
+			// If mouse button pressed -> Generate event!
+			if (Engine::GetInstance().input.get()->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP)
+			{
+				
+				state = GuiControlState::SELECTED;
+				
+				/*NotifyObserver();*/
 			}
 		}
 		else {
+			
 			state = GuiControlState::NORMAL;
 		}
 	}
 
+	SDL_Rect camera = Engine::GetInstance().render.get()->camera;
+	int windowScale = Engine::GetInstance().window.get()->GetScale();
 
-	//L16: TODO 4: Draw the button according the GuiControl State
 	switch (state)
 	{
 	case GuiControlState::DISABLED:
-		section = { 0, 32, 192, 32 };
 		break;
+
 	case GuiControlState::NORMAL:
-		section = { 0, 0, 192, 32 };
+
+		if (isChecked)
+			section = { bounds.h, 0, bounds.h, bounds.h };
+		if (!isChecked)
+			section = { 0, 0, bounds.h, bounds.h };
 		break;
+
 	case GuiControlState::FOCUSED:
-		section = { 0, 64, 192, 32 };
+		if (isChecked)
+			section = { bounds.h, 0, bounds.h, bounds.h };
+		if (!isChecked)
+			section = { 0, 0, bounds.h, bounds.h };
 		break;
+		
+
 	case GuiControlState::PRESSED:
-		section = { 0, 96, 192, 32 };
+		if (isChecked)
+			section = { bounds.h, 0, bounds.h, bounds.h };
+		if (!isChecked)
+			section = { 0, 0, bounds.h, bounds.h };
+		break;
+		
+		break;
+
+	case GuiControlState::SELECTED:
+
+		if (isChecked)
+			isChecked = false;
+		else if (!isChecked)
+			isChecked = true;
+
+		NotifyObserver();
+		break;
+
+	default:
 		break;
 	}
+	
 
 	if (active) {
 		if (texture != nullptr) {
-			Engine::GetInstance().render.get()->DrawTexture(texture, bounds.x, bounds.y, &section);
+				
+			Engine::GetInstance().render.get()->DrawTexture(texture, -camera.x / windowScale + bounds.x, -camera.y / windowScale + bounds.y, &section);
+			
 		}
 
-		Engine::GetInstance().render->DrawText(text.c_str(), bounds.x * 2 + bounds.w / 2, bounds.y * 2 + bounds.h / 2, bounds.w, bounds.h);
+		/*Engine::GetInstance().render->DrawText(text.c_str(), bounds.x * 2 + bounds.w / 2, bounds.y * 2 + bounds.h / 2, bounds.w, bounds.h);*/
 	}
-
-
-
 
 	return false;
 }

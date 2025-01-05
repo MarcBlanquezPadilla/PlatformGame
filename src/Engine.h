@@ -23,6 +23,7 @@ class Physics;
 class ParticleManager;
 class GuiManager;
 class UI;
+class Settings;
 class FadeToBlack;
 
 class Engine
@@ -114,6 +115,7 @@ public:
 	std::shared_ptr<Physics> physics;
 	std::shared_ptr<GuiManager> guiManager;
 	std::shared_ptr<UI> ui;
+	std::shared_ptr<Settings> settings;
 	std::shared_ptr<FadeToBlack> fade;
 	
 

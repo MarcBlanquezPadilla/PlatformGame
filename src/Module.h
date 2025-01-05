@@ -67,7 +67,11 @@ public:
 		return true;
 	}
 
-
+	void SetGuiParameters(GuiControl* bt, std::string btName, pugi::xml_node buttonParameters) 
+	{
+		
+	}
+		
 	void Enable()
 	{
 		if (!active)

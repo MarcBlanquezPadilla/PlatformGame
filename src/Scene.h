@@ -6,6 +6,9 @@
 #include "Audio.h"
 #include "SDL2/SDL_mixer.h"
 #include "GuiControl.h"
+#include <map>
+#include <list>
+
 
 #define POS_TO_START_MOVING_CAMX 100
 #define POS_TO_STOP_MOVING_CAMX 2180
@@ -80,32 +83,47 @@ public:
 
 	void SetLoadState(bool load);
 
+	bool OnGuiMouseClickEvent(GuiControl* control);
+
+	void SetGuiParameters(GuiControl* bt, std::string btName, pugi::xml_node parameters);
+
 public:
 	GameState state;
 	bool musicPlays = false;
 	bool paused = false;
+	bool help = false;
 	Player* player;
 	Timer lvl1Timer;
 	float lvl1Volume;
 
+	float currentTime;
+	bool stoppedTimer;
+
+	SDL_Texture* helpMenu;
 
 	GuiControlButton* resumeBt, * settingsBt, * backToTitleBt, * exitBt, *backBt;
-	GuiControlSlider* musicSlider, * sfxSlider;
+
 	GuiControlCheckBox* fullScreenCheckBox;
 	SDL_Texture* pausePanel;
+	Vector2D pausePos;
 	
-
 
 private:
 	
 	//L03: TODO 3b: Declare a Player attribute
-	
-	
+	float _dt;
+
 	std::vector<Enemy*> enemies;
 	std::vector<Pumpkin*> pumpkins;
 	std::vector<Candy*> candies;
 	pugi::xml_node musicNode;
+
+	std::map<std::string, GuiControlButton*> pauseButtons;
 	
 	bool loadScene = false;
+	bool quit = false;
+
+	Vector2D helpPos;
+
 	
 };
