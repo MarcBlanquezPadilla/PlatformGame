@@ -88,11 +88,13 @@ public:
 	Timer lvl1Timer;
 	float lvl1Volume;
 
+
 	GuiControlButton* resumeBt, * settingsBt, * backToTitleBt, * exitBt, *backBt;
 	GuiControlSlider* musicSlider, * sfxSlider;
 	GuiControlCheckBox* fullScreenCheckBox;
 	SDL_Texture* pausePanel;
 	
+
 
 private:
 	

@@ -1,5 +1,4 @@
 #include "MainMenu.h"
-
 #include "Engine.h"
 #include "Textures.h"
 #include "Render.h"
@@ -45,7 +44,6 @@ bool MainMenu::Start()
 	Engine::GetInstance().textures.get()->GetSize(btTex, texW, texH);
 
 	btFont = TTF_OpenFont("Assets/Fonts/Corvid Conspirator v1.1.ttf", 30);
-	
 
 	pugi::xml_node buttonNode = configFile.child("config").child("mainmenu").child("buttons");
 
@@ -59,6 +57,7 @@ bool MainMenu::Start()
 		LOG("%s, %d", buttons[buttonName]->name, buttons[buttonName]->id);
 	}
 	
+
 	pugi::xml_node sliderNode = configFile.child("config").child("mainmenu").child("optionsMenu").child("sliders");
 
 	musicSlider = (GuiControlSlider*)Engine::Engine::GetInstance().guiManager.get()->CreateGuiControl(GuiControlType::SLIDER, "musicSlider", "", { 0,0,0,0 }, this, { 0,0,0,0 });
@@ -67,7 +66,6 @@ bool MainMenu::Start()
 	sfxSlider = (GuiControlSlider*)Engine::Engine::GetInstance().guiManager.get()->CreateGuiControl(GuiControlType::SLIDER, "sfxSlider", "", { 0,0,0,0 }, this, { 0,0,0,0 });
 	SetGuiParameters(sfxSlider, "sfxSlider", sliderNode);
 	
-
 
 	saved = rootNode.child("scene").child("savedData").attribute("saved").as_bool();
 	LOG("%d", (int)saved);
@@ -106,6 +104,17 @@ bool MainMenu::Update(float dt)
 		OnGuiMouseClickEvent(bt.second);
 		/*if(bt.second->id != GuiControlId::BACK)*/
 		bt.second->Update(dt);
+	}
+	
+	
+	if (settingsOpen) {
+		/*OnGuiMouseClickEvent(musicSlider);*/
+		Engine::GetInstance().render.get()->DrawTexture(optTex, 80, 80);
+		/*musicSlider->active = true;
+		musicSlider->Update(dt);*/
+	}
+	else {
+		/*musicSlider->active = false;*/
 	}
 	
 
@@ -164,6 +173,7 @@ bool MainMenu::CleanUp() {
 	Engine::GetInstance().textures.get()->UnLoad(btTex);
 	Engine::GetInstance().textures.get()->UnLoad(optPanel);
 	Engine::GetInstance().textures.get()->UnLoad(pausePanel);
+
 	return true;
 }
 
@@ -189,14 +199,11 @@ bool MainMenu::OnGuiMouseClickEvent(GuiControl* control) {
 		
 		break;
 	case GuiControlId::OPTIONS:
+
 		if (control->state == GuiControlState::PRESSED) {
 			if (!settingsOpen) settingsOpen = true;
 			
 		}
-		/*else if (control->state == GuiControlState::PRESSED && pressed) {
-			
-			if (settingsOpen) settingsOpen = false;
-		}*/
 		
 		break;
 	case GuiControlId::BACK:

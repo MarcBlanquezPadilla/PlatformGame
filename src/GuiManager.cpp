@@ -1,7 +1,9 @@
 #include "GuiManager.h"
 #include "Engine.h"
 #include "Textures.h"
+
 #include "GuiControlSlider.h"
+
 #include "GuiControlButton.h"
 #include "GuiControlCheckBox.h"
 #include "Audio.h"
@@ -21,6 +23,7 @@ bool GuiManager::Start()
 
 // L16: TODO 1: Implement CreateGuiControl function that instantiates a new GUI control and add it to the list of controls
 GuiControl* GuiManager::CreateGuiControl(GuiControlType type, const char* name, const char* text, SDL_Rect bounds, Module* _observer, SDL_Rect sliderBounds, SDL_Texture* tex, SDL_Texture* sliderTex)
+
 {
 	GuiControl* guiControl = nullptr;
 
@@ -33,6 +36,7 @@ GuiControl* GuiManager::CreateGuiControl(GuiControlType type, const char* name, 
 		guiControl = new GuiControlButton(name, bounds, text, tex);
 		break;
 	case GuiControlType::SLIDER:
+
 		//bounds = circleBounds
 		//tex = circleTex
 		guiControl = new GuiControlSlider(name, text, bounds, sliderBounds, tex, sliderTex);
@@ -41,6 +45,7 @@ GuiControl* GuiManager::CreateGuiControl(GuiControlType type, const char* name, 
 		//bounds = boxBounds
 		//tex = boxTex
 		guiControl = new GuiControlCheckBox(name, bounds, text, tex);
+
 		break;
 	}
 

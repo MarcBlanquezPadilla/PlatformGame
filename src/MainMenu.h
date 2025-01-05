@@ -4,7 +4,9 @@
 #include "Animation.h"
 //#include "GuiControl.h"
 #include "GuiControlButton.h"
+
 #include "GuiControlSlider.h"
+
 #include <list>
 #include <map>
 
@@ -43,6 +45,7 @@ public:
 	pugi::xml_document configFile;
 	pugi::xml_node rootNode;
 	SDL_Texture* bgTex, * btTex, *optPanel, *pausePanel;
+
 	TTF_Font* btFont;
 	bool quit = false;
 	bool saved;

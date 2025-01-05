@@ -289,6 +289,7 @@
 			</items>
 		</entities>
 		<savedData saved="true">
+
 			<player x="25" y="358" lives="3" transformable="false" transformed="false" />
 			<enemy0 dead="false" x="760" y="248" />
 			<enemy1 dead="false" x="1624" y="183" />
