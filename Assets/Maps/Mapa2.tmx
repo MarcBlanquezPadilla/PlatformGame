@@ -25701,7 +25701,7 @@
   <object id="281" x="-156" y="504" width="3040" height="156"/>
  </objectgroup>
  <objectgroup id="20" name="Checkpoints">
-  <object id="610" x="1488" y="80" width="16" height="416"/>
+  <object id="610" x="768" y="161" width="16" height="319"/>
  </objectgroup>
  <objectgroup id="21" name="Items"/>
 </map>
