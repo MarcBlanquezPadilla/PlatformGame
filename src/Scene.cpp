@@ -31,9 +31,8 @@ Scene::Scene(bool startEnabled) : Module(startEnabled)
 {
 	
 	name = "scene";
-	state = MAIN_MENU;
+	player = nullptr;
 	/*active = false;*/
-	
 }
 
 // Destructor
@@ -48,11 +47,10 @@ bool Scene::Awake()
 		return false;
 	}*/
 	LOG("Loading Scene");
+
+	level = LVL1;
 	
-	//L04: TODO 3b: Instantiate the player using the entity manager
-	player = (Player*)Engine::GetInstance().entityManager->CreateEntity(EntityType::PLAYER);
-	player->SetParameters(configParameters.child("entities").child("player"));
-	Engine::GetInstance().map.get()->SetParameters(configParameters.child("scene").child("map"));
+	//L04: TODO 3b: Instantiate the player using the entity manager	
 
 	return ret;
 }
@@ -68,77 +66,86 @@ bool Scene::Start()
 
 	paused = false;
 
-	
-	//Load Map
-	Engine::GetInstance().map->Load(configParameters.child("map").attribute("path").as_string(), configParameters.child("map").attribute("name").as_string());
+	//Load Player
+	player = (Player*)Engine::GetInstance().entityManager->CreateEntity(EntityType::PLAYER);
+	player->SetParameters(configParameters.child("entities").child("player"));
 
 	//Load Parallax
 	Engine::GetInstance().map->LoadParalax(configParameters.child("map").child("parallax"));
-
-
+	
 	//Load HelpMenu
 	help = false;
 	helpPos.setX(configParameters.child("helpMenu").attribute("x").as_int());
 	helpPos.setY(configParameters.child("helpMenu").attribute("y").as_int());
 	helpMenu = Engine::GetInstance().textures.get()->Load(configParameters.child("helpMenu").attribute("path").as_string());
-
-	//Load Bats
-
-	Enemy* batEnemy2 = (BatEnemy*)Engine::GetInstance().entityManager->CreateEntity(EntityType::BAT_ENEMY);
-	LoadEnemy(batEnemy2, configParameters.child("entities").child("enemies").child("flyEnemy").child("bat"), 3);
-
-	Enemy* batEnemy3 = (BatEnemy*)Engine::GetInstance().entityManager->CreateEntity(EntityType::BAT_ENEMY);
-	LoadEnemy(batEnemy3, configParameters.child("entities").child("enemies").child("flyEnemy").child("bat"), 5);
-
-	/*Load Skeletons*/
-	Enemy* groundEnemy = (GroundEnemy*)Engine::GetInstance().entityManager->CreateEntity(EntityType::GROUND_ENEMY);
-	LoadEnemy(groundEnemy, configParameters.child("entities").child("enemies").child("groundEnemy").child("skeleton"), 2);
-
-	Enemy* groundEnemy2 = (GroundEnemy*)Engine::GetInstance().entityManager->CreateEntity(EntityType::GROUND_ENEMY);
-	LoadEnemy(groundEnemy2, configParameters.child("entities").child("enemies").child("groundEnemy").child("skeleton"), 4);
-
-	Enemy* groundEnemy3 = (GroundEnemy*)Engine::GetInstance().entityManager->CreateEntity(EntityType::GROUND_ENEMY);
-	LoadEnemy(groundEnemy3, configParameters.child("entities").child("enemies").child("groundEnemy").child("skeleton"), 6);
-
 	
+	if (level == LVL1)
+	{
+		//Load Map
+		Engine::GetInstance().map->Load(configParameters.child("map").attribute("path").as_string(), configParameters.child("map").attribute("nameLvl1").as_string());
 
-	//Load Pumpkins
-	Pumpkin* pumpkin1 = (Pumpkin*)Engine::GetInstance().entityManager->CreateEntity(EntityType::PUMPKIN);
-	LoadItem(pumpkin1, configParameters.child("entities").child("items").child("pumpkins").child("instances").child("pumpkin1"));
+		//Load Bats
 
-	Pumpkin* checkPumpkin1 = (Pumpkin*)Engine::GetInstance().entityManager->CreateEntity(EntityType::PUMPKIN);
-	LoadItem(checkPumpkin1, configParameters.child("entities").child("items").child("pumpkins").child("instances").child("checkPumpkin1"));
+		Enemy* batEnemy2 = (BatEnemy*)Engine::GetInstance().entityManager->CreateEntity(EntityType::BAT_ENEMY);
+		LoadEnemy(batEnemy2, configParameters.child("entities").child("enemies").child("flyEnemy").child("bat"), 3);
 
-	Pumpkin* pumpkin2 = (Pumpkin*)Engine::GetInstance().entityManager->CreateEntity(EntityType::PUMPKIN);
-	LoadItem(pumpkin2, configParameters.child("entities").child("items").child("pumpkins").child("instances").child("pumpkin2"));
+		Enemy* batEnemy3 = (BatEnemy*)Engine::GetInstance().entityManager->CreateEntity(EntityType::BAT_ENEMY);
+		LoadEnemy(batEnemy3, configParameters.child("entities").child("enemies").child("flyEnemy").child("bat"), 5);
 
-	Pumpkin* pumpkin3 = (Pumpkin*)Engine::GetInstance().entityManager->CreateEntity(EntityType::PUMPKIN);
-	LoadItem(pumpkin3, configParameters.child("entities").child("items").child("pumpkins").child("instances").child("pumpkin3"));
+		/*Load Skeletons*/
+		Enemy* groundEnemy = (GroundEnemy*)Engine::GetInstance().entityManager->CreateEntity(EntityType::GROUND_ENEMY);
+		LoadEnemy(groundEnemy, configParameters.child("entities").child("enemies").child("groundEnemy").child("skeleton"), 2);
 
-	Pumpkin* pumpkin4 = (Pumpkin*)Engine::GetInstance().entityManager->CreateEntity(EntityType::PUMPKIN);
-	LoadItem(pumpkin4, configParameters.child("entities").child("items").child("pumpkins").child("instances").child("pumpkin4"));
+		Enemy* groundEnemy2 = (GroundEnemy*)Engine::GetInstance().entityManager->CreateEntity(EntityType::GROUND_ENEMY);
+		LoadEnemy(groundEnemy2, configParameters.child("entities").child("enemies").child("groundEnemy").child("skeleton"), 4);
 
-	Pumpkin* pumpkin5 = (Pumpkin*)Engine::GetInstance().entityManager->CreateEntity(EntityType::PUMPKIN);
-	LoadItem(pumpkin5, configParameters.child("entities").child("items").child("pumpkins").child("instances").child("pumpkin5"));
+		Enemy* groundEnemy3 = (GroundEnemy*)Engine::GetInstance().entityManager->CreateEntity(EntityType::GROUND_ENEMY);
+		LoadEnemy(groundEnemy3, configParameters.child("entities").child("enemies").child("groundEnemy").child("skeleton"), 6);
 
-	Pumpkin* pumpkin6 = (Pumpkin*)Engine::GetInstance().entityManager->CreateEntity(EntityType::PUMPKIN);
-	LoadItem(pumpkin6, configParameters.child("entities").child("items").child("pumpkins").child("instances").child("pumpkin6"));
 
-	Pumpkin* pumpkin7 = (Pumpkin*)Engine::GetInstance().entityManager->CreateEntity(EntityType::PUMPKIN);
-	LoadItem(pumpkin7, configParameters.child("entities").child("items").child("pumpkins").child("instances").child("pumpkin7"));
+		//Load Pumpkins
+		Pumpkin* pumpkin1 = (Pumpkin*)Engine::GetInstance().entityManager->CreateEntity(EntityType::PUMPKIN);
+		LoadItem(pumpkin1, configParameters.child("entities").child("items").child("pumpkins").child("instances").child("pumpkin1"));
 
-	Pumpkin* pumpkin8 = (Pumpkin*)Engine::GetInstance().entityManager->CreateEntity(EntityType::PUMPKIN);
-	LoadItem(pumpkin8, configParameters.child("entities").child("items").child("pumpkins").child("instances").child("pumpkin8"));
+		Pumpkin* checkPumpkin1 = (Pumpkin*)Engine::GetInstance().entityManager->CreateEntity(EntityType::PUMPKIN);
+		LoadItem(checkPumpkin1, configParameters.child("entities").child("items").child("pumpkins").child("instances").child("checkPumpkin1"));
 
-	//Load Items
-	Candy* corn1 = (Candy*)Engine::GetInstance().entityManager->CreateEntity(EntityType::CANDY);
-	LoadItem(corn1, configParameters.child("entities").child("items").child("candies").child("instances").child("corn1"));
+		Pumpkin* pumpkin2 = (Pumpkin*)Engine::GetInstance().entityManager->CreateEntity(EntityType::PUMPKIN);
+		LoadItem(pumpkin2, configParameters.child("entities").child("items").child("pumpkins").child("instances").child("pumpkin2"));
 
-	Candy* swirl1 = (Candy*)Engine::GetInstance().entityManager->CreateEntity(EntityType::CANDY);
-	LoadItem(swirl1, configParameters.child("entities").child("items").child("candies").child("instances").child("swirl1"));
+		Pumpkin* pumpkin3 = (Pumpkin*)Engine::GetInstance().entityManager->CreateEntity(EntityType::PUMPKIN);
+		LoadItem(pumpkin3, configParameters.child("entities").child("items").child("pumpkins").child("instances").child("pumpkin3"));
 
-	Candy* heart1 = (Candy*)Engine::GetInstance().entityManager->CreateEntity(EntityType::CANDY);
-	LoadItem(heart1, configParameters.child("entities").child("items").child("candies").child("instances").child("heart1"));
+		Pumpkin* pumpkin4 = (Pumpkin*)Engine::GetInstance().entityManager->CreateEntity(EntityType::PUMPKIN);
+		LoadItem(pumpkin4, configParameters.child("entities").child("items").child("pumpkins").child("instances").child("pumpkin4"));
+
+		Pumpkin* pumpkin5 = (Pumpkin*)Engine::GetInstance().entityManager->CreateEntity(EntityType::PUMPKIN);
+		LoadItem(pumpkin5, configParameters.child("entities").child("items").child("pumpkins").child("instances").child("pumpkin5"));
+
+		Pumpkin* pumpkin6 = (Pumpkin*)Engine::GetInstance().entityManager->CreateEntity(EntityType::PUMPKIN);
+		LoadItem(pumpkin6, configParameters.child("entities").child("items").child("pumpkins").child("instances").child("pumpkin6"));
+
+		Pumpkin* pumpkin7 = (Pumpkin*)Engine::GetInstance().entityManager->CreateEntity(EntityType::PUMPKIN);
+		LoadItem(pumpkin7, configParameters.child("entities").child("items").child("pumpkins").child("instances").child("pumpkin7"));
+
+		Pumpkin* pumpkin8 = (Pumpkin*)Engine::GetInstance().entityManager->CreateEntity(EntityType::PUMPKIN);
+		LoadItem(pumpkin8, configParameters.child("entities").child("items").child("pumpkins").child("instances").child("pumpkin8"));
+
+		//Load Items
+		Candy* corn1 = (Candy*)Engine::GetInstance().entityManager->CreateEntity(EntityType::CANDY);
+		LoadItem(corn1, configParameters.child("entities").child("items").child("candies").child("instances").child("corn1"));
+
+		Candy* swirl1 = (Candy*)Engine::GetInstance().entityManager->CreateEntity(EntityType::CANDY);
+		LoadItem(swirl1, configParameters.child("entities").child("items").child("candies").child("instances").child("swirl1"));
+
+		Candy* heart1 = (Candy*)Engine::GetInstance().entityManager->CreateEntity(EntityType::CANDY);
+		LoadItem(heart1, configParameters.child("entities").child("items").child("candies").child("instances").child("heart1"));
+	}
+	else if (level == LVL2)
+	{
+		//Load Map
+		Engine::GetInstance().map->Load(configParameters.child("map").attribute("path").as_string(), configParameters.child("map").attribute("nameLvl2").as_string());
+	}
 
 	std::list<Entity*> entities = Engine::GetInstance().entityManager.get()->entities;
 	for (const auto& entity : entities) {
@@ -220,6 +227,13 @@ bool Scene::Update(float dt)
 
 	_dt = dt;
 
+	if (changeLevel)
+	{
+		changeLevel = false;
+		Engine::GetInstance().fade.get()->Fade(this, this);
+		return true;
+	}
+
 	if (loadScene)
 	{
 		//LOG("ENTRO");
@@ -255,7 +269,7 @@ bool Scene::Update(float dt)
 	
 	
 	if (!paused) {
-		
+
 	
 		if (player->position.getX() < POS_TO_START_MOVING_CAMX) {
 			Engine::GetInstance().render.get()->camera.x = (POS_TO_START_MOVING_CAMX + CAM_EXTRA_DISPLACEMENT_X) * -Engine::GetInstance().window.get()->scale;
@@ -359,19 +373,38 @@ bool Scene::PostUpdate()
 bool Scene::CleanUp()
 {
 	Engine::GetInstance().textures.get()->UnLoad(pausePanel);
-	//Engine::GetInstance().entityManager.get()->DestroyEntity(player);
-	
+	Engine::GetInstance().map.get()->CleanUp();
+	Engine::GetInstance().entityManager.get()->Disable();
+	Engine::GetInstance().ui->Disable();
+	Engine::GetInstance().physics.get()->DeleteAllPhysBody();
+
+	if (player)
+	{
+		player->CleanUp();
+		delete player;
+	}
+
+	for (const auto& enemy : enemies) {
+		enemy->CleanUp();
+		delete enemy;
+	}
+
+	for (const auto& candy : candies) {
+		candy->CleanUp();
+		delete candy;
+	}
+
+	for (const auto& pumpking : pumpkins) {
+		pumpking->CleanUp();
+		delete pumpking;
+	}
 
 	for (const auto& bt : pauseButtons) {
 		bt.second->active = false;
 	}
-	/*Mix_HaltMusic();*/
-	/*player->Disable();*/
-	/*for(const auto& entities)*/
-	Engine::GetInstance().entityManager.get()->Disable();
-	Engine::GetInstance().ui->Disable();
-	
 
+	Mix_HaltMusic();
+	
 	LOG("Freeing scene");
 	return true;
 }
@@ -554,4 +587,9 @@ void Scene::SetGuiParameters(GuiControl* bt, std::string btName, pugi::xml_node 
 	bt->texture = Engine::GetInstance().textures.get()->Load(parameters.child(btName.c_str()).attribute("texture").as_string());
 }
 
+void Scene::ChangeLevel()
+{
+	level = LVL2;
+	changeLevel = true;
+}
 

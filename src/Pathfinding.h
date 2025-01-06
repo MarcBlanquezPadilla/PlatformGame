@@ -39,6 +39,7 @@ public:
     int MovementCost(int x, int y);
     void ComputePath(int x, int y);
     void PropagateDijkstra();
+    bool CleanUp();
 
     // L13: A* Pathfinding methods
     void PropagateAStar(ASTAR_HEURISTICS heuristic, Vector2D destination, PATH_MOVEMENT_TYPE movementType = Pathfinding::FLY);

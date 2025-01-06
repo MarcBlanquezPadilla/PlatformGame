@@ -34,6 +34,7 @@ bool Physics::Start()
 
 	// Set this module as a listener for contacts
 	world->SetContactListener(this);
+	list_physBodies.clear();
 
 	return true;
 }
@@ -96,6 +97,8 @@ PhysBody* Physics::CreateRectangle(int x, int y, int width, int height, bodyType
 	pbody->width = width * 0.5f;
 	pbody->height = height * 0.5f;
 
+	list_physBodies.push_back(pbody);
+
 	return pbody;
 }
 
@@ -132,6 +135,8 @@ PhysBody* Physics::CreateCircle(int x, int y, int radious, bodyType type)
 	b->GetUserData().pointer = (uintptr_t)pbody;
 	pbody->width = radious * 0.5f;
 	pbody->height = radious * 0.5f;
+
+	list_physBodies.push_back(pbody);
 
 	// Return our PhysBody class
 	return pbody;
@@ -172,6 +177,8 @@ PhysBody* Physics::CreateCircleSensor(int x, int y, int radious, bodyType type)
 	pbody->width = radious * 0.5f;
 	pbody->height = radious * 0.5f;
 
+	list_physBodies.push_back(pbody);
+
 	// Return our PhysBody class
 	return pbody;
 }
@@ -208,6 +215,8 @@ PhysBody* Physics::CreateRectangleSensor(int x, int y, int width, int height, bo
 	b->GetUserData().pointer = (uintptr_t)pbody;
 	pbody->width = width * 0.5f;
 	pbody->height = height * 0.5f;
+
+	list_physBodies.push_back(pbody);
 
 	// Return our PhysBody class
 	return pbody;
@@ -250,6 +259,8 @@ PhysBody* Physics::CreateChain(int x, int y, int* points, int size, bodyType typ
 	pbody->body = b;
 	//b->SetUserData(pbody);
 	pbody->width = pbody->height = 0;
+
+	list_physBodies.push_back(pbody);
 
 	// Return our PhysBody class
 	return pbody;
@@ -380,12 +391,6 @@ bool Physics::PostUpdate()
 	}
 
 
-	// Process bodies to delete after the world step
-	for (PhysBody* physBody : bodiesToDelete) {
-		world->DestroyBody(physBody->body);
-	}
-	bodiesToDelete.clear();
-
 	return ret;
 }
 
@@ -446,7 +451,33 @@ void Physics::EndContact(b2Contact* contact)
 }
 
 void Physics::DeletePhysBody(PhysBody* physBody) {
-	bodiesToDelete.push_back(physBody);
+	
+	if (physBody)
+	{
+		world->DestroyBody(physBody->body);
+		physBody->body = nullptr;
+		physBody->listener = nullptr;
+		delete physBody;
+		physBody = nullptr;
+	}
+}
+
+void Physics::DeleteAllPhysBody()
+{
+	for (int i = 0; i < list_physBodies.size(); i++)
+	{
+		PhysBody* physBody = list_physBodies[i];
+		if (physBody)
+		{
+			physBody->body->SetEnabled(false);
+			world->DestroyBody(physBody->body);
+			physBody->body = nullptr;
+			physBody->listener = nullptr;
+			delete physBody;
+			physBody = nullptr;
+		}
+	}
+	list_physBodies.clear();
 }
 
 

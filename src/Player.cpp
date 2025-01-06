@@ -113,16 +113,15 @@ bool Player::Start() {
 
 	currentAnim = &idle;
 
-	//PLAYER PHYSICS
-	if (pbody == nullptr) {
-		pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX(), (int)position.getY(), GHOST_W, bodyType::DYNAMIC);
+	position.setX(parameters.attribute("x").as_float());
+	position.setY(parameters.attribute("y").as_float());
 
-		pbody->listener = this;
-		pbody->ctype = ColliderType::PLAYER;
-		pbody->body->SetLinearDamping(friction);
-		pbody->body->SetGravityScale(gravity);
-		hasCollider = true;
-	}
+	pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX(), (int)position.getY(), GHOST_W, bodyType::DYNAMIC);
+
+	pbody->listener = this;
+	pbody->ctype = ColliderType::PLAYER;
+	pbody->body->SetLinearDamping(friction);
+	pbody->body->SetGravityScale(gravity);
 	
 	//ATTACK COLLIDER
 	ATKcolliderW = 35;
@@ -159,6 +158,19 @@ void Player::Restart()
 
 bool Player::Update(float dt)
 {
+	/*if (deleted)
+	{
+		return true;
+	}
+		*/
+
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_K))
+	{
+		Engine::GetInstance().physics.get()->DeletePhysBody(pbody);
+		/*deleted = true;*/
+		//return true;
+	}
+
 	//FRUSTRUM
 	if (!Engine::GetInstance().render.get()->InCameraView(pbody->GetPosition().getX() - texW, pbody->GetPosition().getY() - texH, texW, texH))
 	{
@@ -538,7 +550,9 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		reachedCheckPoint = true;
 		Engine::GetInstance().scene.get()->SaveState();
 		break;
-		
+	case ColliderType::LEVEL_CHANGER:
+		Engine::GetInstance().scene.get()->ChangeLevel();
+		break;
 	
 	case ColliderType::UNKNOWN:
 		LOG("Collision UNKNOWN");

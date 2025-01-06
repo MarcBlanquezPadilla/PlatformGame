@@ -172,5 +172,6 @@ public:
 	int candySFX;
 	
 	
-	
+	//TEST
+	bool deleted = false;
 };

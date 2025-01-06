@@ -20,7 +20,7 @@ Pathfinding::Pathfinding() {
 }
 
 Pathfinding::~Pathfinding() {
-    delete layerNav;
+    
 }
 
 // L11: BFS Pathfinding methods
@@ -155,6 +155,12 @@ bool Pathfinding::IsFlyable(int x, int y) {
     return isFlyable;
 }
 
+bool Pathfinding::CleanUp()
+{
+    //delete layerNav;
+    //delete map;
+    return true;
+}
 
 bool Pathfinding::IsWalkable(int x, int y) {
 

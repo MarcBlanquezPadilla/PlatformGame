@@ -31,12 +31,11 @@ class GuiControlSlider;
 class GuiControlCheckBox;
 
 
-enum GameState {
-	MAIN_MENU,
+enum Levels {
+
+	UNKNOWN,
 	LVL1,
 	LVL2,
-	WIN_SCREEN,
-	LOSE_SCREEN
 };
 
 class Scene : public Module
@@ -87,8 +86,10 @@ public:
 
 	void SetGuiParameters(GuiControl* bt, std::string btName, pugi::xml_node parameters);
 
+	void ChangeLevel();
+
 public:
-	GameState state;
+	Levels level;
 	bool musicPlays = false;
 	bool paused = false;
 	bool help = false;
@@ -121,9 +122,8 @@ private:
 	std::map<std::string, GuiControlButton*> pauseButtons;
 	
 	bool loadScene = false;
+	bool changeLevel = false;
 	bool quit = false;
 
 	Vector2D helpPos;
-
-	
 };

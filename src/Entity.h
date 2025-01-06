@@ -42,7 +42,6 @@ public:
 
 	virtual bool CleanUp()
 	{
-		
 		active = false;
 		return true;
 	}

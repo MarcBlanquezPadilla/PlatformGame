@@ -17,7 +17,7 @@ Enemy::Enemy() : Entity(EntityType::ENEMY)
 }
 
 Enemy::~Enemy() {
-	delete pathfinding;
+	
 }
 
 bool Enemy::Awake() {
@@ -66,6 +66,8 @@ bool Enemy::Update(float dt)
 
 bool Enemy::CleanUp()
 {
+	pathfinding->CleanUp();
+	//delete pathfinding;
 	return true;
 }
 

@@ -2,7 +2,7 @@
 //#include "Module.h"
 #include "Entity.h"
 #include "box2d/box2d.h"
-#include <list>
+#include <vector>
 
 #define GRAVITY_X 0.0f
 #define GRAVITY_Y -8.0f
@@ -37,8 +37,8 @@ enum class ColliderType {
 	CHECKPOINT,
 	LEVELEND,
 	CANDY,
+	LEVEL_CHANGER,
 	UNKNOWN
-	// ..
 };
 
 // Small class to return to other modules to track position and rotation of physics bodies
@@ -91,11 +91,12 @@ public:
 	void BeginContact(b2Contact* contact);
 	void EndContact(b2Contact* contact);
 	void DeletePhysBody(PhysBody* physBody);
+	void DeleteAllPhysBody();
 
 	
 private:
 
 	// Box2D World
 	b2World* world;
-	std::list<PhysBody*> bodiesToDelete;
+	std::vector<PhysBody*> list_physBodies;
 };

@@ -123,12 +123,25 @@ bool Map::CleanUp()
     }
     mapData.tilesets.clear();
 
-    // L07 TODO 2: clean up all layer data
     for (const auto& layer : mapData.layers)
     {
         delete layer;
     }
     mapData.layers.clear();
+
+    for (const auto& objectGroup : mapData.objectsGroups)
+    {
+        delete objectGroup;
+    }
+    mapData.objectsGroups.clear();
+
+
+    for (const auto& paralax : mapData.paralaxs)
+    {
+        delete paralax;
+    }
+    mapData.paralaxs.clear();
+
 
     return true;
 }
@@ -137,8 +150,6 @@ bool Map::CleanUp()
 bool Map::Load(std::string path, std::string fileName)
 {
     bool ret = false;
-
-
 
     // Assigns the name of the map file and the path
     mapFileName = fileName;
@@ -287,6 +298,14 @@ bool Map::Load(std::string path, std::string fileName)
                     PhysBody* c = Engine::GetInstance().physics.get()->CreateRectangleSensor(object->x + object->width / 2, object->y + object->height / 2, object->width, object->height, STATIC);
 
                     c->ctype =ColliderType::PUMPKIN;
+                }
+            }
+            if (objectGroup->name == "LevelChanger") {
+                for (Object* object : objectGroup->object) {
+
+                    PhysBody* c = Engine::GetInstance().physics.get()->CreateRectangleSensor(object->x + object->width / 2, object->y + object->height / 2, object->width, object->height, STATIC);
+
+                    c->ctype = ColliderType::LEVEL_CHANGER;
                 }
             }
         }
