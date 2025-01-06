@@ -388,16 +388,19 @@ bool Scene::CleanUp()
 		enemy->CleanUp();
 		delete enemy;
 	}
+	enemies.clear();
 
 	for (const auto& candy : candies) {
 		candy->CleanUp();
 		delete candy;
 	}
+	candies.clear();
 
 	for (const auto& pumpking : pumpkins) {
 		pumpking->CleanUp();
 		delete pumpking;
 	}
+	pumpkins.clear();
 
 	for (const auto& bt : pauseButtons) {
 		bt.second->active = false;
@@ -506,7 +509,7 @@ void Scene::LoadState() {
 	player->LoadData(savedDataNode.child("player"));
 
 	bool enemyFound = true;
-	for (int i = 0; enemyFound; i++)
+	for (int i = 0; i<enemies.size() || enemyFound; i++)
 	{
 		std::string nodeChar = "enemy" + std::to_string(i);
 		pugi::xml_node parent = savedDataNode.child(nodeChar.c_str());
@@ -522,7 +525,6 @@ void Scene::LoadState() {
 	}
 
 	loadFile.save_file("config.xml");
-
 }
 
 void Scene::SetLoadState(bool b)
