@@ -63,7 +63,7 @@ bool MainMenu::Start()
 	
 
 	Engine::GetInstance().audio.get()->PlayMusic(musicNode.child("menuMus").attribute("path").as_string(), 0.5f);
-	Mix_VolumeMusic(MIX_MAX_VOLUME/5);
+	/*Mix_VolumeMusic(MIX_MAX_VOLUME/5);*/
 
 	bgTex = Engine::GetInstance().textures.get()->Load(configParameters.child("bg").attribute("path").as_string());
 	///*pausePanel = Engine::GetInstance().textures.get()->Load(configParameters.child("bg").attribute("path").as_string());*/

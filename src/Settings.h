@@ -36,6 +36,7 @@ public:
 	bool OnGuiMouseClickEvent(GuiControl* control);
 	void SetGuiParameters(GuiControl* bt, std::string btName, pugi::xml_node parameters);
 
+	int SetVolume(GuiControlSlider* slider);
 	/*void ShowSettings();*/
 
 public:
@@ -48,7 +49,8 @@ public:
 	bool settingsOpen = false;
 	bool fullScreen;
 	bool saved;
-	float titleVolume;
+
+	int musicVolume, sfxVolume;
 	int optPanelX, optPanelY;
 	float _dt;
 
@@ -56,6 +58,8 @@ public:
 	GuiControlSlider* musicSlider, * sfxSlider;
 	GuiControlCheckBox* fullScreenBox;
 	GuiControlButton* backBt;
+
+	int testSound;
 
 	std::list<GuiControl*> settingsGUI;
 

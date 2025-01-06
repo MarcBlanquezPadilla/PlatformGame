@@ -1,5 +1,7 @@
 #include "Audio.h"
 #include "Log.h"
+#include "Engine.h"
+#include "Settings.h"
 
 #include "SDL2/SDL.h"
 #include "SDL2/SDL_mixer.h"
@@ -101,7 +103,9 @@ bool Audio::PlayMusic(const char* path, float fadeTime)
 		Mix_FreeMusic(music);
 	}
 
-	Mix_VolumeMusic(MIX_MAX_VOLUME / 5);
+
+
+	Mix_VolumeMusic(Engine::GetInstance().settings.get()->musicVolume);
 
 	music = Mix_LoadMUS(path);
 
@@ -163,7 +167,7 @@ bool Audio::PlayFx(int id, int repeat, int channel)
 
 	if(!active)
 		return false;
-
+	Mix_Volume(channel, Engine::GetInstance().settings.get()->sfxVolume);
 	if(id > 0 && id <= fx.size())
 	{
 		auto fxIt = fx.begin();

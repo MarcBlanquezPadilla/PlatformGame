@@ -12,24 +12,24 @@ public:
     virtual ~GuiControlSlider();
 
     bool Update(float dt);
-    /*bool Draw();*/
-
-    float value = 90;
-    float value2 = 90;
    
     
-    SDL_Rect sliderBounds;
+   /* SDL_Rect sliderBounds;*/
     SDL_Texture* sliderTexture;
-
-    float unit, sliderPosX;
+    //PhysBody* button;
+    //PhysBody* sliderBar;
+    int minValue;
+    int maxValue;
+        
+    float sliderPosX;
+    float volumeValue;
 
 private:
 
     // GuiControlSlider specific properties
     // Maybe some animation properties for state change?
     GuiControlId id;
-    int minValue;
-    int maxValue;
+ 
 
     /*bool playFxOnce = true;*/
 };

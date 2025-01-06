@@ -88,104 +88,117 @@ bool BatEnemy::Update(float dt) {
 	}
 
 	if (!dead) {
-		pbody->body->SetGravityScale(0);
-		//STATES CHANGERS
-		if (state != DEAD) {
-			if (pbody->GetPhysBodyWorldPosition().distanceEuclidean(player->pbody->GetPhysBodyWorldPosition()) > chaseArea && state != PATROL)
-			{
-				state = PATROL;
-				ResetPath();
-				destinationPoint = route[routeDestinationIndex];
-				
-			}
-			else if (pbody->GetPhysBodyWorldPosition().distanceEuclidean(player->pbody->GetPhysBodyWorldPosition()) <= chaseArea && state != CHASING)
-			{
-				state = CHASING;
-				ResetPath();
-			}
-		}
-	
-		
 
-
-		
-		//STATES CONTROLER
-		
-		if (state == PATROL) {
-
-			if (CheckIfTwoPointsNear(destinationPoint, { (float)METERS_TO_PIXELS(pbody->body->GetPosition().x), (float)METERS_TO_PIXELS(pbody->body->GetPosition().y) }, 5))
-			{
-				routeDestinationIndex++;
-				if (routeDestinationIndex == route.size()) routeDestinationIndex = 0;
-				destinationPoint = route[routeDestinationIndex];
-				ResetPath();
-			}
-		}
-		else if (state == CHASING) {
-
-			Vector2D playerPos = player->pbody->GetPhysBodyWorldPosition();
-			Vector2D playerPosCenteredOnTile = Engine::GetInstance().map.get()->WorldToWorldCenteredOnTile(playerPos.getX(), playerPos.getY());
-			if (destinationPoint != playerPosCenteredOnTile)
-			{
-				destinationPoint = playerPosCenteredOnTile;
-				ResetPath();
-			}
-		}
-		else if (state == DEAD) {
-			pbody->body->SetGravityScale(1);
-			
-			if (deathTimer.ReadSec() > deathTime && !dead) {
-				pbody->body->SetEnabled(false);
-				dead = true;
-
-				LOG("killed bat");
-			}
-		}
-
-		//PATHFINDING CONTROLER
-		if (state == PATROL || state == CHASING) {
-			
-			if (pbody->GetPhysBodyWorldPosition().distanceEuclidean(player->pbody->GetPhysBodyWorldPosition()) <= (float)chaseArea * 1.5f && !playingSound) {
-				Engine::GetInstance().audio.get()->PlayFx(farBatWingsSFX, 1);
-				playingSound = true;
-			}
-			else if (pbody->GetPhysBodyWorldPosition().distanceEuclidean(player->pbody->GetPhysBodyWorldPosition()) >= chaseArea * 1.5f && playingSound) {
-				Engine::GetInstance().audio.get()->PlayFx(noSound, 1);
-				playingSound = false;
-			}
-			
-			
-
-			if (pathfinding->pathTiles.empty())
-			{
-				while (pathfinding->pathTiles.empty())
+		if (!Engine::GetInstance().scene.get()->paused) {
+			pbody->body->SetGravityScale(0);
+			//STATES CHANGERS
+			if (state != DEAD) {
+				if (pbody->GetPhysBodyWorldPosition().distanceEuclidean(player->pbody->GetPhysBodyWorldPosition()) > chaseArea && state != PATROL)
 				{
-					pathfinding->PropagateAStar(SQUARED, destinationPoint);
+					state = PATROL;
+					ResetPath();
+					destinationPoint = route[routeDestinationIndex];
+
 				}
-				pathfinding->pathTiles.pop_back();
+				else if (pbody->GetPhysBodyWorldPosition().distanceEuclidean(player->pbody->GetPhysBodyWorldPosition()) <= chaseArea && state != CHASING)
+				{
+					state = CHASING;
+					ResetPath();
+				}
 			}
-			else
-			{
 
-				Vector2D nextTile = pathfinding->pathTiles.back();
-				Vector2D nextTileWorld = Engine::GetInstance().map.get()->MapToWorldCentered(nextTile.getX(), nextTile.getY());
+			//STATES CONTROLER
+
+			if (state == PATROL) {
+
+				if (CheckIfTwoPointsNear(destinationPoint, { (float)METERS_TO_PIXELS(pbody->body->GetPosition().x), (float)METERS_TO_PIXELS(pbody->body->GetPosition().y) }, 5))
+				{
+					routeDestinationIndex++;
+					if (routeDestinationIndex == route.size()) routeDestinationIndex = 0;
+					destinationPoint = route[routeDestinationIndex];
+					ResetPath();
+				}
+			}
+			else if (state == CHASING) {
+
+				Vector2D playerPos = player->pbody->GetPhysBodyWorldPosition();
+				Vector2D playerPosCenteredOnTile = Engine::GetInstance().map.get()->WorldToWorldCenteredOnTile(playerPos.getX(), playerPos.getY());
+				if (destinationPoint != playerPosCenteredOnTile)
+				{
+					destinationPoint = playerPosCenteredOnTile;
+					ResetPath();
+				}
+			}
+			else if (state == DEAD) {
+				pbody->body->SetGravityScale(1);
+
+				if (deathTimer.ReadSec() > deathTime && !dead) {
+					pbody->body->SetEnabled(false);
+					dead = true;
+
+					LOG("killed bat");
+				}
+			}
+
+			//PATHFINDING CONTROLER
+			if (state == PATROL || state == CHASING) {
+
+				if (pbody->GetPhysBodyWorldPosition().distanceEuclidean(player->pbody->GetPhysBodyWorldPosition()) <= (float)chaseArea * 1.5f && !playingSound) {
+					Engine::GetInstance().audio.get()->PlayFx(farBatWingsSFX, 1);
+					playingSound = true;
+				}
+				else if (pbody->GetPhysBodyWorldPosition().distanceEuclidean(player->pbody->GetPhysBodyWorldPosition()) >= chaseArea * 1.5f && playingSound) {
+					Engine::GetInstance().audio.get()->PlayFx(noSound, 1);
+					playingSound = false;
+				}
 
 
-				if (CheckIfTwoPointsNear(nextTileWorld, { (float)METERS_TO_PIXELS(pbody->body->GetPosition().x), (float)METERS_TO_PIXELS(pbody->body->GetPosition().y) }, 3)) {
 
+				if (pathfinding->pathTiles.empty())
+				{
+					while (pathfinding->pathTiles.empty())
+					{
+						pathfinding->PropagateAStar(SQUARED, destinationPoint);
+					}
 					pathfinding->pathTiles.pop_back();
-					if (pathfinding->pathTiles.empty()) ResetPath();
 				}
-				else {
-					Vector2D nextTilePhysics = { PIXEL_TO_METERS(nextTileWorld.getX()),PIXEL_TO_METERS(nextTileWorld.getY()) };
-					b2Vec2 direction = { nextTilePhysics.getX() - pbody->body->GetPosition().x, nextTilePhysics.getY() - pbody->body->GetPosition().y };
-					direction.Normalize();
-					pbody->body->SetLinearVelocity({ direction.x * speed, direction.y * speed });
+				else
+				{
+
+					Vector2D nextTile = pathfinding->pathTiles.back();
+					Vector2D nextTileWorld = Engine::GetInstance().map.get()->MapToWorldCentered(nextTile.getX(), nextTile.getY());
+
+
+					if (CheckIfTwoPointsNear(nextTileWorld, { (float)METERS_TO_PIXELS(pbody->body->GetPosition().x), (float)METERS_TO_PIXELS(pbody->body->GetPosition().y) }, 3)) {
+
+						pathfinding->pathTiles.pop_back();
+						if (pathfinding->pathTiles.empty()) ResetPath();
+					}
+					else {
+						Vector2D nextTilePhysics = { PIXEL_TO_METERS(nextTileWorld.getX()),PIXEL_TO_METERS(nextTileWorld.getY()) };
+						b2Vec2 direction = { nextTilePhysics.getX() - pbody->body->GetPosition().x, nextTilePhysics.getY() - pbody->body->GetPosition().y };
+						direction.Normalize();
+						pbody->body->SetLinearVelocity({ direction.x * speed, direction.y * speed });
+					}
 				}
 			}
+
+
+
+			
+		}
+		else {
+			
+			pbody->body->SetLinearVelocity({0,0});
 		}
 		
-
+		
+		if (pbody->body->GetLinearVelocity().x > 0.2f) {
+			dir = RIGHT;
+		}
+		else if (pbody->body->GetLinearVelocity().x < -0.2f) {
+			dir = LEFT;
+		}
 
 		switch (state) {
 			break;
@@ -205,12 +218,6 @@ bool BatEnemy::Update(float dt) {
 			break;
 		}
 
-		if (pbody->body->GetLinearVelocity().x > 0.2f) {
-			dir = RIGHT;
-		}
-		else if (pbody->body->GetLinearVelocity().x < -0.2f) {
-			dir = LEFT;
-		}
 
 		//DRAW
 

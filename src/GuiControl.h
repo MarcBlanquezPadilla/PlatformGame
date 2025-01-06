@@ -56,11 +56,12 @@ public:
 	GuiControl(GuiControlType type, GuiControlId id = GuiControlId::DEFAULT, const char* name= "") : type(type), id(id), name(name), state(GuiControlState::NORMAL) {}
 
 	// Constructor
-	GuiControl(GuiControlType type, const char* name, SDL_Rect bounds, const char* text, SDL_Texture* tex) :
+	GuiControl(GuiControlType type, const char* name, SDL_Rect bounds, SDL_Rect sliderBounds, const char* text, SDL_Texture* tex) :
 		name(name),
 		type(type),
 		state(GuiControlState::NORMAL),
 		bounds(bounds),
+		sliderBounds(sliderBounds),
 		text(text)
 		
 
@@ -109,9 +110,11 @@ public:
 
 	std::string text;           // Control text (if required)
 	SDL_Rect bounds;        // Position and size
+	SDL_Rect sliderBounds;
 	SDL_Color color;        // Tint color
 
 	SDL_Texture* texture;   // Texture atlas reference
+	/*SDL_Texture* sliderTexture;*/
 	SDL_Rect section;       // Texture atlas base section
 
 	Module* observer;        // Observer 

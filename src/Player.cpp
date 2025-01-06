@@ -114,7 +114,7 @@ bool Player::Start() {
 	currentAnim = &idle;
 
 	//PLAYER PHYSICS
-	if (!hasCollider) {
+	if (pbody == nullptr) {
 		pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX(), (int)position.getY(), GHOST_W, bodyType::DYNAMIC);
 
 		pbody->listener = this;
@@ -474,10 +474,12 @@ bool Player::PostUpdate(float dt) {
 bool Player::CleanUp()
 {
 	LOG("Cleanup player");
-	
-	renderable = false;
+	//delete pbody;
+	//pbody = nullptr;
+	//renderable = false;
 	active = false;
 	Engine::GetInstance().textures.get()->UnLoad(texture);
+	/*delete this;*/
 	
 	return true;
 }

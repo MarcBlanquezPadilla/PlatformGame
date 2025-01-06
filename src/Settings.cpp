@@ -35,19 +35,28 @@ bool Settings::Awake()
 bool Settings::Start()
 {
 
+	testSound = Engine::GetInstance().audio.get()->LoadFx("Assets/Audio/Fx/Fushigi.ogg");
+
 	pugi::xml_parse_result result = configFile.load_file("config.xml");
 	rootNode = configFile.child("config");
 
-	musicSlider = (GuiControlSlider*)Engine::Engine::GetInstance().guiManager.get()->CreateGuiControl(GuiControlType::SLIDER, "musicSlider", "", { 0,0,0,0 }, this, { 0,0,0,0 });
+
+	SDL_Texture* circleTex = Engine::GetInstance().textures.get()->Load(configParameters.child("sliders").attribute("texture").as_string());
+	SDL_Texture* barTex = Engine::GetInstance().textures.get()->Load(configParameters.child("sliders").attribute("barTexture").as_string());
+
+	musicSlider = (GuiControlSlider*)Engine::Engine::GetInstance().guiManager.get()->CreateGuiControl(GuiControlType::SLIDER, "musicSlider", "", { 0,0,0,0 }, this, { 0,0,0,0 }, circleTex, barTex);
+	/*musicSlider->sliderTexture = barTex;*/
 	SetGuiParameters(musicSlider, "musicSlider", configParameters.child("sliders"));
 	settingsGUI.push_back(musicSlider);
 
-	sfxSlider = (GuiControlSlider*)Engine::Engine::GetInstance().guiManager.get()->CreateGuiControl(GuiControlType::SLIDER, "sfxSlider", "", { 0,0,0,0 }, this, { 0,0,0,0 });
+	sfxSlider = (GuiControlSlider*)Engine::Engine::GetInstance().guiManager.get()->CreateGuiControl(GuiControlType::SLIDER, "sfxSlider", "", { 0,0,0,0 }, this, { 0,0,0,0 }, circleTex, barTex);
 	SetGuiParameters(sfxSlider, "sfxSlider", configParameters.child("sliders"));
+	/*sfxSlider->sliderTexture = barTex;*/
 	settingsGUI.push_back(sfxSlider);
 
 	backBt = (GuiControlButton*)Engine::GetInstance().guiManager.get()->CreateGuiControl(GuiControlType::BUTTON, "backBt", "", { 0,0,0,0 }, this, { 0,0,0,0 });
 	SetGuiParameters(backBt, "backBt", configParameters);
+	
 	settingsGUI.push_back(backBt);
 	
 	fullScreenBox = (GuiControlCheckBox*)Engine::GetInstance().guiManager.get()->CreateGuiControl(GuiControlType::CHECKBOX, "fullScreenBox", "", { 0,0,0,0 }, this, { 0,0,0,0 });
@@ -58,7 +67,14 @@ bool Settings::Start()
 	optPanelX = configParameters.child("optPanel").attribute("x").as_int();
 	optPanelY = configParameters.child("optPanel").attribute("y").as_int();
 
-	fullScreen = rootNode.child("window").child("fullscreen").attribute("value").as_bool();
+	/*fullScreen = rootNode.child("window").child("fullscreen").attribute("value").as_bool();*/
+	/*musicSlider->sliderPosX = musicSlider->sliderBounds.x + musicSlider->sliderBounds.w - 10;
+	sfxSlider->sliderPosX = sfxSlider->sliderBounds.x + sfxSlider->sliderBounds.w - 10;*/
+	
+	musicSlider->sliderPosX = musicSlider->sliderBounds.x + musicSlider->sliderBounds.w/2 - musicSlider->bounds.w/2;
+	sfxSlider->sliderPosX = sfxSlider->sliderBounds.x + sfxSlider->sliderBounds.w/2 - sfxSlider->bounds.w/2;
+
+
 
 	settingsOpen = false;
 	return true;
@@ -84,13 +100,25 @@ bool Settings::Update(float dt)
 
 		
 		for (GuiControl* gui : settingsGUI) {
-			if(gui->active == false)
+			if (gui->active == false) {
 				gui->active = true;
+				
+			}
 
 		}
-		OnGuiMouseClickEvent(backBt);
+		
 		backBt->Update(dt);
-		fullScreenBox->Update(_dt);
+		OnGuiMouseClickEvent(backBt);
+
+		fullScreenBox->Update(dt);
+
+		
+		musicSlider->Update(dt);
+		/*OnGuiMouseClickEvent(musicSlider);*/
+		
+		sfxSlider->Update(dt);
+		/*OnGuiMouseClickEvent(sfxSlider);*/
+
 
 		
 		
@@ -118,9 +146,6 @@ bool Settings::Update(float dt)
 bool Settings::PostUpdate()
 {
 	
-	
-		
-	
 	return true;
 }
 
@@ -140,15 +165,15 @@ bool Settings::OnGuiMouseClickEvent(GuiControl* control) {
 
 	switch (control->id) {
 	case GuiControlId::MUSIC:
+		musicVolume = SetVolume((GuiControlSlider*)control);
+		Mix_VolumeMusic(musicVolume);
 		break;
 	case GuiControlId::SFX:
+		/*if(state == GuiControlState)*/
+		sfxVolume = SetVolume((GuiControlSlider*)control);
+		Engine::GetInstance().audio.get()->PlayFx(testSound);
 		break;
 	case GuiControlId::FULLSCREEN:
-		
-		if (control->state == GuiControlState::PRESSED)  {
-			
-			
-		}
 		break;
 	case GuiControlId::BACK:
 		if (control->state == GuiControlState::PRESSED && settingsOpen) {
@@ -171,17 +196,28 @@ void Settings::SetGuiParameters(GuiControl* bt, std::string btName, pugi::xml_no
 
 	bt->id = (GuiControlId)parameters.child(btName.c_str()).attribute("id").as_int();
 	if (bt->type == GuiControlType::SLIDER) {
-		/*bt->texture = parameters.child()*/
+		bt->sliderBounds.x = parameters.child(btName.c_str()).attribute("barX").as_int();
+		bt->sliderBounds.y = parameters.child(btName.c_str()).attribute("barY").as_int();
+		bt->sliderBounds.w = parameters.attribute("barW").as_int();
+		bt->sliderBounds.h = parameters.attribute("barH").as_int();
 		bt->bounds.x = parameters.child(btName.c_str()).attribute("circleX").as_int();
 		bt->bounds.y = parameters.child(btName.c_str()).attribute("circleY").as_int();
+		bt->bounds.w = parameters.attribute("circleW").as_int();
+		bt->bounds.h = parameters.attribute("circleH").as_int();
 	}
 	else if (bt->type == GuiControlType::BUTTON || bt->type == GuiControlType::CHECKBOX) {
 		bt->bounds.x = parameters.child(btName.c_str()).attribute("x").as_int();
 		bt->bounds.y = parameters.child(btName.c_str()).attribute("y").as_int();
 		bt->bounds.w = parameters.child(btName.c_str()).attribute("w").as_int();
 		bt->bounds.h = parameters.child(btName.c_str()).attribute("h").as_int();
+		bt->texture = Engine::GetInstance().textures.get()->Load(parameters.child(btName.c_str()).attribute("texture").as_string());
 	}
 
 
-	bt->texture = Engine::GetInstance().textures.get()->Load(parameters.child(btName.c_str()).attribute("texture").as_string());
+	
+}
+
+int Settings::SetVolume(GuiControlSlider* slider) {
+
+	return (slider->volumeValue);
 }

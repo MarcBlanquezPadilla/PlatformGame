@@ -53,6 +53,7 @@ GuiControl* GuiManager::CreateGuiControl(GuiControlType type, const char* name, 
 	guiControl->observer = _observer;
 
 	guiControl->texture = tex;
+	guiControl->sliderBounds = sliderBounds;
 
 	// Created GuiControls are add it to the list of controls
 	guiControlsList.push_back(guiControl);
@@ -64,8 +65,8 @@ bool GuiManager::Update(float dt)
 {
 	for (const auto& control : guiControlsList)
 	{
-		if(control->type != GuiControlType::CHECKBOX)
-			control->Update(dt);
+		/*if(control->type != GuiControlType::CHECKBOX)*/
+			/*control->Update(dt);*/
 	}
 
 	return true;
