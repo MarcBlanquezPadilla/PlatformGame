@@ -50,8 +50,7 @@ bool Scene::Awake()
 	LOG("Loading Scene");
 	
 	//L04: TODO 3b: Instantiate the player using the entity manager
-	
-	
+	player = (Player*)Engine::GetInstance().entityManager->CreateEntity(EntityType::PLAYER);
 	player->SetParameters(configParameters.child("entities").child("player"));
 	Engine::GetInstance().map.get()->SetParameters(configParameters.child("scene").child("map"));
 
@@ -64,7 +63,7 @@ bool Scene::Start()
 	
 	Engine::GetInstance().entityManager.get()->Enable();
 	//player->Enable();
-	player = (Player*)Engine::GetInstance().entityManager->CreateEntity(EntityType::PLAYER);
+	
 	
 
 	paused = false;
