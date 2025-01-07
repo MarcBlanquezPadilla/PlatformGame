@@ -59,7 +59,6 @@ bool Scene::Awake()
 // Called before the first frame
 bool Scene::Start()
 {
-	//ReloadParameters();
 	paused = false;
 	Engine::GetInstance().entityManager.get()->Enable();
 	

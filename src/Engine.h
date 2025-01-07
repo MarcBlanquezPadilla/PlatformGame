@@ -55,6 +55,11 @@ public:
 	//Return debug
 	bool GetDebug();
 
+	// Load config file
+	bool LoadConfig();
+	
+	bool ReloadConfig();
+
 private:
 
 	// Private constructor to prevent instantiation
@@ -80,8 +85,7 @@ private:
 	// Call modules after each loop iteration
 	bool PostUpdate();
 
-	// Load config file
-	bool LoadConfig();
+
 
 
 	//Check if value it's near to other

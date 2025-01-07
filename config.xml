@@ -319,13 +319,13 @@
 		</entities>
 		<savedData saved="true" level="2">
 			<lvl1>
-				<player x="1833" y="198" lives="4" transformable="false" transformed="true" lvl="0" />
-				<enemy0 dead="false" x="121" y="423" />
-				<enemy1 dead="false" x="8" y="185" />
-				<enemy2 dead="true" x="2140" y="119" />
-				<enemy3 dead="true" x="1627" y="263" />
-				<enemy4 dead="false" x="1717" y="439" />
-				<enemy5 dead="false" x="137" y="423" />
+				<player x="1799" y="193" lives="4" transformable="false" transformed="false" lvl="0" />
+				<enemy0 dead="false" x="170" y="423" />
+				<enemy1 dead="false" x="543" y="227" />
+				<enemy2 dead="false" x="2153" y="118" />
+				<enemy3 dead="false" x="1641" y="183" />
+				<enemy4 dead="false" x="1681" y="439" />
+				<enemy5 dead="false" x="97" y="417" />
 				<pumpkin0 alight="true" x="308" y="423" />
 				<pumpkin1 alight="true" x="824" y="312" />
 				<pumpkin2 alight="true" x="728" y="392" />
@@ -335,12 +335,12 @@
 				<pumpkin6 alight="true" x="1479" y="440" />
 				<pumpkin7 alight="true" x="1575" y="265" />
 				<pumpkin8 alight="true" x="1816" y="200" />
-				<candy0 x="376" y="312" type="corn" picked="true" />
-				<candy1 x="616" y="328" type="swirl" picked="true" />
-				<candy2 x="1008" y="423" type="heart" picked="true" />
+				<candy0 x="376" y="312" type="corn" picked="false" />
+				<candy1 x="616" y="328" type="swirl" picked="false" />
+				<candy2 x="1008" y="423" type="heart" picked="false" />
 			</lvl1>
 			<lvl2>
-				<player x="760" y="220" lives="3" transformable="false" transformed="false" lvl="0" />
+				<player x="759" y="220" lives="3" transformable="false" transformed="false" lvl="0" />
 			</lvl2>
 		</savedData>
 		<pauseMenu>
