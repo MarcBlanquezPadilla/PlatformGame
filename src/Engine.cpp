@@ -41,13 +41,13 @@ Engine::Engine() {
     textures = std::make_shared<Textures>(true);
     audio = std::make_shared<Audio>(true);
     physics = std::make_shared<Physics>(true);
-    mainMenu = std::make_shared<MainMenu>(true);
+    mainMenu = std::make_shared<MainMenu>(false);
     scene = std::make_shared<Scene>(false);
     entityManager = std::make_shared<EntityManager>(false);
     map = std::make_shared<Map>(true);
     guiManager = std::make_shared<GuiManager>(true);
     fade = std::make_shared<FadeToBlack>(true);
-    ui = std::make_shared<UI>(false);
+    ui = std::make_shared<UI>(true);
     settings = std::make_shared<Settings>(true);
 
     // Ordered for awake / Start / Update

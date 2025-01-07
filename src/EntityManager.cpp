@@ -9,6 +9,7 @@
 #include "BatEnemy.h"
 #include "GroundEnemy.h"
 #include "Particle.h"
+#include "Santa.h"
 
 EntityManager::EntityManager(bool startEnabled) : Module(startEnabled)
 {
@@ -90,6 +91,9 @@ Entity* EntityManager::CreateEntity(EntityType type)
 		break;
 	case EntityType::GROUND_ENEMY:
 		entity = new GroundEnemy();
+		break;
+	case EntityType::BOSS:
+		entity = new Santa();
 		break;
 	case EntityType::SHOT:
 		entity = new Particle();

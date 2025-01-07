@@ -129,6 +129,7 @@ public:
 
 	int lives;
 	int pickedCandies;
+	int lvl; 
 
 	Animation* currentAnim = nullptr;
 
@@ -156,6 +157,7 @@ public:
 	//audio
 	int saveGameSFX;
 	int loadGameSFX;
+	int godModeSFX;
 	int atk1SFX;
 	int atk2SFX;
 	int gJumpSFX;
@@ -170,6 +172,7 @@ public:
 	int eatCandySFX;
 	int pourCandySFX;
 	int candySFX;
+	
 	
 	
 	//TEST

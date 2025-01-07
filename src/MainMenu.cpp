@@ -40,6 +40,8 @@ bool MainMenu::Start()
 	rootNode = configFile.child("config");	
 	pugi::xml_node musicNode = rootNode.child("audio").child("music");
 
+	credits = Engine::GetInstance().textures.get()->Load(configParameters.child("credits").attribute("path").as_string());
+
 	btTex = Engine::GetInstance().textures.get()->Load(configParameters.child("buttons").attribute("defaultTex").as_string());
 	int texW, texH;
 	Engine::GetInstance().textures.get()->GetSize(btTex, texW, texH);
@@ -63,17 +65,18 @@ bool MainMenu::Start()
 	
 
 	Engine::GetInstance().audio.get()->PlayMusic(musicNode.child("menuMus").attribute("path").as_string(), 0.5f);
-	/*Mix_VolumeMusic(MIX_MAX_VOLUME/5);*/
 
-	bgTex = Engine::GetInstance().textures.get()->Load(configParameters.child("bg").attribute("path").as_string());
-	///*pausePanel = Engine::GetInstance().textures.get()->Load(configParameters.child("bg").attribute("path").as_string());*/
-	
+	bgTex = Engine::GetInstance().textures.get()->Load(configParameters.child("bg").attribute("path").as_string());	
 	rootNode = configFile.child("config");
 
 	saved = rootNode.child("scene").child("savedData").attribute("saved").as_bool();
+
 	LOG("%d", (int)saved);
 	if (!saved)
 		buttons["continueBt"]->state = GuiControlState::DISABLED();
+
+	creditsOpen = false;
+	buttons["backBt"]->active = false;
 
 	return ret;
 }
@@ -86,8 +89,8 @@ bool MainMenu::Update(float dt)
 	for (const auto& bt : buttons)
 	{
 		OnGuiMouseClickEvent(bt.second);
-		/*if(bt.second->id != GuiControlId::BACK)*/
-		bt.second->Update(dt);
+		if(bt.second->name != "backBt")
+			bt.second->Update(dt);
 	}
 	
 	
@@ -101,10 +104,29 @@ bool MainMenu::Update(float dt)
 // Update: draw background
 bool MainMenu::PostUpdate()
 {
-	if (Engine::GetInstance().settings.get()->settingsOpen/* && pressed*/) {
+	if (Engine::GetInstance().settings.get()->settingsOpen) {
 		/*OnGuiMouseClickEvent(musicSlider);*/
 		for (const auto& bt : buttons)
 			bt.second->state = GuiControlState::DISABLED;
+	}
+
+	if (creditsOpen) {
+		Engine::GetInstance().render.get()->DrawTexture(credits, 0, 0, NULL);
+
+		buttons["backBt"]->active = true;
+		OnGuiMouseClickEvent(buttons["backBt"]);
+		buttons["backBt"]->Update(_dt);
+
+		
+	}
+	else {
+		buttons["backBt"]->active = false;
+		/*buttons["creditsBt"]->state = GuiControlState::NORMAL;*/
+		buttons["creditsBt"]->active = true;
+	/*	buttons["creditsBt"]->Update(_dt);
+		OnGuiMouseClickEvent(buttons["creditsBt"]);*/
+		
+		
 	}
 
 	return true;
@@ -119,6 +141,7 @@ bool MainMenu::CleanUp() {
 	Engine::GetInstance().textures.get()->UnLoad(btTex);
 	Engine::GetInstance().textures.get()->UnLoad(optPanel);
 	Engine::GetInstance().textures.get()->UnLoad(pausePanel);
+	Engine::GetInstance().textures.get()->UnLoad(credits);
 
 	return true;
 }
@@ -147,17 +170,18 @@ bool MainMenu::OnGuiMouseClickEvent(GuiControl* control) {
 				Engine::GetInstance().settings.get()->settingsOpen = true;
 		}
 		break;
-	/*case GuiControlId::BACK:
-		if (control->state == GuiControlState::PRESSED) {
-			if (settingsOpen) {
-				settingsOpen = false;
-				for (const auto& bt : buttons) {
-					bt.second->state = GuiControlState::NORMAL;
-				}
-			}
-		}*/
 	case GuiControlId::CREDITS:
+		if (control->state == GuiControlState::PRESSED && !creditsOpen) {
+			creditsOpen = true;
+			buttons["creditsBt"]->active = false;
+		}
+		break;
+	case GuiControlId::BACK:
+		if (control->state == GuiControlState::PRESSED && creditsOpen) {
+			creditsOpen = false;
+			buttons["creditsBt"]->active = true;
 			
+		}
 		break;
 	case GuiControlId::QUIT:
 		if (control->state == GuiControlState::PRESSED) {

@@ -24,6 +24,7 @@
 #include "MainMenu.h"
 #include "FadeToBlack.h"
 #include "Settings.h"
+#include "Santa.h"
 
 #include "UI.h"
 
@@ -78,9 +79,20 @@ bool Scene::Start()
 	helpPos.setX(configParameters.child("helpMenu").attribute("x").as_int());
 	helpPos.setY(configParameters.child("helpMenu").attribute("y").as_int());
 	helpMenu = Engine::GetInstance().textures.get()->Load(configParameters.child("helpMenu").attribute("path").as_string());
+
+	//if (player->lvl == 1) {
+	//	level = LVL1;
+	//}
+	//else if (player->lvl == 2) {
+	//	level = LVL2;
+	//}
+	int currentLevel = configParameters.child("savedData").child("player").attribute("lvl").as_int();
+	if (currentLevel == 1) level = LVL1;
+	else if (currentLevel == 2) level = LVL2;
 	
 	if (level == LVL1)
 	{
+		player->lvl = 1;
 		//Load Map
 		Engine::GetInstance().map->Load(configParameters.child("map").attribute("path").as_string(), configParameters.child("map").attribute("nameLvl1").as_string());
 
@@ -102,6 +114,8 @@ bool Scene::Start()
 		Enemy* groundEnemy3 = (GroundEnemy*)Engine::GetInstance().entityManager->CreateEntity(EntityType::GROUND_ENEMY);
 		LoadEnemy(groundEnemy3, configParameters.child("entities").child("enemies").child("groundEnemy").child("skeleton"), 6);
 
+		Enemy* santaBoss = (Santa*)Engine::GetInstance().entityManager->CreateEntity(EntityType::BOSS);
+		LoadEnemy(santaBoss, configParameters.child("entities").child("enemies").child("boss").child("santa"), 7);
 
 		//Load Pumpkins
 		Pumpkin* pumpkin1 = (Pumpkin*)Engine::GetInstance().entityManager->CreateEntity(EntityType::PUMPKIN);
@@ -140,9 +154,11 @@ bool Scene::Start()
 
 		Candy* heart1 = (Candy*)Engine::GetInstance().entityManager->CreateEntity(EntityType::CANDY);
 		LoadItem(heart1, configParameters.child("entities").child("items").child("candies").child("instances").child("heart1"));
+
 	}
 	else if (level == LVL2)
 	{
+		player->lvl = 2;
 		//Load Map
 		Engine::GetInstance().map->Load(configParameters.child("map").attribute("path").as_string(), configParameters.child("map").attribute("nameLvl2").as_string());
 	}
@@ -508,6 +524,8 @@ void Scene::LoadState() {
 	
 	player->LoadData(savedDataNode.child("player"));
 
+
+	//TODO: add an attribute to tell enemies from first and second level apart
 	bool enemyFound = true;
 	for (int i = 0; i<enemies.size() || enemyFound; i++)
 	{

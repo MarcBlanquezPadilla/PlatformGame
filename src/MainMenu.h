@@ -45,13 +45,14 @@ public:
 	// The scene sprite sheet loaded into an SDL_Texture
 	pugi::xml_document configFile;
 	pugi::xml_node rootNode;
-	SDL_Texture* bgTex, * btTex, *optPanel, *pausePanel;
+	SDL_Texture* bgTex, * btTex, *optPanel, *pausePanel, *credits;
 
 	TTF_Font* btFont;
 	bool quit = false;
 	bool saved;
 	bool settingsOpen = false;
-	bool pressed = false;
+	bool creditsOpen = false;
+
 	float titleVolume;
 	int optPanelX, optPanelY;
 	float _dt;

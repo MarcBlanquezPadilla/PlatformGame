@@ -159,8 +159,10 @@
     <ClCompile Include="src\GuiManager.cpp" />
     <ClCompile Include="src\GuiControlSlider.cpp" />
     <ClCompile Include="src\Input.cpp" />
+    <ClCompile Include="src\Intro.cpp" />
     <ClCompile Include="src\MainMenu.cpp" />
     <ClCompile Include="src\FadeToBlack.cpp" />
+    <ClCompile Include="src\Santa.cpp" />
     <ClCompile Include="src\Settings.cpp" />
     <ClCompile Include="src\Pumpkin.cpp" />
     <ClCompile Include="src\Log.cpp" />
@@ -195,6 +197,7 @@
     <ClInclude Include="src\GuiManager.h" />
     <ClInclude Include="src\GuiControlSlider.h" />
     <ClInclude Include="src\Input.h" />
+    <ClInclude Include="src\Intro.h" />
     <ClInclude Include="src\MainMenu.h" />
     <ClInclude Include="src\FadeToBlack.h" />
     <ClInclude Include="src\Pumpkin.h" />
@@ -207,6 +210,7 @@
     <ClInclude Include="src\Physics.h" />
     <ClInclude Include="src\Player.h" />
     <ClInclude Include="src\Render.h" />
+    <ClInclude Include="src\Santa.h" />
     <ClInclude Include="src\Scene.h" />
     <ClInclude Include="src\Settings.h" />
     <ClInclude Include="src\Textures.h" />

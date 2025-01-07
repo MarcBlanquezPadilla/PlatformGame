@@ -92,24 +92,25 @@ bool Player::Start() {
 
 	pickedCandies = 0;
 
-	pugi::xml_document audioFile;
-	pugi::xml_parse_result result = audioFile.load_file("config.xml");
+	pugi::xml_document baseFile;
+	pugi::xml_parse_result result = baseFile.load_file("config.xml");
 
-	gJumpSFX = Engine::GetInstance().audio.get()->LoadFx(audioFile.child("config").child("audio").child("fx").child("gJumpSFX").attribute("path").as_string());
-	pJumpSFX = Engine::GetInstance().audio.get()->LoadFx(audioFile.child("config").child("audio").child("fx").child("pJumpSFX").attribute("path").as_string());
-	gHurtSFX = Engine::GetInstance().audio.get()->LoadFx(audioFile.child("config").child("audio").child("fx").child("gHurtSFX").attribute("path").as_string());
-	pHurtSFX = Engine::GetInstance().audio.get()->LoadFx(audioFile.child("config").child("audio").child("fx").child("pHurtSFX").attribute("path").as_string());
-	gDeathSFX = Engine::GetInstance().audio.get()->LoadFx(audioFile.child("config").child("audio").child("fx").child("gDeathSFX").attribute("path").as_string());
-	pDeathSFX = Engine::GetInstance().audio.get()->LoadFx(audioFile.child("config").child("audio").child("fx").child("pDeathSFX").attribute("path").as_string());
-	atk1SFX = Engine::GetInstance().audio.get()->LoadFx(audioFile.child("config").child("audio").child("fx").child("atk1SFX").attribute("path").as_string());
-	atk2SFX = Engine::GetInstance().audio.get()->LoadFx(audioFile.child("config").child("audio").child("fx").child("atk2SFX").attribute("path").as_string());
-	pickCandySFX = Engine::GetInstance().audio.get()->LoadFx(audioFile.child("config").child("audio").child("fx").child("pickCandy").attribute("path").as_string());
-	pourCandySFX = Engine::GetInstance().audio.get()->LoadFx(audioFile.child("config").child("audio").child("fx").child("pourCandy").attribute("path").as_string());
-	eatCandySFX = Engine::GetInstance().audio.get()->LoadFx(audioFile.child("config").child("audio").child("fx").child("eatCandy").attribute("path").as_string());
-	switchOnSFX = Engine::GetInstance().audio.get()->LoadFx(audioFile.child("config").child("audio").child("fx").child("switchOnSFX").attribute("path").as_string());
-	switchOffSFX = Engine::GetInstance().audio.get()->LoadFx(audioFile.child("config").child("audio").child("fx").child("switchOffSFX").attribute("path").as_string());
-	saveGameSFX = Engine::GetInstance().audio.get()->LoadFx(audioFile.child("config").child("audio").child("fx").child("saveGame").attribute("path").as_string());
-	loadGameSFX = Engine::GetInstance().audio.get()->LoadFx(audioFile.child("config").child("audio").child("fx").child("loadGame").attribute("path").as_string());
+	gJumpSFX = Engine::GetInstance().audio.get()->LoadFx(baseFile.child("config").child("audio").child("fx").child("gJumpSFX").attribute("path").as_string());
+	pJumpSFX = Engine::GetInstance().audio.get()->LoadFx(baseFile.child("config").child("audio").child("fx").child("pJumpSFX").attribute("path").as_string());
+	gHurtSFX = Engine::GetInstance().audio.get()->LoadFx(baseFile.child("config").child("audio").child("fx").child("gHurtSFX").attribute("path").as_string());
+	pHurtSFX = Engine::GetInstance().audio.get()->LoadFx(baseFile.child("config").child("audio").child("fx").child("pHurtSFX").attribute("path").as_string());
+	gDeathSFX = Engine::GetInstance().audio.get()->LoadFx(baseFile.child("config").child("audio").child("fx").child("gDeathSFX").attribute("path").as_string());
+	pDeathSFX = Engine::GetInstance().audio.get()->LoadFx(baseFile.child("config").child("audio").child("fx").child("pDeathSFX").attribute("path").as_string());
+	atk1SFX = Engine::GetInstance().audio.get()->LoadFx(baseFile.child("config").child("audio").child("fx").child("atk1SFX").attribute("path").as_string());
+	atk2SFX = Engine::GetInstance().audio.get()->LoadFx(baseFile.child("config").child("audio").child("fx").child("atk2SFX").attribute("path").as_string());
+	pickCandySFX = Engine::GetInstance().audio.get()->LoadFx(baseFile.child("config").child("audio").child("fx").child("pickCandy").attribute("path").as_string());
+	pourCandySFX = Engine::GetInstance().audio.get()->LoadFx(baseFile.child("config").child("audio").child("fx").child("pourCandy").attribute("path").as_string());
+	eatCandySFX = Engine::GetInstance().audio.get()->LoadFx(baseFile.child("config").child("audio").child("fx").child("eatCandy").attribute("path").as_string());
+	switchOnSFX = Engine::GetInstance().audio.get()->LoadFx(baseFile.child("config").child("audio").child("fx").child("switchOnSFX").attribute("path").as_string());
+	switchOffSFX = Engine::GetInstance().audio.get()->LoadFx(baseFile.child("config").child("audio").child("fx").child("switchOffSFX").attribute("path").as_string());
+	saveGameSFX = Engine::GetInstance().audio.get()->LoadFx(baseFile.child("config").child("audio").child("fx").child("saveGame").attribute("path").as_string());
+	loadGameSFX = Engine::GetInstance().audio.get()->LoadFx(baseFile.child("config").child("audio").child("fx").child("loadGame").attribute("path").as_string());
+	godModeSFX = Engine::GetInstance().audio.get()->LoadFx(baseFile.child("config").child("audio").child("fx").child("godModeSFX").attribute("path").as_string());
 
 	currentAnim = &idle;
 
@@ -141,6 +142,8 @@ bool Player::Start() {
 	
 	hurtTimer = Timer();
 	respawnTimer = Timer();
+
+	lvl = baseFile.child("config").child("scene").child("savedData").child("player").attribute("lvl").as_int();
 
 	return true;
 }
@@ -203,6 +206,7 @@ bool Player::Update(float dt)
 		if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F10) == KEY_DOWN)
 		{
 			godMode = !godMode;
+			if(godMode) Engine::GetInstance().audio.get()->PlayFx(godModeSFX);
 			pbody->body->SetGravityScale(godMode == true || canClimb == true || playerState == DEAD ? 0 : gravity);
 			pbody->body->SetLinearVelocity(godMode == true ? b2Vec2_zero : pbody->body->GetLinearVelocity());
 			LOG("God mode = %d", (int)godMode);
@@ -602,6 +606,7 @@ void Player::SaveData(pugi::xml_node playerNode)
 		playerNode.attribute("y").set_value(pbody->GetPhysBodyWorldPosition().getY());
 		playerNode.attribute("lives").set_value(lives);
 		playerNode.attribute("transformed").set_value(transformed);
+		playerNode.attribute("lvl").set_value(lvl);
 	}
 	
 }
@@ -615,6 +620,9 @@ void Player::LoadData(pugi::xml_node playerNode)
 	transformed = playerNode.attribute("transformed").as_bool();
 	if (transformed) jumpForce = parameters.child("propierties").attribute("pJumpForce").as_float();
 	SetPosition(position);
+	lvl = playerNode.attribute("lvl").as_int();
+	/*if (lvl == 1) Engine::GetInstance().scene.get()->level = LVL1;
+	else if(lvl == 2) Engine::GetInstance().scene.get()->level = LVL2;*/
 }
 
 void Player::DMGPlayer(PhysBody* physA, PhysBody* physB) {

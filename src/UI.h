@@ -1,12 +1,13 @@
 #pragma once
 #include "Module.h"
-#include "Player.h"
+#include "Timer.h"
 
-#define HELP_MENU_X_DISPLACEMENT 125
-#define HELP_MENU_Y_DISPLACEMENT 10
-
-#define PAUSE_MENU_X_DISPLACEMENT 150
-#define PAUSE_MENU_Y_DISPLACEMENT 10
+//#define HELP_MENU_X_DISPLACEMENT 125
+//#define HELP_MENU_Y_DISPLACEMENT 10
+//
+//#define PAUSE_MENU_X_DISPLACEMENT 150
+//#define PAUSE_MENU_Y_DISPLACEMENT 10
+struct SDL_Texture;
 
 class UI : public Module
 {
@@ -41,9 +42,9 @@ public:
 private:
 
 
-	SDL_Texture* helpMenu;
-	
-	bool help;
-	pugi::xml_node parameters;
+	SDL_Texture* intro;
+	Timer introTimer;
+	int maxIntroTime;
+	/*pugi::xml_node parameters;*/
 
 };

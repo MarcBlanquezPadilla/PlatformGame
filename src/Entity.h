@@ -13,6 +13,7 @@ enum class EntityType
 	ENEMY,
 	BAT_ENEMY,
 	GROUND_ENEMY,
+	BOSS,
 	UNKNOWN
 };
 

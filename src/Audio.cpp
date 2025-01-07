@@ -2,6 +2,7 @@
 #include "Log.h"
 #include "Engine.h"
 #include "Settings.h"
+#include "Render.h"
 
 #include "SDL2/SDL.h"
 #include "SDL2/SDL_mixer.h"

@@ -14,15 +14,18 @@
 		<resizable value="false" />
 		<fullscreen_window value="false" />
 	</window>
+	<intro path="Assets/Textures/Menus/Intro/intro-screen.png" />
 	<mainmenu>
 		<bg path="Assets/Textures/Menus/Title Screen/title screen pixel bg.png" />
 		<buttons defaultTex="Assets/Textures/Menus/Title Screen/title screen button sheet rescaled.png">
-			<newGameBt id="1" x="40" y="34" w="192" h="32" texture="Assets/Textures/Menus/Title Screen/New Game Button Sheet.png" />
-			<continueBt id="2" x="40" y="74" w="192" h="32" texture="Assets/Textures/Menus/Title Screen/Continue Button Sheet.png" />
-			<optionsBt id="3" x="40" y="114" w="192" h="32" texture="Assets/Textures/Menus/Title Screen/Options Button Sheet.png" />
+			<newGameBt id="1" x="40" y="38" w="192" h="32" texture="Assets/Textures/Menus/Title Screen/New Game Button Sheet.png" />
+			<continueBt id="2" x="40" y="78" w="192" h="32" texture="Assets/Textures/Menus/Title Screen/Continue Button Sheet.png" />
+			<optionsBt id="3" x="40" y="118" w="192" h="32" texture="Assets/Textures/Menus/Title Screen/Options Button Sheet.png" />
 			<creditsBt id="4" x="-72" y="280" w="192" h="32" texture="Assets/Textures/Menus/Title Screen/Credits Button Sheet.png" />
 			<exitBt id="5" x="519" y="20" w="192" h="32" texture="Assets/Textures/Menus/Title Screen/Exit Button Sheet.png" />
+			<backBt id="6" x="-95" y="10" w="192" h="32" texture="Assets/Textures/Menus/Title Screen/Back Button Sheet.png" />
 		</buttons>
+		<credits path="Assets/Textures/Menus/Title Screen/credits screen.png" />
 	</mainmenu>
 	<settings>
 		<optPanel x="144" y="16" w="361" h="284" path="Assets/Textures/Menus/Options/settings-panel.png" />
@@ -45,7 +48,7 @@
 				<layer name="sky" path="Assets/Textures/Parallax/SkyX2.png" marginX="0" marginY="0" spacing="0" width="640" height="360" slowX="1" repeatNum="6" slowY="1" />
 			</parallax>
 		</map>
-		<helpMenu x="140" y="9" w="379" h="295" path="Assets/Textures/Menus/Help/HelpMenu_ver2.png" />
+		<helpMenu x="140" y="9" w="379" h="295" path="Assets/Textures/Menus/Help/HelpMenu_ver2.png" lvl="1" />
 		<entities>
 			<player x="25" y="350" w="64" h="64" t_w="64" t_h="64" lives="3" texture="Assets/Textures/GhostCharacter/Ghost_Sheet_Resized.png" t_texture="Assets/Textures/Pumpkin Head/pumpkinhead_sheet2.png">
 				<propierties gJumpForce="0.6f" pJumpForce="0.5f" pushForce="0.5f" moveSpeed="0.2f" friction="2.0f" gravity="1.2f" attack1Time="0.8f" attack2Time="1.0f" hurtTime="1.0f" respawnTime=" 2.0f" playerState="0" direction="1" shootCooldown="5" />
@@ -222,6 +225,22 @@
 						</animations>
 					</bat>
 				</flyEnemy>
+        <boss>
+          <santa x="250" y="350" w="32" h="32" texture="Assets/Textures/Enemies/Santa_Boss/idle_sheet.png" lvl ="1">
+            <properties />
+            <animations>
+              <idle  loop="true" speed="0.2f">
+                <frame x="0" y="0" w="32" h="32"/>
+                <frame x="32" y="0" w="32" h="32"/>
+                <frame x="64" y="0" w="32" h="32"/>
+                <frame x="96" y="0" w="32" h="32"/>
+                <frame x="128" y="0" w="32" h="32"/>
+              </idle>
+              <jump>
+              </jump>
+            </animations>
+          </santa>
+        </boss>
 				<paths>
 					<path1>
 						<point x="2629" y=" 193" />
@@ -243,10 +262,14 @@
 						<point x="1618" y="176" />
 						<point x="1696" y="176" />
 					</path5>
-					<path6>
-						<point x="1505" y="432" />
-						<point x="1713" y="432" />
-					</path6>
+          <path6>
+            <point x="1505" y="432" />
+            <point x="1713" y="432" />
+          </path6>
+          <path7>
+            <point x="100" y="420" />
+            <point x="275" y="390" />
+          </path7>
 				</paths>
 			</enemies>
 			<items>
@@ -290,14 +313,13 @@
 				</pumpkins>
 			</items>
 		</entities>
-		<savedData saved="true">
-
-			<player x="2684" y="246" lives="3" transformable="false" transformed="false" />
-			<enemy0 dead="false" x="542" y="284" />
-			<enemy1 dead="false" x="1654" y="200" />
-			<enemy2 dead="false" x="178" y="423" />
-			<enemy3 dead="false" x="2176" y="118" />
-			<enemy4 dead="false" x="1609" y="439" />
+		<savedData saved="false">
+			<player x="25" y="350" lives="3" transformable="false" transformed="false" lvl="1" />
+			<enemy0 dead="false" x="95" y="-47" />
+			<enemy1 dead="false" x="1364" y="114" />
+			<enemy2 dead="false" x="142" y="423" />
+			<enemy3 dead="false" x="2068" y="135" />
+			<enemy4 dead="false" x="1642" y="439" />
 			<pumpkin0 alight="true" x="308" y="423" />
 			<pumpkin1 alight="true" x="1816" y="200" />
 			<pumpkin2 alight="true" x="824" y="312" />
@@ -325,6 +347,7 @@
 		<music>
 			<menuMus path="Assets/Audio/Music/Nothing As It Seems.ogg" />
 			<lvl1Mus path="Assets/Audio/Music/Haunted Towers.ogg" />
+			<lvl2Mus path="Assets/Audio/Music/ .ogg" />
 		</music>
 		<fx>
 			<gJumpSFX path="Assets/Audio/Fx/ghostJump.ogg" />
@@ -342,6 +365,7 @@
 			<eatCandy path="Assets/Audio/Fx/candyEat.ogg" />
 			<saveGame path="Assets/Audio/Fx/SaveGame.ogg" />
 			<loadGame path="Assets/Audio/Fx/LoadGame.ogg" />
+      <godModeSFX path ="Assets/Audio/Fx/i-am-a-god.ogg"/>
 			<batWingsSFX path="Assets/Audio/Fx/BatWings.ogg" />
 			<farBatWings path="Assets/Audio/Fx/FarBatWings.ogg" />
 			<batDeathSFX path="Assets/Audio/Fx/BatDeath.ogg" />
