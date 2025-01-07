@@ -57,7 +57,6 @@ bool MainMenu::Start()
 		GuiControlButton* bt = (GuiControlButton*)Engine::GetInstance().guiManager.get()->CreateGuiControl(GuiControlType::BUTTON, buttonName.c_str(), "", { 0, 0, 0, 0 }, this, { 0,0,0,0 });
 		SetGuiParameters(bt, buttonName, buttonNode);
 		buttons[buttonName] = bt;
-		LOG("%s, %d", buttons[buttonName]->name, buttons[buttonName]->id);
 	}
 	
 	Engine::GetInstance().render.get()->camera.x = 0;
@@ -71,7 +70,6 @@ bool MainMenu::Start()
 
 	saved = rootNode.child("scene").child("savedData").attribute("saved").as_bool();
 
-	LOG("%d", (int)saved);
 	if (!saved)
 		buttons["continueBt"]->state = GuiControlState::DISABLED();
 
@@ -153,7 +151,9 @@ bool MainMenu::OnGuiMouseClickEvent(GuiControl* control) {
 	case GuiControlId::NEW_GAME:
 		if(control->state == GuiControlState::PRESSED){
 			Engine::GetInstance().fade.get()->Fade((Module*)this, (Module*)Engine::GetInstance().scene.get(), 30);
-			rootNode.child("scene").child("savedData").attribute("saved").set_value(false);
+			rootNode.child("scene").child("savedData").attribute("saved").set_value(false); 
+			Engine::GetInstance().scene.get()->SetLoadState(false);
+			Engine::GetInstance().scene.get()->SetLevel(LVL1);
 		}
 		
 		break;

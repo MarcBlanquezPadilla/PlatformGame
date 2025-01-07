@@ -62,6 +62,20 @@ public:
 		return true;
 	}
 
+	virtual bool ReloadParameters()
+	{
+		pugi::xml_document loadFile;
+		pugi::xml_parse_result result = loadFile.load_file("config.xml");
+
+		if (result == NULL) {
+			LOG("Error loading config.xml");
+			return false;
+		}
+		LoadParameters(loadFile.child("config").child(name.c_str()));
+		return true;
+	}
+
+
 	virtual bool OnGuiMouseClickEvent(GuiControl* control)
 	{
 		return true;

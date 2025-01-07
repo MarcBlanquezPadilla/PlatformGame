@@ -59,20 +59,9 @@ bool Scene::Awake()
 // Called before the first frame
 bool Scene::Start()
 {
-	
-	Engine::GetInstance().entityManager.get()->Enable();
-	//player->Enable();
-	
-	
-
+	//ReloadParameters();
 	paused = false;
-
-	//Load Player
-	player = (Player*)Engine::GetInstance().entityManager->CreateEntity(EntityType::PLAYER);
-	player->SetParameters(configParameters.child("entities").child("player"));
-
-	//Load Parallax
-	Engine::GetInstance().map->LoadParalax(configParameters.child("map").child("parallax"));
+	Engine::GetInstance().entityManager.get()->Enable();
 	
 	//Load HelpMenu
 	help = false;
@@ -80,87 +69,37 @@ bool Scene::Start()
 	helpPos.setY(configParameters.child("helpMenu").attribute("y").as_int());
 	helpMenu = Engine::GetInstance().textures.get()->Load(configParameters.child("helpMenu").attribute("path").as_string());
 
-	//if (player->lvl == 1) {
-	//	level = LVL1;
-	//}
-	//else if (player->lvl == 2) {
-	//	level = LVL2;
-	//}
-	int currentLevel = configParameters.child("savedData").child("player").attribute("lvl").as_int();
-	if (currentLevel == 1) level = LVL1;
-	else if (currentLevel == 2) level = LVL2;
-	
-	if (level == LVL1)
+	if (loadScene) level = (Levels)configParameters.child("savedData").attribute("level").as_int();
+
+	std::string path = configParameters.child("map").child("paths").child(GetLevelString().c_str()).attribute("path").as_string();
+	std::string name = configParameters.child("map").child("paths").child(GetLevelString().c_str()).attribute("name").as_string();
+
+	//Load Map
+	Engine::GetInstance().map->Load(path, name);
+	//Load Parallax
+	Engine::GetInstance().map->LoadParalax(configParameters.child("map").child("parallax"));
+
+	//Load Player
+	player = (Player*)Engine::GetInstance().entityManager->CreateEntity(EntityType::PLAYER);
+	player->SetParameters(configParameters.child("entities").child("player"));
+
+	//Load Enemies
+	for (pugi::xml_node enemyNode : configParameters.child("entities").child("enemies").child("instances").child(GetLevelString().c_str()).children())
 	{
-		player->lvl = 1;
-		//Load Map
-		Engine::GetInstance().map->Load(configParameters.child("map").attribute("path").as_string(), configParameters.child("map").attribute("nameLvl1").as_string());
-
-		//Load Bats
-
-		Enemy* batEnemy2 = (BatEnemy*)Engine::GetInstance().entityManager->CreateEntity(EntityType::BAT_ENEMY);
-		LoadEnemy(batEnemy2, configParameters.child("entities").child("enemies").child("flyEnemy").child("bat"), 3);
-
-		Enemy* batEnemy3 = (BatEnemy*)Engine::GetInstance().entityManager->CreateEntity(EntityType::BAT_ENEMY);
-		LoadEnemy(batEnemy3, configParameters.child("entities").child("enemies").child("flyEnemy").child("bat"), 5);
-
-		/*Load Skeletons*/
-		Enemy* groundEnemy = (GroundEnemy*)Engine::GetInstance().entityManager->CreateEntity(EntityType::GROUND_ENEMY);
-		LoadEnemy(groundEnemy, configParameters.child("entities").child("enemies").child("groundEnemy").child("skeleton"), 2);
-
-		Enemy* groundEnemy2 = (GroundEnemy*)Engine::GetInstance().entityManager->CreateEntity(EntityType::GROUND_ENEMY);
-		LoadEnemy(groundEnemy2, configParameters.child("entities").child("enemies").child("groundEnemy").child("skeleton"), 4);
-
-		Enemy* groundEnemy3 = (GroundEnemy*)Engine::GetInstance().entityManager->CreateEntity(EntityType::GROUND_ENEMY);
-		LoadEnemy(groundEnemy3, configParameters.child("entities").child("enemies").child("groundEnemy").child("skeleton"), 6);
-
-		Enemy* santaBoss = (Santa*)Engine::GetInstance().entityManager->CreateEntity(EntityType::BOSS);
-		LoadEnemy(santaBoss, configParameters.child("entities").child("enemies").child("boss").child("santa"), 7);
-
-		//Load Pumpkins
-		Pumpkin* pumpkin1 = (Pumpkin*)Engine::GetInstance().entityManager->CreateEntity(EntityType::PUMPKIN);
-		LoadItem(pumpkin1, configParameters.child("entities").child("items").child("pumpkins").child("instances").child("pumpkin1"));
-
-		Pumpkin* checkPumpkin1 = (Pumpkin*)Engine::GetInstance().entityManager->CreateEntity(EntityType::PUMPKIN);
-		LoadItem(checkPumpkin1, configParameters.child("entities").child("items").child("pumpkins").child("instances").child("checkPumpkin1"));
-
-		Pumpkin* pumpkin2 = (Pumpkin*)Engine::GetInstance().entityManager->CreateEntity(EntityType::PUMPKIN);
-		LoadItem(pumpkin2, configParameters.child("entities").child("items").child("pumpkins").child("instances").child("pumpkin2"));
-
-		Pumpkin* pumpkin3 = (Pumpkin*)Engine::GetInstance().entityManager->CreateEntity(EntityType::PUMPKIN);
-		LoadItem(pumpkin3, configParameters.child("entities").child("items").child("pumpkins").child("instances").child("pumpkin3"));
-
-		Pumpkin* pumpkin4 = (Pumpkin*)Engine::GetInstance().entityManager->CreateEntity(EntityType::PUMPKIN);
-		LoadItem(pumpkin4, configParameters.child("entities").child("items").child("pumpkins").child("instances").child("pumpkin4"));
-
-		Pumpkin* pumpkin5 = (Pumpkin*)Engine::GetInstance().entityManager->CreateEntity(EntityType::PUMPKIN);
-		LoadItem(pumpkin5, configParameters.child("entities").child("items").child("pumpkins").child("instances").child("pumpkin5"));
-
-		Pumpkin* pumpkin6 = (Pumpkin*)Engine::GetInstance().entityManager->CreateEntity(EntityType::PUMPKIN);
-		LoadItem(pumpkin6, configParameters.child("entities").child("items").child("pumpkins").child("instances").child("pumpkin6"));
-
-		Pumpkin* pumpkin7 = (Pumpkin*)Engine::GetInstance().entityManager->CreateEntity(EntityType::PUMPKIN);
-		LoadItem(pumpkin7, configParameters.child("entities").child("items").child("pumpkins").child("instances").child("pumpkin7"));
-
-		Pumpkin* pumpkin8 = (Pumpkin*)Engine::GetInstance().entityManager->CreateEntity(EntityType::PUMPKIN);
-		LoadItem(pumpkin8, configParameters.child("entities").child("items").child("pumpkins").child("instances").child("pumpkin8"));
-
-		//Load Items
-		Candy* corn1 = (Candy*)Engine::GetInstance().entityManager->CreateEntity(EntityType::CANDY);
-		LoadItem(corn1, configParameters.child("entities").child("items").child("candies").child("instances").child("corn1"));
-
-		Candy* swirl1 = (Candy*)Engine::GetInstance().entityManager->CreateEntity(EntityType::CANDY);
-		LoadItem(swirl1, configParameters.child("entities").child("items").child("candies").child("instances").child("swirl1"));
-
-		Candy* heart1 = (Candy*)Engine::GetInstance().entityManager->CreateEntity(EntityType::CANDY);
-		LoadItem(heart1, configParameters.child("entities").child("items").child("candies").child("instances").child("heart1"));
-
+		Enemy* enemy = (GroundEnemy*)Engine::GetInstance().entityManager->CreateEntity((EntityType)enemyNode.attribute("entityType").as_int());;
+		LoadEnemy(enemy, enemyNode);
 	}
-	else if (level == LVL2)
+
+	for (pugi::xml_node pumpkingNode : configParameters.child("entities").child("items").child("pumpkins").child("instances").child(GetLevelString().c_str()).children())
 	{
-		player->lvl = 2;
-		//Load Map
-		Engine::GetInstance().map->Load(configParameters.child("map").attribute("path").as_string(), configParameters.child("map").attribute("nameLvl2").as_string());
+		Pumpkin* pumpkin = (Pumpkin*)Engine::GetInstance().entityManager->CreateEntity((EntityType)pumpkingNode.attribute("entityType").as_int());;
+		LoadItem(pumpkin, pumpkingNode);
+	}
+
+	for (pugi::xml_node candyNode : configParameters.child("entities").child("items").child("candies").child("instances").child(GetLevelString().c_str()).children())
+	{
+		Candy* candy = (Candy*)Engine::GetInstance().entityManager->CreateEntity((EntityType)candyNode.attribute("entityType").as_int());;
+		LoadItem(candy, candyNode);
 	}
 
 	std::list<Entity*> entities = Engine::GetInstance().entityManager.get()->entities;
@@ -184,7 +123,6 @@ bool Scene::Start()
 		GuiControlButton* bt = (GuiControlButton*)Engine::GetInstance().guiManager.get()->CreateGuiControl(GuiControlType::BUTTON, buttonName.c_str(), "", { 0, 0, 0, 0 }, this, { 0,0,0,0 });
 		this->SetGuiParameters(bt, buttonName, pauseBtNode);
 		pauseButtons[buttonName] = bt;
-		LOG("%s, %d", pauseButtons[buttonName]->name, pauseButtons[buttonName]->id);
 		bt->active = false;
 	}
 
@@ -195,26 +133,28 @@ bool Scene::Start()
 	return true;
 }
 
-void Scene::LoadEnemy(Enemy* enemy, pugi::xml_node parametersNode, int pathNum)
+void Scene::LoadEnemy(Enemy* enemy, pugi::xml_node instanceNode)
 {
 	enemy->SetPlayer(player);
-	enemy->SetParameters(parametersNode);
-	std::string nodeChar = "path" + std::to_string(pathNum);
-	enemy->SetPath(configParameters.child("entities").child("enemies").child("paths").child(nodeChar.c_str()));
+	enemy->SetParameters(configParameters.child("entities").child("enemies").child(instanceNode.attribute("enemyType").as_string()));
+	enemy->SetInstanceParameters(instanceNode);
+	enemy->SetPath(instanceNode);
 	enemies.push_back(enemy);
 }
 
-void Scene::LoadItem(Pumpkin* pumpkin, pugi::xml_node parametersNode) {
+void Scene::LoadItem(Pumpkin* pumpkin, pugi::xml_node instanceNode) {
 
 	pumpkin->SetPlayer(player);
-	pumpkin->SetParameters(parametersNode);
+	pumpkin->SetParameters(configParameters.child("entities").child("items").child("pumpkins"));
+	pumpkin->SetInstanceParameters(instanceNode);
 	pumpkins.push_back(pumpkin);
 }
 
-void Scene::LoadItem(Candy* candy, pugi::xml_node parametersNode) {
+void Scene::LoadItem(Candy* candy, pugi::xml_node instanceNode) {
 
 	candy->SetPlayer(player);
-	candy->SetParameters(parametersNode);
+	candy->SetParameters(configParameters.child("entities").child("items").child("candies"));
+	candy->SetInstanceParameters(instanceNode);
 	candies.push_back(candy);
 }
 
@@ -226,6 +166,12 @@ void Scene::RestartScene()
 	{
 		enemies[i]->Restart();
 	}
+}
+
+
+int Scene::GetLevel()
+{
+	return (int)level;
 }
 
 
@@ -442,6 +388,7 @@ void Scene::SaveState()
 	pugi::xml_parse_result result = saveFile.load_file("config.xml");
 
 	saveFile.child("config").child("scene").child("savedData").attribute("saved").set_value(true);
+	saveFile.child("config").child("scene").child("savedData").attribute("level").set_value((int)level);
 
 	if (result == NULL)
 	{
@@ -449,7 +396,7 @@ void Scene::SaveState()
 		return;
 	}
 
-	pugi::xml_node savedDataNode = saveFile.child("config").child("scene").child("savedData");
+	pugi::xml_node savedDataNode = saveFile.child("config").child("scene").child("savedData").child(GetLevelString().c_str());
 
 	//Save info to XML 
 	//Player 
@@ -519,7 +466,7 @@ void Scene::LoadState() {
 		return;
 	}
 
-	pugi::xml_node savedDataNode = loadFile.child("config").child("scene").child("savedData");
+	pugi::xml_node savedDataNode = loadFile.child("config").child("scene").child("savedData").child(GetLevelString().c_str());
 
 	
 	player->LoadData(savedDataNode.child("player"));
@@ -612,4 +559,16 @@ void Scene::ChangeLevel()
 	level = LVL2;
 	changeLevel = true;
 }
+
+std::string Scene::GetLevelString()
+{
+	return "lvl" + std::to_string((int)level);
+}
+
+void Scene::SetLevel(Levels level)
+{
+	level = level;
+}
+
+
 

@@ -71,8 +71,6 @@ private:
 	//SFX
 	int gotCandy;
 
-	pugi::xml_node parameters;
-
 	
 };
 

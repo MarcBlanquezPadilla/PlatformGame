@@ -42,10 +42,6 @@ public:
 
 	bool CleanUp();
 
-	void SetParameters(pugi::xml_node parameters) {
-		this->parameters = parameters;
-	}
-
 	void OnCollision(PhysBody* physA, PhysBody* physB) override;
 
 	void OnCollisionEnd(PhysBody* physA, PhysBody* physB) override;
@@ -79,7 +75,6 @@ public:
 	SDL_Texture* texture;
 	const char* texturePath;
 	int texW, texH;
-	pugi::xml_node parameters;
 	pugi::xml_node audioNode;
 	
 	PhysBody* pbody;

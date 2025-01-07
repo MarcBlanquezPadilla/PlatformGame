@@ -68,13 +68,13 @@ public:
 	// Return the player position
 	Vector2D GetPlayerPosition();
 
-	void LoadEnemy(Enemy* enemy, pugi::xml_node parametersNode, int pathNum);
+	void LoadEnemy(Enemy* enemy, pugi::xml_node instanceNode);
 
 	void RestartScene();
 
-	void LoadItem(Pumpkin* pumpkins, pugi::xml_node parametersNode);
+	void LoadItem(Pumpkin* pumpkins, pugi::xml_node instanceNode);
 
-	void LoadItem(Candy* candy, pugi::xml_node parametersNode);
+	void LoadItem(Candy* candy, pugi::xml_node instanceNode);
 
 	void LoadState();
 
@@ -87,6 +87,13 @@ public:
 	void SetGuiParameters(GuiControl* bt, std::string btName, pugi::xml_node parameters);
 
 	void ChangeLevel();
+	
+	int GetLevel();
+	
+	void SetLevel(Levels level);
+	
+	std::string GetLevelString();
+
 
 public:
 	Levels level;

@@ -23,17 +23,16 @@ bool Candy::Awake() {
 
 bool Candy::Start() {
 
-	pugi::xml_node baseParameters = Engine::GetInstance().scene.get()->configParameters.child("entities").child("items").child("candies");
 	//initilize textures
-	candyTex = Engine::GetInstance().textures.get()->Load(baseParameters.child("properties").attribute("texture").as_string());
+	candyTex = Engine::GetInstance().textures.get()->Load(parameters.child("properties").attribute("texture").as_string());
 
-	texW = baseParameters.child("properties").attribute("w").as_float();
-	texH = baseParameters.child("properties").attribute("h").as_float();
+	texW = parameters.child("properties").attribute("w").as_float();
+	texH = parameters.child("properties").attribute("h").as_float();
 	/* L08 TODO 4: Add a physics to an item - initialize the physics body*/
 
-	position.setX(parameters.attribute("x").as_float());
-	position.setY(parameters.attribute("y").as_float());
-	type = parameters.attribute("type").as_string();
+	position.setX(instanceParameters.attribute("x").as_float());
+	position.setY(instanceParameters.attribute("y").as_float());
+	type = instanceParameters.attribute("type").as_string();
 
 	function = POINTS;
 	if (type == "corn") yAnim = 0;
@@ -61,7 +60,7 @@ bool Candy::Start() {
 		
 	}*/
 	/*LOG("yAnim = %d", floatAnimNode.attribute("y").as_int());*/
-	floating.LoadAnimations(baseParameters.child("animations").child("floating"));
+	floating.LoadAnimations(parameters.child("animations").child("floating"));
 
 	for (int i = 0; i < floating.totalFrames; ++i)
 		floating.frames[i].y = yAnim;

@@ -114,8 +114,11 @@ bool Player::Start() {
 
 	currentAnim = &idle;
 
-	position.setX(parameters.attribute("x").as_float());
-	position.setY(parameters.attribute("y").as_float());
+	int level = Engine::GetInstance().scene.get()->GetLevel();
+
+	std::string nodeChar = "lvl" + std::to_string(level);
+	position.setX(parameters.child("startPositions").child(nodeChar.c_str()).attribute("x").as_float());
+	position.setY(parameters.child("startPositions").child(nodeChar.c_str()).attribute("y").as_float());
 
 	pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX(), (int)position.getY(), GHOST_W, bodyType::DYNAMIC);
 
@@ -154,18 +157,15 @@ void Player::Restart()
 		playerState = (state)parameters.child("propierties").attribute("playerState").as_int();
 		dir = (Direction)parameters.child("propierties").attribute("direction").as_int();
 		lives = parameters.attribute("lives").as_int();
-		SetPosition({ parameters.attribute("x").as_float(), parameters.attribute("y").as_float() });
+		SetPosition({ 
+			parameters.child("startPositions").child(Engine::GetInstance().scene.get()->GetLevelString().c_str()).attribute("x").as_float(),
+			parameters.child("startPositions").child(Engine::GetInstance().scene.get()->GetLevelString().c_str()).attribute("y").as_float() });
 	}
 	
 }
 
 bool Player::Update(float dt)
 {
-	/*if (deleted)
-	{
-		return true;
-	}
-		*/
 
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_K))
 	{

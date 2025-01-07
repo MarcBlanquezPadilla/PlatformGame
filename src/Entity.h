@@ -72,6 +72,16 @@ public:
 	virtual void OnCollisionEnd(PhysBody* physA, PhysBody* physB) {
 
 	};
+	
+	virtual void SetParameters(pugi::xml_node _parameters) {
+		parameters = _parameters;
+	}
+
+	virtual void SetInstanceParameters(pugi::xml_node _parameters) {
+		instanceParameters = _parameters;
+	}
+
+
 
 public:
 
@@ -88,5 +98,7 @@ public:
 	{
 		return position;
 	}
+	pugi::xml_node parameters;
+	pugi::xml_node instanceParameters;
 
 };

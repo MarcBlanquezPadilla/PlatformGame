@@ -7,6 +7,7 @@
 #include "Physics.h"
 #include "Window.h"
 #include "tracy/Tracy.hpp"
+#include <string>
 
 #include <math.h>
 
@@ -154,7 +155,8 @@ bool Map::Load(std::string path, std::string fileName)
     // Assigns the name of the map file and the path
     mapFileName = fileName;
     mapPath = path;
-    std::string mapPathName = mapPath + mapFileName;
+    std::string mapPathName = path + fileName;
+
 
     pugi::xml_document mapFileXML;
     pugi::xml_parse_result result = mapFileXML.load_file(mapPathName.c_str());

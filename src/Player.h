@@ -52,10 +52,6 @@ public:
 
 	void OnCollisionEnd(PhysBody* physA, PhysBody* physB);
 
-	void SetParameters(pugi::xml_node parameters) {
-		this->parameters = parameters;
-	}
-
 	void SetPosition(Vector2D pos);
 
 	void SaveData(pugi::xml_node playerNode);
@@ -122,10 +118,7 @@ public:
 	b2Vec2 initPos;
 	b2Vec2 pushDir;
 
-
-	pugi::xml_node parameters;
 	pugi::xml_node savedDataNode;
-
 
 	int lives;
 	int pickedCandies;
