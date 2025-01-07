@@ -130,6 +130,8 @@ bool Scene::Start()
 	stoppedTimer = false;
 	lvl1Timer.Start();
 
+	if (!loadScene) SaveState();
+
 	return true;
 }
 
@@ -383,7 +385,6 @@ Vector2D Scene::GetPlayerPosition()
 void Scene::SaveState()
 {
 	
-	Engine::GetInstance().audio.get()->PlayFx(player->saveGameSFX);
 	pugi::xml_document saveFile;
 	pugi::xml_parse_result result = saveFile.load_file("config.xml");
 

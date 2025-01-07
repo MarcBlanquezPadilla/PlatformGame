@@ -552,6 +552,7 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		break;
 	case ColliderType::CHECKPOINT:
 		reachedCheckPoint = true;
+		Engine::GetInstance().audio.get()->PlayFx(saveGameSFX);
 		Engine::GetInstance().scene.get()->SaveState();
 		break;
 	case ColliderType::LEVEL_CHANGER:
