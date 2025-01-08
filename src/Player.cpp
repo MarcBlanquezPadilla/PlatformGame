@@ -159,7 +159,8 @@ void Player::Restart()
 		lives = parameters.attribute("lives").as_int();
 		SetPosition({ 
 			parameters.child("startPositions").child(Engine::GetInstance().scene.get()->GetLevelString().c_str()).attribute("x").as_float(),
-			parameters.child("startPositions").child(Engine::GetInstance().scene.get()->GetLevelString().c_str()).attribute("y").as_float() });
+			parameters.child("startPositions").child(Engine::GetInstance().scene.get()->GetLevelString().c_str()).attribute("y").as_float() 
+		});
 	}
 	
 }
@@ -366,7 +367,7 @@ bool Player::Update(float dt)
 				tpToStart = true;
 				playerState = IDLE;
 				dir = RIGHT;
-
+				
 
 
 				pbody->body->SetGravityScale(godMode == true || canClimb == true || playerState == DEAD ? 0 : gravity);

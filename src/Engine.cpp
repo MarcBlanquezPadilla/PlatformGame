@@ -13,7 +13,7 @@
 #include "EntityManager.h"
 #include "Map.h"
 #include "Physics.h"
-#include "UI.h"
+#include "Intro.h"
 #include "FadeToBlack.h"
 #include "GuiManager.h"
 #include "MainMenu.h"
@@ -47,7 +47,7 @@ Engine::Engine() {
     map = std::make_shared<Map>(true);
     guiManager = std::make_shared<GuiManager>(true);
     fade = std::make_shared<FadeToBlack>(true);
-    ui = std::make_shared<UI>(true);
+    intro = std::make_shared<Intro>(true);
     settings = std::make_shared<Settings>(true);
 
     // Ordered for awake / Start / Update
@@ -62,7 +62,7 @@ Engine::Engine() {
     AddModule(std::static_pointer_cast<Module>(mainMenu));
     AddModule(std::static_pointer_cast<Module>(scene));
     AddModule(std::static_pointer_cast<Module>(entityManager));
-    AddModule(std::static_pointer_cast<Module>(ui));
+    AddModule(std::static_pointer_cast<Module>(intro));
    
     AddModule(std::static_pointer_cast<Module>(guiManager));
     AddModule(std::static_pointer_cast<Module>(settings));

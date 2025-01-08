@@ -3,6 +3,7 @@
 #include "Engine.h"
 #include "Render.h"
 #include "Window.h"
+#include "Audio.h"
 #include "Log.h"
 
 #include "SDL2/SDL_render.h"
@@ -45,6 +46,7 @@ bool FadeToBlack::Update(float dt)
 			// TODO 1: Enable / disable the modules received when FadeToBlacks() gets called
 			moduleToDisable->Disable();
 			Engine::GetInstance().ReloadConfig();
+			
 			moduleToEnable->Enable();
 
 			currentStep = Fade_Step::FROM_BLACK;
@@ -56,6 +58,7 @@ bool FadeToBlack::Update(float dt)
 		if (frameCount <= 0)
 		{
 			currentStep = Fade_Step::NONE;
+			
 		}
 	}
 
@@ -88,6 +91,8 @@ bool FadeToBlack::Fade(Module* moduleToDisable, Module* moduleToEnable, float fr
 
 		this->moduleToDisable = moduleToDisable;
 		this->moduleToEnable = moduleToEnable;
+
+		//Mix_HaltMusic();
 
 		ret = true;
 	}

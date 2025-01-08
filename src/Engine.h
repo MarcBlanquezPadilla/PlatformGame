@@ -22,7 +22,7 @@ class Map;
 class Physics;
 class ParticleManager;
 class GuiManager;
-class UI;
+class Intro;
 class Settings;
 class FadeToBlack;
 
@@ -118,7 +118,7 @@ public:
 	std::shared_ptr<Map> map;
 	std::shared_ptr<Physics> physics;
 	std::shared_ptr<GuiManager> guiManager;
-	std::shared_ptr<UI> ui;
+	std::shared_ptr<Intro> intro;
 	std::shared_ptr<Settings> settings;
 	std::shared_ptr<FadeToBlack> fade;
 	

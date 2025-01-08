@@ -9,7 +9,7 @@
 
 UI::UI(bool startEnabled) : Module(startEnabled)
 {
-	name = "intro";
+	
 }
 
 // Destructor
@@ -30,9 +30,7 @@ bool UI::Awake()
 // Called before the first frame
 bool UI::Start()
 {
-	intro = Engine::GetInstance().textures.get()->Load(configParameters.attribute("path").as_string());
-	maxIntroTime = 5.0f;
-	introTimer.Start();
+	
 	
 	return true;
 }
@@ -46,10 +44,7 @@ bool UI::PreUpdate()
 // Called each loop iteration
 bool UI::Update(float dt)
 {
-	Engine::GetInstance().render.get()->DrawTexture(intro, 0, 0, NULL);
-	if (introTimer.ReadSec() > maxIntroTime || (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)) {
-		Engine::GetInstance().fade.get()->Fade(this, Engine::GetInstance().mainMenu.get(), 60);
-	}
+	
 
 	return true;
 }
@@ -64,7 +59,7 @@ bool UI::PostUpdate()
 bool UI::CleanUp()
 {
 	LOG("Freeing UI");
-	Engine::GetInstance().textures.get()->UnLoad(intro);
+	
 
 
 	return true;

@@ -26,7 +26,7 @@
 #include "Settings.h"
 #include "Santa.h"
 
-#include "UI.h"
+#include "Intro.h"
 
 Scene::Scene(bool startEnabled) : Module(startEnabled)
 {
@@ -163,6 +163,7 @@ void Scene::RestartScene()
 {
 	player->Restart();
 
+
 	for (int i = 0; i < enemies.size()/2; i++)
 	{
 		enemies[i]->Restart();
@@ -211,13 +212,18 @@ bool Scene::Update(float dt)
 		pugi::xml_parse_result result = configFile.load_file("config.xml");
 		musicNode = configFile.child("config").child("audio").child("music");
 		
-		Engine::GetInstance().audio.get()->PlayMusic(musicNode.child("lvl1Mus").attribute("path").as_string());
+		if(level == LVL1)
+			Engine::GetInstance().audio.get()->PlayMusic(musicNode.child("lvl1Mus").attribute("path").as_string());
+		else if (level == LVL2) {
+			/*Mix_HaltMusic();*/
+			Engine::GetInstance().audio.get()->PlayMusic(musicNode.child("lvl2Mus").attribute("path").as_string());
+		}
 		/*Mix_VolumeMusic(MIX_MAX_VOLUME / 5);*/
 		
 		musicPlays = true;
 		
 	}
-
+	
 	if (paused) {
 		if (!stoppedTimer) {
 			stoppedTimer = true;
@@ -338,11 +344,11 @@ bool Scene::CleanUp()
 	Engine::GetInstance().textures.get()->UnLoad(pausePanel);
 	Engine::GetInstance().map.get()->CleanUp();
 	Engine::GetInstance().entityManager.get()->Disable();
-	Engine::GetInstance().ui->Disable();
+	Engine::GetInstance().intro->Disable();
 	Engine::GetInstance().physics.get()->DeleteAllPhysBody();
 
 	if (player)
-	{
+	{		
 		player->CleanUp();
 		delete player;
 	}
@@ -369,7 +375,8 @@ bool Scene::CleanUp()
 		bt.second->active = false;
 	}
 
-	Mix_HaltMusic();
+	
+	/*Mix_HaltMusic();*/
 	
 	LOG("Freeing scene");
 	return true;
@@ -557,6 +564,7 @@ void Scene::SetGuiParameters(GuiControl* bt, std::string btName, pugi::xml_node 
 void Scene::ChangeLevel()
 {
 	level = LVL2;
+	musicPlays = false;
 	changeLevel = true;
 }
 

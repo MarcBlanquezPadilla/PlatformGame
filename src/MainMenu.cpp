@@ -153,6 +153,7 @@ bool MainMenu::OnGuiMouseClickEvent(GuiControl* control) {
 			Engine::GetInstance().fade.get()->Fade((Module*)this, (Module*)Engine::GetInstance().scene.get(), 30);
 			Engine::GetInstance().scene.get()->SetLoadState(false);
 			Engine::GetInstance().scene.get()->SetLevel(LVL1);
+			/*Mix_HaltMusic();*/
 		}
 		
 		break;
@@ -160,6 +161,7 @@ bool MainMenu::OnGuiMouseClickEvent(GuiControl* control) {
 		if (control->state == GuiControlState::PRESSED) {
 			Engine::GetInstance().fade.get()->Fade((Module*)this, (Module*)Engine::GetInstance().scene.get(), 30);
 			Engine::GetInstance().scene.get()->SetLoadState(true);
+			/*Mix_HaltMusic();*/
 		}
 		
 		break;

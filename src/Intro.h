@@ -4,6 +4,7 @@
 #include "Animation.h"
 #include "GuiControlButton.h"
 #include "GuiControl.h" 
+#include "Timer.h"
 
 
 #include <list>
@@ -33,8 +34,9 @@ public:
 
 
 public:
-	
 
-
+	SDL_Texture* intro;
+	Timer introTimer;
+	int maxIntroTime;
 
 };

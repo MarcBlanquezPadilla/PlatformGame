@@ -107,7 +107,7 @@ public:
 	float currentTime;
 	bool stoppedTimer;
 
-	SDL_Texture* helpMenu;
+	SDL_Texture* helpMenu, *deathScreen, *winScreen;
 
 	GuiControlButton* resumeBt, * settingsBt, * backToTitleBt, * exitBt, *backBt;
 
