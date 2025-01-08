@@ -431,8 +431,8 @@
 		<music />
 	</audio>
 	<playerPrefs>
-		<fullscreen toggle="0"/>
-		<musivVolume value="0"/>
-		<sfxVolume value="0"/>
+		<fullscreen toggle="0" />
+		<musicVolume value="9" />
+		<sfxVolume value="30" />
 	</playerPrefs>
 </config>

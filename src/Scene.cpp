@@ -345,6 +345,7 @@ bool Scene::CleanUp()
 	{
 		player->CleanUp();
 		delete player;
+		player = nullptr;
 	}
 
 	for (const auto& enemy : enemies) {
@@ -454,6 +455,7 @@ void Scene::SaveState()
 
 	//Saves the modifications to the XML 
 	saveFile.save_file("config.xml");
+	Engine::GetInstance().ReloadConfig();
 }
 
 void Scene::LoadState() {

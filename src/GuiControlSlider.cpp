@@ -23,8 +23,6 @@ GuiControlSlider::GuiControlSlider(const char* name, const char* text, SDL_Rect 
     Engine::GetInstance().textures.get()->GetSize(circleTex, texW, texH);*/
    /* button = Engine::GetInstance().physics.get()->CreateCircle(bounds.x, bounds.y, texW, STATIC);
     sliderBar = Engine::GetInstance().physics.get()->CreateRectangle(sliderBounds.x, sliderBounds.y, sliderBounds.w, sliderBounds.h, STATIC);*/
-
-   
     
     
 }
@@ -88,6 +86,15 @@ bool GuiControlSlider::Update(float dt)
 
     return false;
 }
+
+void GuiControlSlider::SetVolumeValue(int value)
+{
+    minValue = sliderBounds.x + 10;
+    maxValue = sliderBounds.x + sliderBounds.w - 10;
+    volumeValue = value;
+    sliderPosX = (volumeValue / (float)MIX_MAX_VOLUME) * (maxValue - minValue) + minValue;
+}
+
 
 
 

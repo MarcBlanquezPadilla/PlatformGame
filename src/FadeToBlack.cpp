@@ -44,7 +44,6 @@ bool FadeToBlack::Update(float dt)
 		{
 			// TODO 1: Enable / disable the modules received when FadeToBlacks() gets called
 			moduleToDisable->Disable();
-			Engine::GetInstance().ReloadConfig();
 			moduleToEnable->Enable();
 
 			currentStep = Fade_Step::FROM_BLACK;
