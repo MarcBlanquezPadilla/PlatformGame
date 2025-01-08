@@ -62,16 +62,10 @@ public:
 		return true;
 	}
 
-	virtual bool ReloadParameters()
+	virtual bool ReloadParameters(pugi::xml_node parameters)
 	{
-		pugi::xml_document loadFile;
-		pugi::xml_parse_result result = loadFile.load_file("config.xml");
 
-		if (result == NULL) {
-			LOG("Error loading config.xml");
-			return false;
-		}
-		LoadParameters(loadFile.child("config").child(name.c_str()));
+		LoadParameters(parameters);
 		return true;
 	}
 

@@ -269,7 +269,26 @@
 							<point x="275" y="390" />
 						</instance>
 					</lvl1>
-					<lvl2 />
+					<lvl2>
+						<instance enemyType="skeleton" entityType="6">
+							<point x="280" y=" 390" />
+							<point x="525" y=" 360" />
+						</instance>
+						<instance enemyType="bat" entityType="5">
+							<point x="860" y="200" />
+							<point x="1060" y="200" />
+						</instance>
+						<instance enemyType="bat" entityType="5">
+							<point x="1830" y="215" />
+							<point x="1900" y="215" />
+							<point x="1900" y="335" />
+							<point x="1830" y="335" />
+						</instance>
+						<instance enemyType="santa" entityType="7">
+							<point x="2660" y="400" />
+							<point x="2140" y="400" />
+						</instance>
+					</lvl2>
 				</instances>
 			</enemies>
 			<items>
@@ -281,6 +300,12 @@
 							<swirl1 x="608" y="320" type="swirl" entityType="3" />
 							<heart1 x="1000" y="416" type="heart" entityType="3" />
 						</lvl1>
+						<lvl2>
+							<swirl1 x="608" y="310" type="swirl" entityType="3" />
+							<corn1 x="1233" y="310" type="corn" entityType="3" />
+							<swirl2 x="1855" y="236" type="swirl" entityType="3" />
+							<heart1 x="1888" y="360" type="heart" entityType="3" />
+						</lvl2>
 					</instances>
 					<animations>
 						<floating loop="true" speed="0.1f">
@@ -305,6 +330,13 @@
 							<instance x="1568" y="257" entityType="2" />
 							<instance x="1808" y="192" entityType="2" />
 						</lvl1>
+						<lvl2>
+							<instance x="175" y="385" entityType="2" />
+							<instance x="1035" y="224" entityType="2" />
+							<instance x="1488" y="400" entityType="2" />
+							<instance x="1780" y="352" entityType="2" />
+							<instance x="2120" y="400" entityType="2" />
+						</lvl2>
 					</instances>
 					<animations>
 						<unlit>
@@ -317,15 +349,15 @@
 				</pumpkins>
 			</items>
 		</entities>
-		<savedData saved="true" level="2">
+		<savedData saved="true" level="2" time="0">
 			<lvl1>
-				<player x="1799" y="181" lives="3" transformable="false" transformed="false" lvl="0" />
-				<enemy0 dead="false" x="187" y="423" />
-				<enemy1 dead="false" x="537" y="207" />
-				<enemy2 dead="false" x="2153" y="119" />
-				<enemy3 dead="false" x="1647" y="184" />
-				<enemy4 dead="false" x="1660" y="439" />
-				<enemy5 dead="false" x="203" y="423" />
+				<player x="1799" y="197" lives="2" transformable="false" transformed="false" lvl="0" candies="3" />
+				<enemy0 dead="false" x="152" y="423" />
+				<enemy1 dead="false" x="8" y="248" />
+				<enemy2 dead="false" x="2087" y="127" />
+				<enemy3 dead="true" x="1627" y="263" />
+				<enemy4 dead="false" x="1653" y="439" />
+				<enemy5 dead="false" x="168" y="423" />
 				<pumpkin0 alight="true" x="308" y="423" />
 				<pumpkin1 alight="true" x="824" y="312" />
 				<pumpkin2 alight="true" x="728" y="392" />
@@ -337,10 +369,23 @@
 				<pumpkin8 alight="true" x="1816" y="200" />
 				<candy0 x="376" y="312" type="corn" picked="true" />
 				<candy1 x="616" y="328" type="swirl" picked="true" />
-				<candy2 x="1008" y="423" type="heart" picked="false" />
+				<candy2 x="1008" y="423" type="heart" picked="true" />
 			</lvl1>
 			<lvl2>
 				<player x="25" y="419" lives="3" transformable="false" transformed="false" lvl="0" />
+				<enemy0 dead="false" x="280" y="391" />
+				<enemy1 dead="false" x="855" y="200" />
+				<pumpkin0 alight="true" x="183" y="392" />
+				<enemy2 dead="false" x="1832" y="215" />
+				<pumpkin1 alight="true" x="1042" y="232" />
+				<pumpkin2 alight="true" x="1496" y="408" />
+				<enemy3 dead="false" x="2664" y="408" />
+				<pumpkin3 alight="true" x="1787" y="360" />
+				<pumpkin4 alight="true" x="2128" y="408" />
+				<candy0 x="616" y="317" type="swirl" picked="false" />
+				<candy1 x="1241" y="317" type="corn" picked="false" />
+				<candy2 x="1862" y="244" type="swirl" picked="false" />
+				<candy3 x="1895" y="367" type="heart" picked="false" />
 			</lvl2>
 		</savedData>
 		<pauseMenu>
@@ -387,4 +432,9 @@
 		</fx>
 		<music />
 	</audio>
+	<playerPrefs>
+		<fullscreen toggle="0" />
+		<musicVolume value="10" />
+		<sfxVolume value="30" />
+	</playerPrefs>
 </config>

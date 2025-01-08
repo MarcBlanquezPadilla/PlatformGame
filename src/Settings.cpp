@@ -44,6 +44,7 @@ bool Settings::Start()
 	SDL_Texture* circleTex = Engine::GetInstance().textures.get()->Load(configParameters.child("sliders").attribute("texture").as_string());
 	SDL_Texture* barTex = Engine::GetInstance().textures.get()->Load(configParameters.child("sliders").attribute("barTexture").as_string());
 
+
 	musicSlider = (GuiControlSlider*)Engine::Engine::GetInstance().guiManager.get()->CreateGuiControl(GuiControlType::SLIDER, "musicSlider", "", { 0,0,0,0 }, this, { 0,0,0,0 }, circleTex, barTex);
 	/*musicSlider->sliderTexture = barTex;*/
 	SetGuiParameters(musicSlider, "musicSlider", configParameters.child("sliders"));
@@ -74,7 +75,7 @@ bool Settings::Start()
 	musicSlider->sliderPosX = musicSlider->sliderBounds.x + musicSlider->sliderBounds.w/2 - musicSlider->bounds.w/2;
 	sfxSlider->sliderPosX = sfxSlider->sliderBounds.x + sfxSlider->sliderBounds.w/2 - sfxSlider->bounds.w/2;
 
-
+	LoadPrefs();
 
 	settingsOpen = false;
 	return true;
@@ -102,9 +103,7 @@ bool Settings::Update(float dt)
 		for (GuiControl* gui : settingsGUI) {
 			if (gui->active == false) {
 				gui->active = true;
-				
 			}
-
 		}
 		
 		backBt->Update(dt);
@@ -120,8 +119,7 @@ bool Settings::Update(float dt)
 		/*OnGuiMouseClickEvent(sfxSlider);*/
 
 
-		
-		
+	
 		if (fullScreenBox->isChecked) {
 			SDL_SetWindowFullscreen(Engine::GetInstance().window.get()->window, SDL_WINDOW_FULLSCREEN);
 		}
@@ -181,7 +179,7 @@ bool Settings::OnGuiMouseClickEvent(GuiControl* control) {
 			for (const auto& bt : Engine::GetInstance().mainMenu.get()->buttons) {
 				bt.second->state = GuiControlState::NORMAL;
 			}
-			
+			SavePrefs();
 		}
 		
 		break;
@@ -220,4 +218,35 @@ void Settings::SetGuiParameters(GuiControl* bt, std::string btName, pugi::xml_no
 int Settings::SetVolume(GuiControlSlider* slider) {
 
 	return (slider->volumeValue);
+}
+
+void Settings::SavePrefs()
+{
+	pugi::xml_document saveFile;
+	pugi::xml_parse_result result = saveFile.load_file("config.xml");
+
+	saveFile.child("config").child("playerPrefs").child("fullscreen").attribute("toggle").set_value((int)fullScreenBox->isChecked);
+	saveFile.child("config").child("playerPrefs").child("musicVolume").attribute("value").set_value(musicVolume);
+	saveFile.child("config").child("playerPrefs").child("sfxVolume").attribute("value").set_value(sfxVolume);
+
+	//Saves the modifications to the XML 
+	saveFile.save_file("config.xml");
+	Engine::GetInstance().ReloadConfig();
+}
+
+void Settings::LoadPrefs()
+{
+	pugi::xml_document saveFile;
+	pugi::xml_parse_result result = saveFile.load_file("config.xml");
+
+	fullScreen = saveFile.child("config").child("playerPrefs").child("fullscreen").attribute("toggle").as_bool();
+	musicVolume = saveFile.child("config").child("playerPrefs").child("musicVolume").attribute("value").as_int();
+	sfxVolume = saveFile.child("config").child("playerPrefs").child("sfxVolume").attribute("value").as_int();
+
+	fullScreenBox->SetChecked(fullScreen);
+	if (fullScreenBox->isChecked) {
+		SDL_SetWindowFullscreen(Engine::GetInstance().window.get()->window, SDL_WINDOW_FULLSCREEN);
+	}
+	musicSlider->SetVolumeValue(musicVolume);
+	sfxSlider->SetVolumeValue(sfxVolume);
 }

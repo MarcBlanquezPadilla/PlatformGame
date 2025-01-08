@@ -12,6 +12,7 @@ public:
     virtual ~GuiControlSlider();
 
     bool Update(float dt);
+    void SetVolumeValue(int value);
    
     
    /* SDL_Rect sliderBounds;*/

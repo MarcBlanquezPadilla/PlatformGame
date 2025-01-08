@@ -37,6 +37,8 @@ public:
 	void SetGuiParameters(GuiControl* bt, std::string btName, pugi::xml_node parameters);
 
 	int SetVolume(GuiControlSlider* slider);
+	void SavePrefs();
+	void LoadPrefs();
 	/*void ShowSettings();*/
 
 public:

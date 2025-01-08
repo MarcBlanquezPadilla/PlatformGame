@@ -117,3 +117,8 @@ bool GuiControlCheckBox::Update(float dt)
 
 	return false;
 }
+
+void GuiControlCheckBox::SetChecked(bool b)
+{
+	isChecked = b;
+}
