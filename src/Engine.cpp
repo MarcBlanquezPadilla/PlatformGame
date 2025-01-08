@@ -203,7 +203,7 @@ bool Engine::ReloadConfig()
 {
     LoadConfig();
     for (const auto& module : moduleList) {
-        module.get()->LoadParameters(configFile.child("config").child(module.get()->name.c_str()));
+        module.get()->ReloadParameters(configFile.child("config").child(module.get()->name.c_str()));
     }
     return true;
 }

@@ -127,6 +127,7 @@ bool Scene::Start()
 
 	currentTime = 0;
 	stoppedTimer = false;
+
 	lvl1Timer.Start();
 
 	if (!loadScene) SaveState();
@@ -390,6 +391,7 @@ void Scene::SaveState()
 
 	saveFile.child("config").child("scene").child("savedData").attribute("saved").set_value(true);
 	saveFile.child("config").child("scene").child("savedData").attribute("level").set_value((int)level);
+	saveFile.child("config").child("scene").child("savedData").attribute("time").set_value(lvl1Timer.ReadSec());
 
 	if (result == NULL)
 	{
@@ -532,7 +534,6 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control) {
 			quit = true;
 		}
 		break;
-
 	}
 
 	
@@ -572,5 +573,13 @@ void Scene::SetLevel(Levels level)
 	level = level;
 }
 
-
+bool Scene::ReloadParameters(pugi::xml_node parameters)
+{
+	LoadParameters(parameters);
+	if (player)
+	{
+		player->SetParameters(configParameters.child("entities").child("player"));
+	}
+	return true;
+}
 

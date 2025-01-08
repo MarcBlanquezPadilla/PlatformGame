@@ -91,9 +91,10 @@ public:
 	int GetLevel();
 	
 	void SetLevel(Levels level);
+
+	bool ReloadParameters(pugi::xml_node parameters) override;
 	
 	std::string GetLevelString();
-
 
 public:
 	Levels level;

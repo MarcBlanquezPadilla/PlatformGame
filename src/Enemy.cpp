@@ -142,7 +142,6 @@ void Enemy::SaveData(pugi::xml_node enemyNode)
 void Enemy::LoadData(pugi::xml_node enemyNode)
 {
 	pbody->SetPhysPositionWithWorld( enemyNode.attribute("x").as_float(), enemyNode.attribute("y").as_float() );
-	ResetPath();
 	dead = enemyNode.attribute("dead").as_bool();
 	if (dead) {
 		state = DEAD;
@@ -150,18 +149,20 @@ void Enemy::LoadData(pugi::xml_node enemyNode)
 	}
 	else
 	{
-		state = PATROL;
+		state = CHASING;
 		pbody->body->SetEnabled(true);
 	}
-	
+	destinationPoint = route[routeDestinationIndex];
+	ResetPath();
 }
 
 void Enemy::Restart()
 {
 	pbody->SetPhysPositionWithWorld(route[0].getX(), route[0].getY());
-	state = CHASING;
+	state = PATROL;
 	dead = false;
 	pbody->body->SetEnabled(true);
+	
 	ResetPath();
 }
 
