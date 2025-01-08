@@ -166,12 +166,9 @@ void Player::Restart()
 
 bool Player::Update(float dt)
 {
-
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_K))
 	{
-		Engine::GetInstance().physics.get()->DeletePhysBody(pbody);
-		/*deleted = true;*/
-		//return true;
+		LOG("%f,%f", pbody->GetPhysBodyWorldPosition().getX(), pbody->GetPhysBodyWorldPosition().getY());
 	}
 
 	//FRUSTRUM
@@ -620,6 +617,7 @@ void Player::LoadData(pugi::xml_node playerNode)
 	lives = playerNode.attribute("lives").as_int();
 	transformed = playerNode.attribute("transformed").as_bool();
 	if (transformed) jumpForce = parameters.child("propierties").attribute("pJumpForce").as_float();
+	else jumpForce = parameters.child("propierties").attribute("gJumpForce").as_float();
 	SetPosition(position);
 	lvl = playerNode.attribute("lvl").as_int();
 	/*if (lvl == 1) Engine::GetInstance().scene.get()->level = LVL1;
