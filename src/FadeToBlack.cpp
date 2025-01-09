@@ -33,17 +33,42 @@ bool FadeToBlack::Start()
 	return true;
 }
 
-bool FadeToBlack::Update(float dt)
+bool FadeToBlack::PreUpdate()
 {
-	// Exit this function if we are not performing a fade
 	if (currentStep == Fade_Step::NONE) return true;
 
 	if (currentStep == Fade_Step::TO_BLACK)
 	{
 		++frameCount;
-		if (frameCount >= maxFadeFrames)
+		frameCount = frameCount > maxFadeFrames ? maxFadeFrames : frameCount;
+	}
+	else
+	{
+		--frameCount;
+		frameCount = frameCount < 0 ? 0 : frameCount;
+	}
+	return true;
+}
+
+bool FadeToBlack::Update(float dt)
+{
+	// Exit this function if we are not performing a fade
+	if (currentStep == Fade_Step::NONE) return true;
+
+	float fadeRatio = (float)frameCount / (float)maxFadeFrames;
+	// Render the black square with alpha on the screen
+	SDL_SetRenderDrawColor(Engine::GetInstance().render.get()->renderer, 0, 0, 0, (Uint8)(fadeRatio * 255.0f));
+	SDL_RenderFillRect(Engine::GetInstance().render.get()->renderer, &screenRect);
+
+	return true;
+}
+
+bool FadeToBlack::PostUpdate()
+{
+	if (currentStep == Fade_Step::TO_BLACK)
+	{
+		if (frameCount == maxFadeFrames)
 		{
-			// TODO 1: Enable / disable the modules received when FadeToBlacks() gets called
 			moduleToDisable->Disable();
 
 			moduleToEnable->Enable();
@@ -53,27 +78,13 @@ bool FadeToBlack::Update(float dt)
 	}
 	else
 	{
-		--frameCount;
-		if (frameCount <= 0)
+		if (frameCount == 0)
 		{
 			currentStep = Fade_Step::NONE;
 			
 		}
 	}
-
-	return true;
-}
-
-bool FadeToBlack::PostUpdate()
-{
-	// Exit this function if we are not performing a fade
-	if (currentStep == Fade_Step::NONE) return true;
-
-	float fadeRatio = (float)frameCount / (float)maxFadeFrames;
-
-	// Render the black square with alpha on the screen
-	SDL_SetRenderDrawColor(Engine::GetInstance().render.get()->renderer, 0, 0, 0, (Uint8)(fadeRatio * 255.0f));
-	SDL_RenderFillRect(Engine::GetInstance().render.get()->renderer, &screenRect);
+	
 
 	return true;
 }

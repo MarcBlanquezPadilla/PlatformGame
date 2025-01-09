@@ -97,7 +97,6 @@ public:
 
 public:
 	Levels level;
-	bool musicPlays = false;
 	bool paused = false;
 	bool help = false;
 	Player* player;

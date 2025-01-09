@@ -35,6 +35,7 @@ public:
 	// Called at the end of the application loop
 	// Performs the render call of a black rectangle with transparency
 	bool PostUpdate() override;
+	bool PreUpdate() override;
 
 	// Called from another module
 	// Starts the fade process which has two steps, fade_out and fade_in

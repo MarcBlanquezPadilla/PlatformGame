@@ -4,7 +4,7 @@
 #include "SDL2/SDL_mixer.h"
 #include <list>
 
-#define DEFAULT_MUSIC_FADE_TIME 2.0f
+#define DEFAULT_MUSIC_FADE_TIME 1.0f
 #define MAX_FX 600
 
 struct _Mix_Music;
@@ -26,6 +26,7 @@ public:
 
 	// Play a music file
 	bool PlayMusic(const char* path, float fadeTime = DEFAULT_MUSIC_FADE_TIME);
+	bool StopMusic(float fadeTime = DEFAULT_MUSIC_FADE_TIME);
 
 	// Load a WAV in memory
 	int LoadFx(const char* path);

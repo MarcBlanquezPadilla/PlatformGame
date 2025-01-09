@@ -62,6 +62,8 @@ public:
 	bool LoadConfig();
 	
 	bool ReloadConfig();
+	
+	pugi::xml_node GetConfig();
 
 private:
 
@@ -87,8 +89,6 @@ private:
 
 	// Call modules after each loop iteration
 	bool PostUpdate();
-
-
 
 
 	//Check if value it's near to other

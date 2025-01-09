@@ -62,5 +62,4 @@ public:
 	GuiControlButton* backBt;
 
 	std::map<std::string, GuiControlButton*> buttons;
-
 };

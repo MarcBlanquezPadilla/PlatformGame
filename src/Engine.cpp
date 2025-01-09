@@ -339,3 +339,8 @@ bool Engine::GetDebug()
 {
     return debug;
 }
+
+pugi::xml_node Engine::GetConfig()
+{
+    return configFile.child("config");
+}

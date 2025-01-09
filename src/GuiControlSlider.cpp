@@ -34,7 +34,7 @@ GuiControlSlider::~GuiControlSlider()
 bool GuiControlSlider::Update(float dt)
 {
     minValue = sliderBounds.x + 10;
-    maxValue = sliderBounds.x + sliderBounds.w - 10;
+    maxValue = sliderBounds.x + sliderBounds.w - 45;
    
     
     if (state != GuiControlState::DISABLED)
@@ -44,30 +44,30 @@ bool GuiControlSlider::Update(float dt)
         Vector2D mousePos = Engine::GetInstance().input.get()->GetMousePosition();
         
         // Check collision between mouse and button bounds
-        if (mousePos.getX() > sliderBounds.x && mousePos.getX() < sliderBounds.x + sliderBounds.w && mousePos.getY() > bounds.y && mousePos.getY() < bounds.y + bounds.h)
+        if (mousePos.getX() > sliderBounds.x && mousePos.getX() < sliderBounds.x + sliderBounds.w && mousePos.getY() > bounds.y && mousePos.getY() < bounds.y + bounds.h && state != GuiControlState::PRESSED)
         {
             state = GuiControlState::FOCUSED;
 
             
-            if (Engine::GetInstance().input.get()->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_REPEAT)
+            if (Engine::GetInstance().input.get()->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN)
             {
                 state = GuiControlState::PRESSED;
-                if (mousePos.getX() > minValue && mousePos.getX() < maxValue) {
-                    sliderPosX = mousePos.getX() - bounds.w/2;
-                }
-               
             }
+        }
+        else if (state == GuiControlState::PRESSED)
+        {
+            sliderPosX = mousePos.getX();
+            sliderPosX = sliderPosX < minValue ? minValue : sliderPosX;
+            sliderPosX = sliderPosX > maxValue ? maxValue : sliderPosX;
 
             // If mouse button pressed -> Generate event!
             if (Engine::GetInstance().input.get()->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP)
             {
-                
+                state = GuiControlState::NORMAL;
                 NotifyObserver();
-                
             }
         }
         else state = GuiControlState::NORMAL;
-       
     }
 
     SDL_Rect camera = Engine::GetInstance().render.get()->camera;

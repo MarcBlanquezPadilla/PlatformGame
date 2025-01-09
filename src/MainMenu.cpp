@@ -61,7 +61,6 @@ bool MainMenu::Start()
 	
 	Engine::GetInstance().render.get()->camera.x = 0;
 	Engine::GetInstance().render.get()->camera.y = 0;
-	
 
 	Engine::GetInstance().audio.get()->PlayMusic(musicNode.child("menuMus").attribute("path").as_string(), 0.5f);
 
@@ -84,14 +83,15 @@ bool MainMenu::Update(float dt)
 	_dt = dt;
 
 	Engine::GetInstance().render.get()->DrawTexture(bgTex, 0, 0, NULL);
-	for (const auto& bt : buttons)
+	if (!Engine::GetInstance().settings.get()->settingsOpen && !creditsOpen)
 	{
-		OnGuiMouseClickEvent(bt.second);
-		if(bt.second->name != "backBt")
-			bt.second->Update(dt);
+		for (const auto& bt : buttons)
+		{
+			OnGuiMouseClickEvent(bt.second);
+			if (bt.second->name != "backBt")
+				bt.second->Update(dt);
+		}
 	}
-	
-	
 
 	if (quit) return false;
 	

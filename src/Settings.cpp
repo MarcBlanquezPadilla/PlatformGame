@@ -113,7 +113,7 @@ bool Settings::Update(float dt)
 
 		
 		musicSlider->Update(dt);
-		/*OnGuiMouseClickEvent(musicSlider);*/
+		OnGuiMouseClickEvent(musicSlider);
 		
 		sfxSlider->Update(dt);
 		/*OnGuiMouseClickEvent(sfxSlider);*/

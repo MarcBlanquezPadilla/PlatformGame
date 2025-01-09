@@ -137,6 +137,9 @@ bool Scene::Start()
 
 	if (!loadScene) SaveState();
 
+	musicNode = Engine::GetInstance().GetConfig().child("audio").child("music");
+	Engine::GetInstance().audio.get()->PlayMusic(musicNode.child("lvl1Mus").attribute("path").as_string());
+
 	return true;
 }
 
@@ -232,25 +235,6 @@ bool Scene::Update(float dt)
 		loadScene = false;
 	}
 
-	//PlayMusic
-	if (!musicPlays) {
-		
-		pugi::xml_document configFile;
-		pugi::xml_parse_result result = configFile.load_file("config.xml");
-		musicNode = configFile.child("config").child("audio").child("music");
-		
-		if(level == LVL1)
-			Engine::GetInstance().audio.get()->PlayMusic(musicNode.child("lvl1Mus").attribute("path").as_string());
-		else if (level == LVL2) {
-			/*Mix_HaltMusic();*/
-			Engine::GetInstance().audio.get()->PlayMusic(musicNode.child("lvl2Mus").attribute("path").as_string());
-		}
-		/*Mix_VolumeMusic(MIX_MAX_VOLUME / 5);*/
-		
-		musicPlays = true;
-		
-	}
-	
 	if (paused) {
 		if (!stoppedTimer) {
 			stoppedTimer = true;
@@ -262,7 +246,6 @@ bool Scene::Update(float dt)
 		stoppedTimer = false;
 		lvl1Timer.Start();
 	}
-	
 	
 	if (!paused) {
 
@@ -281,8 +264,6 @@ bool Scene::Update(float dt)
 		else Engine::GetInstance().render.get()->camera.y = (player->position.getY() + CAM_EXTRA_DISPLACEMENT_Y) * -Engine::GetInstance().window.get()->scale;
 	}
 
-
-
 	return true;
 }
 
@@ -294,11 +275,13 @@ bool Scene::PostUpdate()
 
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F5) == KEY_DOWN)
 	{
+		Engine::GetInstance().audio.get()->PlayFx(player->saveGameSFX);
 		SaveState();
 	}
 
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F6) == KEY_DOWN) {
 		
+		Engine::GetInstance().audio.get()->PlayFx(player->loadGameSFX);
 		LoadState();
 	}
 	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_H) == KEY_DOWN) {
