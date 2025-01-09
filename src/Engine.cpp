@@ -18,6 +18,8 @@
 #include "GuiManager.h"
 #include "MainMenu.h"
 #include "tracy/Tracy.hpp"
+#include "DeathMenu.h"
+#include "WinMenu.h"
 #include "Settings.h"
 
 // Constructor
@@ -49,6 +51,9 @@ Engine::Engine() {
     fade = std::make_shared<FadeToBlack>(true);
     intro = std::make_shared<Intro>(true);
     settings = std::make_shared<Settings>(true);
+    death = std::make_shared<DeathMenu>(false);
+    win = std::make_shared<WinMenu>(false);
+
 
     // Ordered for awake / Start / Update
     // Reverse order of CleanUp
@@ -63,8 +68,10 @@ Engine::Engine() {
     AddModule(std::static_pointer_cast<Module>(scene));
     AddModule(std::static_pointer_cast<Module>(entityManager));
     AddModule(std::static_pointer_cast<Module>(intro));
-   
+    
     AddModule(std::static_pointer_cast<Module>(guiManager));
+    AddModule(std::static_pointer_cast<Module>(death));
+    AddModule(std::static_pointer_cast<Module>(win));
     AddModule(std::static_pointer_cast<Module>(settings));
     AddModule(std::static_pointer_cast<Module>(fade));
     // Render last 

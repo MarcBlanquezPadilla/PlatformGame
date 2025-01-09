@@ -4,9 +4,20 @@
 #include "Module.h"
 #include "SDL2/SDL_rect.h"
 
+
+
 class FadeToBlack : public Module
 {
 public:
+
+	enum Fade_Step
+	{
+		NONE,
+		TO_BLACK,
+		FROM_BLACK
+	} currentStep = Fade_Step::NONE;
+
+
 	//Constructor
 	FadeToBlack(bool startEnabled);
 
@@ -32,12 +43,7 @@ public:
 
 private:
 
-	enum Fade_Step
-	{
-		NONE,
-		TO_BLACK,
-		FROM_BLACK
-	} currentStep = Fade_Step::NONE;
+
 
 	// A frame count system to handle the fade time and ratio
 	Uint32 frameCount = 0;

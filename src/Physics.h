@@ -48,6 +48,7 @@ public:
 	PhysBody() : listener(NULL), body(NULL), ctype(ColliderType::UNKNOWN)
 	{}
 
+
 	~PhysBody() {}
 
 	Vector2D GetPosition();

@@ -12,6 +12,8 @@
 #include "EntityManager.h"
 #include "Candy.h"
 #include "MainMenu.h"
+#include "WinMenu.h"
+#include "FadeToBlack.h"
 
 
  
@@ -89,6 +91,7 @@ bool Player::Start() {
 	reachedCheckPoint = false;
 	shot = false;
 	pickedItem = false;
+	won = false;
 
 	pickedCandies = 0;
 
@@ -371,6 +374,7 @@ bool Player::Update(float dt)
 
 				if (lives <= 0) {
 					lives = parameters.attribute("lives").as_int();
+					
 				}
 
 				death.Reset();
@@ -554,7 +558,14 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		Engine::GetInstance().scene.get()->SaveState();
 		break;
 	case ColliderType::LEVEL_CHANGER:
-		Engine::GetInstance().scene.get()->ChangeLevel();
+		if (Engine::GetInstance().scene.get()->level == LVL1) {
+			Engine::GetInstance().scene.get()->ChangeLevel();
+		}
+		else if (Engine::GetInstance().scene.get()->level == LVL2) {
+			/*Engine::GetInstance().fade.get()->Fade(Engine::GetInstance().scene.get(), Engine::GetInstance().win.get(), 30);*/
+			won = true;
+		}
+		
 		break;
 	
 	case ColliderType::UNKNOWN:

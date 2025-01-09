@@ -349,15 +349,15 @@
 				</pumpkins>
 			</items>
 		</entities>
-		<savedData saved="true" level="2" time="0">
+		<savedData saved="true" level="2" time="15.9320002">
 			<lvl1>
-				<player x="1799" y="197" lives="2" transformable="false" transformed="false" lvl="0" candies="3" />
-				<enemy0 dead="false" x="152" y="423" />
-				<enemy1 dead="false" x="8" y="248" />
-				<enemy2 dead="false" x="2087" y="127" />
-				<enemy3 dead="true" x="1627" y="263" />
-				<enemy4 dead="false" x="1653" y="439" />
-				<enemy5 dead="false" x="168" y="423" />
+				<player x="1800" y="198" lives="4" transformable="false" transformed="false" lvl="0" candies="3" />
+				<enemy0 dead="false" x="133" y="423" />
+				<enemy1 dead="false" x="877" y="-96" />
+				<enemy2 dead="false" x="2153" y="119" />
+				<enemy3 dead="false" x="1626" y="199" />
+				<enemy4 dead="false" x="1679" y="439" />
+				<enemy5 dead="false" x="148" y="423" />
 				<pumpkin0 alight="true" x="308" y="423" />
 				<pumpkin1 alight="true" x="824" y="312" />
 				<pumpkin2 alight="true" x="728" y="392" />
@@ -372,18 +372,18 @@
 				<candy2 x="1008" y="423" type="heart" picked="true" />
 			</lvl1>
 			<lvl2>
-				<player x="25" y="419" lives="3" transformable="false" transformed="false" lvl="0" />
-				<enemy0 dead="false" x="280" y="391" />
-				<enemy1 dead="false" x="855" y="200" />
+				<player x="1480" y="333" lives="3" transformable="false" transformed="false" lvl="0" />
+				<enemy0 dead="false" x="419" y="359" />
+				<enemy1 dead="false" x="806" y="167" />
 				<pumpkin0 alight="true" x="183" y="392" />
-				<enemy2 dead="false" x="1832" y="215" />
+				<enemy2 dead="false" x="1890" y="215" />
 				<pumpkin1 alight="true" x="1042" y="232" />
 				<pumpkin2 alight="true" x="1496" y="408" />
-				<enemy3 dead="false" x="2664" y="408" />
+				<enemy3 dead="false" x="2664" y="407" />
 				<pumpkin3 alight="true" x="1787" y="360" />
 				<pumpkin4 alight="true" x="2128" y="408" />
-				<candy0 x="616" y="317" type="swirl" picked="false" />
-				<candy1 x="1241" y="317" type="corn" picked="false" />
+				<candy0 x="616" y="317" type="swirl" picked="true" />
+				<candy1 x="1241" y="317" type="corn" picked="true" />
 				<candy2 x="1862" y="244" type="swirl" picked="false" />
 				<candy3 x="1895" y="367" type="heart" picked="false" />
 			</lvl2>
@@ -397,14 +397,36 @@
 				<exitBt id="5" x="213" y="236" w="233" h="39" texture="Assets/Textures/Menus/Pause/exit centered.png" />
 			</buttons>
 		</pauseMenu>
-		<deathMenu path="Assets/Textures/Menus/Win-Lose/lose screen no text.png" />
-		<winMenu path="Assets/Textures/Menus/Win-Lose/winScreen.png" />
+		<deathMenu>
+			<bg path="Assets/Textures/Menus/Win-Lose/lose screen no text.png" />
+			<icons>
+				<candy x="24" y="17" w="38" h="33" textX="70" textY="22" textW="19" textH="23" path="Assets/Textures/Menus/Win-Lose/candy icon.png" />
+			</icons>
+			<buttons>
+				<retryBt id="12" x="76" y="253" w="233" h="39" texture="Assets/Textures/Menus/Win-Lose/Retry Button Sheet resized.png" />
+				<backToTitleBt id="11" x="330" y="253" w="233" h="39" texture="Assets/Textures/Menus/Win-Lose/back to title.png" />
+				<exitBt id="5" x="505" y="19" w="233" h="39" texture="Assets/Textures/Menus/Win-Lose/Exit Button Sheet_Resized.png" />
+			</buttons>
+		</deathMenu>
+		<winMenu>
+			<bg path="Assets/Textures/Menus/Win-Lose/winScreen.png" />
+			<icons>
+				<candy x="24" y="17" w="38" h="33" textX="70" textY="22" textW="19" textH="23" path="Assets/Textures/Menus/Win-Lose/candy icon.png" />
+			</icons>
+			<buttons>
+				<replayBt id="12" x="379" y="125" w="233" h="39" texture="Assets/Textures/Menus/Win-Lose/Replay Button Sheet resized.png" />
+				<backToTitleBt id="11" x="379" y="180" w="233" h="39" texture="Assets/Textures/Menus/Win-Lose/back to title.png" />
+				<exitBt id="5" x="379" y="236" w="233" h="39" texture="Assets/Textures/Menus/Win-Lose/exit centered.png" />
+			</buttons>
+		</winMenu>
 	</scene>
 	<audio>
 		<music>
 			<menuMus path="Assets/Audio/Music/Nothing As It Seems.ogg" />
 			<lvl1Mus path="Assets/Audio/Music/Haunted Towers.ogg" />
 			<lvl2Mus path="Assets/Audio/Music/Crystal Conundrum (Remix).ogg" />
+			<winMus path="Assets/Audio/Music/Yo-kai Watch 2 Victory.ogg" />
+			<loseMus path="Assets/Audio/Music/Yo-kai Watch Defeat.ogg" />
 		</music>
 		<fx>
 			<gJumpSFX path="Assets/Audio/Fx/ghostJump.ogg" />
@@ -434,7 +456,7 @@
 	</audio>
 	<playerPrefs>
 		<fullscreen toggle="0" />
-		<musicVolume value="10" />
-		<sfxVolume value="30" />
+		<musicVolume value="88" />
+		<sfxVolume value="54" />
 	</playerPrefs>
 </config>

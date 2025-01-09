@@ -148,6 +148,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Candy.cpp" />
+    <ClCompile Include="src\DeathMenu.cpp" />
     <ClCompile Include="src\GroundEnemy.cpp" />
     <ClCompile Include="src\BatEnemy.cpp" />
     <ClCompile Include="src\Audio.cpp" />
@@ -180,9 +181,11 @@
     <ClCompile Include="src\Vector2D.cpp" />
     <ClCompile Include="src\Window.cpp" />
     <ClCompile Include="src\Intro.cpp" />
+    <ClCompile Include="src\WinMenu.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Candy.h" />
+    <ClInclude Include="src\DeathMenu.h" />
     <ClInclude Include="src\GroundEnemy.h" />
     <ClInclude Include="src\BatEnemy.h" />
     <ClInclude Include="src\Animation.h" />
@@ -218,6 +221,7 @@
     <ClInclude Include="src\Vector2D.h" />
     <ClInclude Include="src\Window.h" />
     <ClInclude Include="src\Intro.h" />
+    <ClInclude Include="src\WinMenu.h" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="config.xml" />

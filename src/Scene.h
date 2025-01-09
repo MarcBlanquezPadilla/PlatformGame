@@ -5,7 +5,6 @@
 #include <vector>
 #include "Audio.h"
 #include "SDL2/SDL_mixer.h"
-#include "GuiControl.h"
 #include <map>
 #include <list>
 
@@ -108,13 +107,17 @@ public:
 	float currentTime;
 	bool stoppedTimer;
 
-	SDL_Texture* helpMenu, *deathScreen, *winScreen;
+	SDL_Texture* helpMenu;
 
 	GuiControlButton* resumeBt, * settingsBt, * backToTitleBt, * exitBt, *backBt;
 
 	GuiControlCheckBox* fullScreenCheckBox;
 	SDL_Texture* pausePanel;
 	Vector2D pausePos;
+
+	int finalCandyNum;
+
+	/*PhysBody* endSensor;*/
 	
 
 private:

@@ -324,3 +324,25 @@ bool Render::DrawText(const char* text, int posx, int posy, int w, int h) const
 
 	return true;
 }
+
+
+bool Render::DrawTextEx(const char* text, int posx, int posy, int w, int h, TTF_Font* _font, SDL_Color _color) const
+{
+	int scale = Engine::GetInstance().window.get()->GetScale();
+	
+	SDL_Surface* surface = TTF_RenderText_Solid(_font, text, _color);
+	SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+
+	int texW, texH;
+	/*texW *= scale;
+	texH *= scale;*/
+	SDL_QueryTexture(texture, NULL, NULL, &texW, &texH);
+	SDL_Rect dstrect = { posx*scale, posy*scale, w*scale, h*scale };
+
+	SDL_RenderCopy(renderer, texture, NULL, &dstrect);
+
+	SDL_DestroyTexture(texture);
+	SDL_FreeSurface(surface);
+
+	return true;
+}

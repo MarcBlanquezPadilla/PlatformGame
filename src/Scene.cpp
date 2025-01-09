@@ -25,6 +25,8 @@
 #include "FadeToBlack.h"
 #include "Settings.h"
 #include "Santa.h"
+#include "DeathMenu.h"
+#include "WinMenu.h"
 
 #include "Intro.h"
 
@@ -75,6 +77,8 @@ bool Scene::Start()
 
 	//Load Map
 	Engine::GetInstance().map->Load(path, name);
+
+
 	//Load Parallax
 	Engine::GetInstance().map->LoadParalax(configParameters.child("map").child("parallax"));
 
@@ -127,6 +131,7 @@ bool Scene::Start()
 
 	currentTime = 0;
 	stoppedTimer = false;
+	finalCandyNum = 0;
 
 	lvl1Timer.Start();
 
@@ -192,10 +197,31 @@ bool Scene::Update(float dt)
 
 	_dt = dt;
 
+	if (player->lives <= 0 && player->respawnTimer.ReadSec() > player->respawnTime-1) {
+		/*Engine::GetInstance().death.get()->Enable();*/
+
+		Engine::GetInstance().fade.get()->Fade((Module*)this, Engine::GetInstance().death.get());
+		/*if(Engine::GetInstance().fade.get()->currentStep == Engine::GetInstance().fade.get()->FROM_BLACK)*/
+		
+		
+		musicPlays = false;
+		return true;
+	}
+
 	if (changeLevel)
 	{
 		changeLevel = false;
 		Engine::GetInstance().fade.get()->Fade(this, this);
+		return true;
+	}
+
+	if (player->won) {
+
+		finalCandyNum = player->candyNum;
+		player->won = false;
+		Engine::GetInstance().fade.get()->Fade(this, Engine::GetInstance().win.get());
+		musicPlays = false;
+		
 		return true;
 	}
 
@@ -528,11 +554,11 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control) {
 
 	case GuiControlId::BACKTOTITLE:
 		if (control->state == GuiControlState::PRESSED) {
-			
+			finalCandyNum = player->candyNum;
 			Engine::GetInstance().fade.get()->Fade((Module*)this, (Module*)Engine::GetInstance().mainMenu.get(), 30);
 			
 			Engine::GetInstance().entityManager.get()->Disable();
-			/*player->Disable();*/
+			musicPlays = false;
 			
 		}
 		break;
@@ -570,6 +596,7 @@ void Scene::ChangeLevel()
 	musicPlays = false;
 	changeLevel = true;
 }
+
 
 std::string Scene::GetLevelString()
 {

@@ -74,9 +74,6 @@ bool GuiControlButton::Update(float dt)
 		break;
 	}
 
-	if (useCamera) {
-		
-	}
 
 	if (active) {
 		if (texture != nullptr) {

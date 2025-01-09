@@ -45,6 +45,7 @@ enum class GuiControlId
 	
 	RESUME,
 	BACKTOTITLE,
+	RETRY
 	
 };
 

@@ -105,6 +105,7 @@ public:
 	bool shot;
 	bool pickedItem;
 	bool hasCollider = false;
+	bool won;
 
 	int candyNum;
 
