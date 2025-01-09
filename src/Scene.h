@@ -77,6 +77,8 @@ public:
 
 	void LoadState();
 
+	void LoadTimeLivesCandies();
+
 	void SaveState();
 
 	void SetLoadState(bool load);
@@ -93,14 +95,17 @@ public:
 
 	bool ReloadParameters(pugi::xml_node parameters) override;
 	
-	std::string GetLevelString();
+	std::string GetCurrentLevelString();
+	
+	std::string GetLevelString(Levels level);
+
+
 
 public:
 	Levels level;
 	bool paused = false;
 	bool help = false;
 	Player* player;
-	Timer lvl1Timer;
 	float lvl1Volume;
 
 	float currentTime;

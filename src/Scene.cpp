@@ -72,8 +72,8 @@ bool Scene::Start()
 
 	if (loadScene) level = (Levels)configParameters.child("savedData").attribute("level").as_int();
 
-	std::string path = configParameters.child("map").child("paths").child(GetLevelString().c_str()).attribute("path").as_string();
-	std::string name = configParameters.child("map").child("paths").child(GetLevelString().c_str()).attribute("name").as_string();
+	std::string path = configParameters.child("map").child("paths").child(GetCurrentLevelString().c_str()).attribute("path").as_string();
+	std::string name = configParameters.child("map").child("paths").child(GetCurrentLevelString().c_str()).attribute("name").as_string();
 
 	//Load Map
 	Engine::GetInstance().map->Load(path, name);
@@ -87,19 +87,19 @@ bool Scene::Start()
 	player->SetParameters(configParameters.child("entities").child("player"));
 
 	//Load Enemies
-	for (pugi::xml_node enemyNode : configParameters.child("entities").child("enemies").child("instances").child(GetLevelString().c_str()).children())
+	for (pugi::xml_node enemyNode : configParameters.child("entities").child("enemies").child("instances").child(GetCurrentLevelString().c_str()).children())
 	{
 		Enemy* enemy = (GroundEnemy*)Engine::GetInstance().entityManager->CreateEntity((EntityType)enemyNode.attribute("entityType").as_int());;
 		LoadEnemy(enemy, enemyNode);
 	}
 
-	for (pugi::xml_node pumpkingNode : configParameters.child("entities").child("items").child("pumpkins").child("instances").child(GetLevelString().c_str()).children())
+	for (pugi::xml_node pumpkingNode : configParameters.child("entities").child("items").child("pumpkins").child("instances").child(GetCurrentLevelString().c_str()).children())
 	{
 		Pumpkin* pumpkin = (Pumpkin*)Engine::GetInstance().entityManager->CreateEntity((EntityType)pumpkingNode.attribute("entityType").as_int());;
 		LoadItem(pumpkin, pumpkingNode);
 	}
 
-	for (pugi::xml_node candyNode : configParameters.child("entities").child("items").child("candies").child("instances").child(GetLevelString().c_str()).children())
+	for (pugi::xml_node candyNode : configParameters.child("entities").child("items").child("candies").child("instances").child(GetCurrentLevelString().c_str()).children())
 	{
 		Candy* candy = (Candy*)Engine::GetInstance().entityManager->CreateEntity((EntityType)candyNode.attribute("entityType").as_int());;
 		LoadItem(candy, candyNode);
@@ -129,13 +129,21 @@ bool Scene::Start()
 		bt->active = false;
 	}
 
-	currentTime = 0;
 	stoppedTimer = false;
 	finalCandyNum = 0;
 
-	lvl1Timer.Start();
-
-	if (!loadScene) SaveState();
+	if (!loadScene)
+	{
+		SaveState();
+		if (level != LVL1)
+		{
+			LoadTimeLivesCandies();
+		}
+		else
+		{
+			currentTime = 0;
+		}
+	}
 
 	musicNode = Engine::GetInstance().GetConfig().child("audio").child("music");
 	Engine::GetInstance().audio.get()->PlayMusic(musicNode.child("lvl1Mus").attribute("path").as_string());
@@ -213,6 +221,8 @@ bool Scene::Update(float dt)
 	if (changeLevel)
 	{
 		changeLevel = false;
+		SaveState();
+		level = LVL2;
 		Engine::GetInstance().fade.get()->Fade(this, this);
 		return true;
 	}
@@ -232,22 +242,10 @@ bool Scene::Update(float dt)
 		LoadState();
 		loadScene = false;
 	}
-
-	if (paused) {
-		if (!stoppedTimer) {
-			stoppedTimer = true;
-			currentTime += lvl1Timer.ReadSec();
-		}
-		
-	}
-	else if(stoppedTimer) {
-		stoppedTimer = false;
-		lvl1Timer.Start();
-	}
 	
 	if (!paused) {
+		currentTime += dt / 1000.0f;
 
-	
 		if (player->position.getX() < POS_TO_START_MOVING_CAMX) {
 			Engine::GetInstance().render.get()->camera.x = (POS_TO_START_MOVING_CAMX + CAM_EXTRA_DISPLACEMENT_X) * -Engine::GetInstance().window.get()->scale;
 		}
@@ -301,7 +299,7 @@ bool Scene::PostUpdate()
 		std::string livesText = "Lives: " + std::to_string(player->lives);
 		std::string ptsText = "Collected Candies: " + std::to_string(player->pickedCandies);
 		if (paused) timerText = "Time: " + std::to_string((int)currentTime) + " s";
-		else timerText = "Time: " + std::to_string((int)currentTime + (int)lvl1Timer.ReadSec()) + " s";
+		else timerText = "Time: " + std::to_string((int)currentTime) + " s";
 		render->DrawText(livesText.c_str(), 20, 20, 100, 20);
 		render->DrawText(ptsText.c_str(), 150, 20, 200, 20);
 		render->DrawText(timerText.c_str(), 375, 20, 100, 20);
@@ -405,7 +403,7 @@ void Scene::SaveState()
 
 	saveFile.child("config").child("scene").child("savedData").attribute("saved").set_value(true);
 	saveFile.child("config").child("scene").child("savedData").attribute("level").set_value((int)level);
-	saveFile.child("config").child("scene").child("savedData").attribute("time").set_value(lvl1Timer.ReadSec());
+	saveFile.child("config").child("scene").child("savedData").attribute("time").set_value(currentTime);
 
 	if (result == NULL)
 	{
@@ -413,7 +411,7 @@ void Scene::SaveState()
 		return;
 	}
 
-	pugi::xml_node savedDataNode = saveFile.child("config").child("scene").child("savedData").child(GetLevelString().c_str());
+	pugi::xml_node savedDataNode = saveFile.child("config").child("scene").child("savedData").child(GetCurrentLevelString().c_str());
 
 	//Save info to XML 
 	//Player 
@@ -484,7 +482,7 @@ void Scene::LoadState() {
 		return;
 	}
 
-	pugi::xml_node savedDataNode = loadFile.child("config").child("scene").child("savedData").child(GetLevelString().c_str());
+	pugi::xml_node savedDataNode = loadFile.child("config").child("scene").child("savedData").child(GetCurrentLevelString().c_str());
 
 	
 	player->LoadData(savedDataNode.child("player"));
@@ -506,6 +504,32 @@ void Scene::LoadState() {
 		}
 
 	}
+
+	loadFile.save_file("config.xml");
+}
+
+void Scene::LoadTimeLivesCandies() {
+
+	int previousLevel = (int)level - 1;
+	std::string previousLevelString = GetLevelString(Levels(previousLevel));
+
+	LOG("%s", previousLevelString);
+
+	pugi::xml_document loadFile;
+	pugi::xml_parse_result result = loadFile.load_file("config.xml");
+
+	if (result == NULL) {
+		LOG("Error loading config.xml");
+		return;
+	}
+
+
+
+	pugi::xml_node savedDataNode = loadFile.child("config").child("scene").child("savedData");
+
+	currentTime = savedDataNode.attribute("time").as_float();
+	player->SetCandies(savedDataNode.child(previousLevelString.c_str()).child("player").attribute("candies").as_int());
+	player->SetLives(savedDataNode.child(previousLevelString.c_str()).child("player").attribute("lives").as_int());
 
 	loadFile.save_file("config.xml");
 }
@@ -572,19 +596,23 @@ void Scene::SetGuiParameters(GuiControl* bt, std::string btName, pugi::xml_node 
 
 void Scene::ChangeLevel()
 {
-	level = LVL2;
 	changeLevel = true;
 }
 
 
-std::string Scene::GetLevelString()
+std::string Scene::GetCurrentLevelString()
 {
 	return "lvl" + std::to_string((int)level);
 }
 
-void Scene::SetLevel(Levels level)
+std::string Scene::GetLevelString(Levels lvl)
 {
-	level = level;
+	return "lvl" + std::to_string((int)lvl);
+}
+
+void Scene::SetLevel(Levels lvl)
+{
+	level = lvl;
 }
 
 bool Scene::ReloadParameters(pugi::xml_node parameters)

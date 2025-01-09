@@ -38,6 +38,7 @@ public:
 
 	void SaveData(pugi::xml_node itemNode);
 	void LoadData(pugi::xml_node itemNode);
+	void OnCollision(PhysBody* physA, PhysBody* physB);
 
 public:
 
@@ -70,7 +71,5 @@ private:
 
 	//SFX
 	int gotCandy;
-
-	
 };
 

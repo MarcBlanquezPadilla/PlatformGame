@@ -53,6 +53,8 @@ public:
 	void OnCollisionEnd(PhysBody* physA, PhysBody* physB);
 
 	void SetPosition(Vector2D pos);
+	void SetLives(int lives);
+	void SetCandies(int candies);
 
 	void SaveData(pugi::xml_node playerNode);
 
@@ -61,6 +63,8 @@ public:
 	void Restart();
 
 	void DMGPlayer(PhysBody* physA, PhysBody* physB);
+	void PickCandies();
+	void Heal();
 
 public:
 
@@ -103,7 +107,6 @@ public:
 	bool reachedCheckPoint;
 	bool hitEnemy;
 	bool shot;
-	bool pickedItem;
 	bool hasCollider = false;
 	bool won;
 

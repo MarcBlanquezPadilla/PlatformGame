@@ -90,7 +90,6 @@ bool Player::Start() {
 	transformed = false;
 	reachedCheckPoint = false;
 	shot = false;
-	pickedItem = false;
 	won = false;
 
 	pickedCandies = 0;
@@ -161,8 +160,8 @@ void Player::Restart()
 		dir = (Direction)parameters.child("propierties").attribute("direction").as_int();
 		lives = parameters.attribute("lives").as_int();
 		SetPosition({ 
-			parameters.child("startPositions").child(Engine::GetInstance().scene.get()->GetLevelString().c_str()).attribute("x").as_float(),
-			parameters.child("startPositions").child(Engine::GetInstance().scene.get()->GetLevelString().c_str()).attribute("y").as_float() 
+			parameters.child("startPositions").child(Engine::GetInstance().scene.get()->GetCurrentLevelString().c_str()).attribute("x").as_float(),
+			parameters.child("startPositions").child(Engine::GetInstance().scene.get()->GetCurrentLevelString().c_str()).attribute("y").as_float()
 		});
 	}
 	
@@ -509,12 +508,6 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 	case ColliderType::PLATFORM:
 		LOG("Collision PLATFORM");
 		break;
-	case ColliderType::CANDY:
-		LOG("Collision CANDY");
-		pickedItem = true;
-		pickedCandies++;
-		
-		break;
 	case ColliderType::PUMPKIN:
 		LOG("Collision PUMPKIN");
 		transformable = true;
@@ -669,4 +662,28 @@ void Player::DMGPlayer(PhysBody* physA, PhysBody* physB) {
 			physA->body->ApplyLinearImpulseToCenter(b2Vec2(pushForce * pushDir.x, pushForce * pushDir.y), true);
 		}
 	}
+}
+
+void Player::SetCandies(int candies)
+{
+	pickedCandies = candies;
+}
+
+void Player::SetLives(int l)
+{
+	lives = l;
+}
+
+void Player::PickCandies()
+{
+	pickedCandies++;
+	candySFX = eatCandySFX;
+	Engine::GetInstance().audio.get()->PlayFx(candySFX);
+}
+
+void Player::Heal()
+{
+	lives++;
+	candySFX = loadGameSFX;
+	Engine::GetInstance().audio.get()->PlayFx(candySFX);
 }

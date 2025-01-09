@@ -67,11 +67,13 @@ bool Candy::Start() {
 
 
 	pbody = Engine::GetInstance().physics.get()->CreateRectangleSensor((int)position.getX() + texW / 2, (int)position.getY() + texH / 2, texW, texH, bodyType::STATIC);
+	pbody->listener = this;
 
 	
 	// L08 TODO 7: Assign collider type
 	pbody->ctype = ColliderType::CANDY;
 
+	picked = false;
 	return true;
 }
 
@@ -82,18 +84,14 @@ bool Candy::Update(float dt)
 		return true;
 	}
 
-	if (player->pickedItem && pbody->body->IsEnabled()) {
+	if (picked && pbody->body->IsEnabled()) {
 		if (function == POINTS) {
-			player->candyNum++;
-			player->candySFX = player->eatCandySFX;
+			player->PickCandies();
 		}
 		else if (function == HEALING) {
-			player->lives++;
-			player->candySFX = player->loadGameSFX;
+			player->Heal();
 		}
-		Engine::GetInstance().audio.get()->PlayFx(player->candySFX);
 		pbody->body->SetEnabled(false);
-		player->pickedItem = false;
 		picked = true;
 	}
 	else {
@@ -139,4 +137,21 @@ void Candy::LoadData(pugi::xml_node candyNode)
 		pbody->body->SetEnabled(false);
 	else 
 		pbody->body->SetEnabled(true);
+}
+
+void Candy::OnCollision(PhysBody* physA, PhysBody* physB) {
+	switch (physB->ctype)
+	{
+	case ColliderType::PLAYER:
+		LOG("Collision CANDY");
+		picked = true;
+		break;
+
+	case ColliderType::UNKNOWN:
+		LOG("Collision UNKNOWN");
+		break;
+
+	default:
+		break;
+	}
 }
