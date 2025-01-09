@@ -207,7 +207,6 @@ bool Scene::Update(float dt)
 		/*if(Engine::GetInstance().fade.get()->currentStep == Engine::GetInstance().fade.get()->FROM_BLACK)*/
 		
 		
-		musicPlays = false;
 		return true;
 	}
 
@@ -223,7 +222,6 @@ bool Scene::Update(float dt)
 		finalCandyNum = player->candyNum;
 		player->won = false;
 		Engine::GetInstance().fade.get()->Fade(this, Engine::GetInstance().win.get());
-		musicPlays = false;
 		
 		return true;
 	}
@@ -541,7 +539,6 @@ bool Scene::OnGuiMouseClickEvent(GuiControl* control) {
 			Engine::GetInstance().fade.get()->Fade((Module*)this, (Module*)Engine::GetInstance().mainMenu.get(), 30);
 			
 			Engine::GetInstance().entityManager.get()->Disable();
-			musicPlays = false;
 			
 		}
 		break;
@@ -576,7 +573,6 @@ void Scene::SetGuiParameters(GuiControl* bt, std::string btName, pugi::xml_node 
 void Scene::ChangeLevel()
 {
 	level = LVL2;
-	musicPlays = false;
 	changeLevel = true;
 }
 
