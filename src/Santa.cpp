@@ -28,6 +28,9 @@ bool Santa::Start() {
 
 
 	idle.LoadAnimations(parameters.child("animations").child("idle"));
+	//attack.LoadAnimations(parameters.child("animations").child("attack"));
+	//hurt.LoadAnimations(parameters.child("animations").child("hurt"));
+	//death.LoadAnimations(parameters.child("animations").child("death"));
 
 
 
