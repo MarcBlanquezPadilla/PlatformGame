@@ -669,6 +669,10 @@ void Player::SetCandies(int candies)
 	pickedCandies = candies;
 }
 
+int Player::GetCandies() {
+	return pickedCandies;
+}
+
 void Player::SetLives(int l)
 {
 	lives = l;

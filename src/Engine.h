@@ -16,6 +16,7 @@ class Render;
 class Textures;
 class Audio;
 class Scene;
+class HUD;
 class MainMenu;
 class EntityManager;
 class Map;
@@ -122,6 +123,7 @@ public:
 	std::shared_ptr<Physics> physics;
 	std::shared_ptr<GuiManager> guiManager;
 	std::shared_ptr<Intro> intro;
+	std::shared_ptr<HUD> hud;
 	std::shared_ptr<Settings> settings;
 	std::shared_ptr<FadeToBlack> fade;
 	std::shared_ptr<DeathMenu> death;

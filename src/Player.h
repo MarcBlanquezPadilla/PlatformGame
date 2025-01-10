@@ -56,6 +56,8 @@ public:
 	void SetLives(int lives);
 	void SetCandies(int candies);
 
+	int GetCandies();
+
 	void SaveData(pugi::xml_node playerNode);
 
 	void LoadData(pugi::xml_node playerNode);

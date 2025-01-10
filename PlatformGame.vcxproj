@@ -160,7 +160,6 @@
     <ClCompile Include="src\GuiManager.cpp" />
     <ClCompile Include="src\GuiControlSlider.cpp" />
     <ClCompile Include="src\Input.cpp" />
-    <ClCompile Include="src\Intro.cpp" />
     <ClCompile Include="src\MainMenu.cpp" />
     <ClCompile Include="src\FadeToBlack.cpp" />
     <ClCompile Include="src\Santa.cpp" />
@@ -178,9 +177,9 @@
     <ClCompile Include="src\Scene.cpp" />
     <ClCompile Include="src\Textures.cpp" />
     <ClCompile Include="src\Timer.cpp" />
+    <ClCompile Include="src\HUD.cpp" />
     <ClCompile Include="src\Vector2D.cpp" />
     <ClCompile Include="src\Window.cpp" />
-    <ClCompile Include="src\Intro.cpp" />
     <ClCompile Include="src\WinMenu.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -200,7 +199,6 @@
     <ClInclude Include="src\GuiManager.h" />
     <ClInclude Include="src\GuiControlSlider.h" />
     <ClInclude Include="src\Input.h" />
-    <ClInclude Include="src\Intro.h" />
     <ClInclude Include="src\MainMenu.h" />
     <ClInclude Include="src\FadeToBlack.h" />
     <ClInclude Include="src\Pumpkin.h" />
@@ -218,9 +216,9 @@
     <ClInclude Include="src\Settings.h" />
     <ClInclude Include="src\Textures.h" />
     <ClInclude Include="src\Timer.h" />
+    <ClInclude Include="src\HUD.h" />
     <ClInclude Include="src\Vector2D.h" />
     <ClInclude Include="src\Window.h" />
-    <ClInclude Include="src\Intro.h" />
     <ClInclude Include="src\WinMenu.h" />
   </ItemGroup>
   <ItemGroup>

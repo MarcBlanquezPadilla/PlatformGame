@@ -146,7 +146,10 @@ bool Scene::Start()
 	}
 
 	musicNode = Engine::GetInstance().GetConfig().child("audio").child("music");
-	Engine::GetInstance().audio.get()->PlayMusic(musicNode.child("lvl1Mus").attribute("path").as_string());
+	if(level == LVL1)
+		Engine::GetInstance().audio.get()->PlayMusic(musicNode.child("lvl1Mus").attribute("path").as_string());
+	else if(level == LVL2) 
+		Engine::GetInstance().audio.get()->PlayMusic(musicNode.child("lvl2Mus").attribute("path").as_string());
 
 	return true;
 }
@@ -290,21 +293,6 @@ bool Scene::PostUpdate()
 	Render* render = Engine::GetInstance().render.get();
 	Window* window = Engine::GetInstance().window.get();
 
-	
-	
-	
-
-	if (!Engine::GetInstance().settings.get()->settingsOpen) {
-		std::string timerText;
-		std::string livesText = "Lives: " + std::to_string(player->lives);
-		std::string ptsText = "Collected Candies: " + std::to_string(player->pickedCandies);
-		if (paused) timerText = "Time: " + std::to_string((int)currentTime) + " s";
-		else timerText = "Time: " + std::to_string((int)currentTime) + " s";
-		render->DrawText(livesText.c_str(), 20, 20, 100, 20);
-		render->DrawText(ptsText.c_str(), 150, 20, 200, 20);
-		render->DrawText(timerText.c_str(), 375, 20, 100, 20);
-	}
-
 	if (paused && !Engine::GetInstance().settings.get()->settingsOpen) {
 
 		
@@ -393,6 +381,15 @@ bool Scene::CleanUp()
 Vector2D Scene::GetPlayerPosition()
 {
 	return player->GetPosition();
+}
+
+int Scene::GetPlayerCandies()
+{
+	return player->GetCandies();
+}
+
+float Scene::GetCurrentTime() {
+	return currentTime;
 }
 
 void Scene::SaveState()
@@ -609,6 +606,10 @@ std::string Scene::GetLevelString(Levels lvl)
 {
 	return "lvl" + std::to_string((int)lvl);
 }
+
+//Player* Scene::GetPlayer() {
+//	return player;
+//}
 
 void Scene::SetLevel(Levels lvl)
 {
