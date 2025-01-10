@@ -10,7 +10,6 @@
 #include "Textures.h"
 #include "Audio.h"
 #include "Scene.h"
-#include "HUD.h"
 #include "EntityManager.h"
 #include "Map.h"
 #include "Physics.h"
@@ -49,7 +48,6 @@ Engine::Engine() {
     entityManager = std::make_shared<EntityManager>(false);
     map = std::make_shared<Map>(true);
     guiManager = std::make_shared<GuiManager>(true);
-    hud = std::make_shared<HUD>(false);
     fade = std::make_shared<FadeToBlack>(true);
     intro = std::make_shared<Intro>(true);
     settings = std::make_shared<Settings>(true);
@@ -70,7 +68,7 @@ Engine::Engine() {
     AddModule(std::static_pointer_cast<Module>(scene));
     AddModule(std::static_pointer_cast<Module>(entityManager));
     AddModule(std::static_pointer_cast<Module>(intro));
-    AddModule(std::static_pointer_cast<Module>(hud));
+    
     AddModule(std::static_pointer_cast<Module>(guiManager));
     AddModule(std::static_pointer_cast<Module>(death));
     AddModule(std::static_pointer_cast<Module>(win));

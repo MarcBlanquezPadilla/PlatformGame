@@ -67,8 +67,6 @@ public:
 	// Return the player position
 	Vector2D GetPlayerPosition();
 
-	int GetPlayerCandies();
-
 	void LoadEnemy(Enemy* enemy, pugi::xml_node instanceNode);
 
 	void RestartScene();
@@ -101,8 +99,6 @@ public:
 	
 	std::string GetLevelString(Levels level);
 
-	float GetCurrentTime();
-
 
 
 public:
@@ -112,7 +108,8 @@ public:
 	Player* player;
 	float lvl1Volume;
 
-	
+	float currentTime;
+	bool stoppedTimer;
 
 	SDL_Texture* helpMenu;
 
@@ -123,6 +120,8 @@ public:
 	Vector2D pausePos;
 
 	int finalCandyNum;
+
+	/*PhysBody* endSensor;*/
 	
 
 private:
@@ -137,9 +136,6 @@ private:
 
 	std::map<std::string, GuiControlButton*> pauseButtons;
 	
-
-	float currentTime;
-	bool stoppedTimer;
 	bool loadScene = false;
 	bool changeLevel = false;
 	bool quit = false;

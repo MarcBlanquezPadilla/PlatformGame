@@ -1,18 +1,22 @@
 #pragma once
 #include "Module.h"
 #include "Timer.h"
-#include "Animation.h"
 
+//#define HELP_MENU_X_DISPLACEMENT 125
+//#define HELP_MENU_Y_DISPLACEMENT 10
+//
+//#define PAUSE_MENU_X_DISPLACEMENT 150
+//#define PAUSE_MENU_Y_DISPLACEMENT 10
 struct SDL_Texture;
 
-class HUD : public Module
+class UI : public Module
 {
 public:
 
-	HUD(bool startEnabled);
+	UI(bool startEnabled);
 
 	// Destructor
-	virtual ~HUD();
+	virtual ~UI();
 
 	// Called before render is available
 	bool Awake();
@@ -36,9 +40,11 @@ public:
 
 
 private:
-	SDL_Texture* lifeContainer, *candyIcon, *timerIcon;
-	Animation full, empty, loseLife;
 
+
+	SDL_Texture* intro;
+	Timer introTimer;
+	int maxIntroTime;
 	/*pugi::xml_node parameters;*/
 
 };
