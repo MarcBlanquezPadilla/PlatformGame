@@ -100,12 +100,19 @@ bool GroundEnemy::Update(float dt) {
 
 	ZoneScoped;
 
-	if (!Engine::GetInstance().render.get()->InCameraView(pbody->GetPosition().getX() - texW, pbody->GetPosition().getY() - texH, texW, texH))
-	{
-		return true;
-	}
 
 	if (!dead) {
+		
+		if (!Engine::GetInstance().render.get()->InCameraView(pbody->GetPosition().getX() - texW, pbody->GetPosition().getY() - texH, texW, texH))
+		{
+			pbody->body->SetEnabled(false);
+			return true;
+		}
+		else
+		{
+			pbody->body->SetEnabled(true);
+		}
+
 		if (!Engine::GetInstance().scene.get()->paused) {
 			dist = pbody->GetPhysBodyWorldPosition().distanceEuclidean(player->pbody->GetPhysBodyWorldPosition());
 
@@ -226,14 +233,6 @@ bool GroundEnemy::Update(float dt) {
 
 		}
 	
-
-
-
-	
-		
-
-
-
 
 		switch (state) {
 			break;

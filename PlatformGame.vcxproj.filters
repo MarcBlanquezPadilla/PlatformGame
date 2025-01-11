@@ -20,6 +20,9 @@
     <Filter Include="Source Files\Game\Enemies">
       <UniqueIdentifier>{e069a71e-d03a-438a-b227-44c78393a3ca}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Game\Menus">
+      <UniqueIdentifier>{b400ba7f-b5cd-4af3-99cb-ad90dbb33bac}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="vcpkg.json">
@@ -111,9 +114,6 @@
     <ClCompile Include="src\FadeToBlack.cpp">
       <Filter>Source Files\Engine</Filter>
     </ClCompile>
-    <ClCompile Include="src\MainMenu.cpp">
-      <Filter>Source Files\Game</Filter>
-    </ClCompile>
     <ClCompile Include="src\GuiControlSlider.cpp">
       <Filter>Source Files\Engine</Filter>
     </ClCompile>
@@ -126,14 +126,20 @@
     <ClCompile Include="src\Settings.cpp">
       <Filter>Source Files\Game</Filter>
     </ClCompile>
-    <ClCompile Include="src\DeathMenu.cpp">
-      <Filter>Source Files\Game</Filter>
-    </ClCompile>
     <ClCompile Include="src\Intro.cpp">
       <Filter>Source Files\Game</Filter>
     </ClCompile>
+    <ClCompile Include="src\Intro.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="src\WinMenu.cpp">
-      <Filter>Source Files\Engine</Filter>
+      <Filter>Source Files\Game\Menus</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MainMenu.cpp">
+      <Filter>Source Files\Game\Menus</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DeathMenu.cpp">
+      <Filter>Source Files\Game\Menus</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -224,9 +230,6 @@
     <ClInclude Include="src\FadeToBlack.h">
       <Filter>Source Files\Engine</Filter>
     </ClInclude>
-    <ClInclude Include="src\MainMenu.h">
-      <Filter>Source Files\Game</Filter>
-    </ClInclude>
     <ClInclude Include="src\GuiControlSlider.h">
       <Filter>Source Files\Engine</Filter>
     </ClInclude>
@@ -242,11 +245,15 @@
     <ClInclude Include="src\Intro.h">
       <Filter>Source Files\Game</Filter>
     </ClInclude>
-    <ClInclude Include="src\DeathMenu.h">
-      <Filter>Source Files\Game</Filter>
-    </ClInclude>
+    <ClInclude Include="src\Intro.h" />
     <ClInclude Include="src\WinMenu.h">
-      <Filter>Source Files\Engine</Filter>
+      <Filter>Source Files\Game\Menus</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MainMenu.h">
+      <Filter>Source Files\Game\Menus</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DeathMenu.h">
+      <Filter>Source Files\Game\Menus</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

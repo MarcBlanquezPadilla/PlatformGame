@@ -115,9 +115,6 @@ bool DeathMenu::CleanUp() {
 	for (const auto& bt : deathButtons) {
 		bt.second->active = false;
 	}
-	/*musicSlider->active = false;*/
-	Engine::GetInstance().textures.get()->UnLoad(screenTex);
-	Engine::GetInstance().textures.get()->UnLoad(candyIcon);
 
 
 	return true;
@@ -129,8 +126,7 @@ bool DeathMenu::OnGuiMouseClickEvent(GuiControl* control) {
 	case GuiControlId::RETRY:
 		if (control->state == GuiControlState::PRESSED) {
 			Engine::GetInstance().fade.get()->Fade((Module*)this, (Module*)Engine::GetInstance().scene.get(), 30);
-			Engine::GetInstance().scene.get()->SetLoadState(false);
-			Engine::GetInstance().scene.get()->SetLevel(LVL1);
+			Engine::GetInstance().scene.get()->SetLoadState(true);
 
 		}
 
@@ -138,8 +134,6 @@ bool DeathMenu::OnGuiMouseClickEvent(GuiControl* control) {
 	case GuiControlId::BACKTOTITLE:
 		if (control->state == GuiControlState::PRESSED) {
 			Engine::GetInstance().fade.get()->Fade((Module*)this, (Module*)Engine::GetInstance().mainMenu.get(), 30);
-			Engine::GetInstance().scene.get()->SetLoadState(true);
-
 		}
 
 		break;

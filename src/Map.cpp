@@ -161,6 +161,8 @@ bool Map::Load(std::string path, std::string fileName)
     pugi::xml_document mapFileXML;
     pugi::xml_parse_result result = mapFileXML.load_file(mapPathName.c_str());
 
+    bossFightColliders.clear();
+
     if (result == NULL)
     {
         LOG("Could not load map xml file %s. pugi error: %s", mapPathName.c_str(), result.description());
@@ -308,6 +310,23 @@ bool Map::Load(std::string path, std::string fileName)
                     PhysBody* c = Engine::GetInstance().physics.get()->CreateRectangleSensor(object->x + object->width / 2, object->y + object->height / 2, object->width, object->height, STATIC);
 
                     c->ctype = ColliderType::LEVEL_CHANGER;
+                }
+            }
+            if (objectGroup->name == "BossStarter") {
+                for (Object* object : objectGroup->object) {
+
+                    PhysBody* c = Engine::GetInstance().physics.get()->CreateRectangleSensor(object->x + object->width / 2, object->y + object->height / 2, object->width, object->height, STATIC);
+
+                    c->ctype = ColliderType::BOSS_STARTER;
+                }
+            }
+            if (objectGroup->name == "BossFightColliders") {
+                for (Object* object : objectGroup->object) {
+
+                    PhysBody* c = Engine::GetInstance().physics.get()->CreateRectangle(object->x + object->width / 2, object->y + object->height / 2, object->width, object->height, STATIC);
+
+                    c->ctype = ColliderType::MAPLIMITS;
+                    bossFightColliders.push_back(c);
                 }
             }
         }

@@ -91,6 +91,11 @@ public:
 	
 	int GetLevel();
 	
+	bool GetStartBossFight();
+	
+	void SetStartBossFight(bool b);
+	void SetBossFightKilled(bool b);
+	
 	void SetLevel(Levels level);
 
 	bool ReloadParameters(pugi::xml_node parameters) override;
@@ -138,6 +143,8 @@ private:
 	
 	bool loadScene = false;
 	bool changeLevel = false;
+	bool startBossFight = false;
+	bool bossKilled = false;
 	bool quit = false;
 
 	Vector2D helpPos;

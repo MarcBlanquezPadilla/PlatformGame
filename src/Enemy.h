@@ -23,7 +23,9 @@ public:
 		PATROL,
 		CHASING,
 		ATTACK,
-		DEAD
+		JUMP,
+		DEAD,
+		HURT
 	};
 
 	enum Dir {
@@ -89,6 +91,9 @@ public:
 	Animation attack;
 	Animation hurt;
 	Animation death;
+	Animation jump;
+	Animation fall;
+	Animation walk;
 
 	//PATH
 	Pathfinding* pathfinding;
@@ -98,6 +103,7 @@ public:
 
 	//PROPERTIES
 	int speed;
+	int lives;
 	int chaseArea;
 	int attackArea;
 	int noSound;

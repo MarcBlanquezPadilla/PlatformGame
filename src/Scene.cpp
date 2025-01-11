@@ -131,6 +131,7 @@ bool Scene::Start()
 
 	stoppedTimer = false;
 	finalCandyNum = 0;
+	currentTime = 0;
 
 	if (!loadScene)
 	{
@@ -147,6 +148,8 @@ bool Scene::Start()
 
 	musicNode = Engine::GetInstance().GetConfig().child("audio").child("music");
 	Engine::GetInstance().audio.get()->PlayMusic(musicNode.child("lvl1Mus").attribute("path").as_string());
+	startBossFight = false;
+	bossKilled = false;
 
 	return true;
 }
@@ -260,6 +263,9 @@ bool Scene::Update(float dt)
 		else Engine::GetInstance().render.get()->camera.y = (player->position.getY() + CAM_EXTRA_DISPLACEMENT_Y) * -Engine::GetInstance().window.get()->scale;
 	}
 
+	if (!bossKilled && startBossFight) Engine::GetInstance().map.get()->ActivateBossFightCollider(true);
+	else Engine::GetInstance().map.get()->ActivateBossFightCollider(false);
+
 	return true;
 }
 
@@ -290,9 +296,6 @@ bool Scene::PostUpdate()
 	Render* render = Engine::GetInstance().render.get();
 	Window* window = Engine::GetInstance().window.get();
 
-	
-	
-	
 
 	if (!Engine::GetInstance().settings.get()->settingsOpen) {
 		std::string timerText;
@@ -404,6 +407,8 @@ void Scene::SaveState()
 	saveFile.child("config").child("scene").child("savedData").attribute("saved").set_value(true);
 	saveFile.child("config").child("scene").child("savedData").attribute("level").set_value((int)level);
 	saveFile.child("config").child("scene").child("savedData").attribute("time").set_value(currentTime);
+	saveFile.child("config").child("scene").child("savedData").attribute("startBossFight").set_value(startBossFight);
+	saveFile.child("config").child("scene").child("savedData").attribute("bossKilled").set_value(bossKilled);
 
 	if (result == NULL)
 	{
@@ -482,9 +487,12 @@ void Scene::LoadState() {
 		return;
 	}
 
+	currentTime = loadFile.child("config").child("scene").child("savedData").attribute("time").as_float();
+	startBossFight = loadFile.child("config").child("scene").child("savedData").attribute("startBossFight").as_bool();
+	bossKilled = loadFile.child("config").child("scene").child("savedData").attribute("bossKilled").as_bool();
+
 	pugi::xml_node savedDataNode = loadFile.child("config").child("scene").child("savedData").child(GetCurrentLevelString().c_str());
 
-	
 	player->LoadData(savedDataNode.child("player"));
 
 
@@ -502,7 +510,36 @@ void Scene::LoadState() {
 		{
 			enemies[i]->LoadData(parent);
 		}
+	}
 
+	bool candyFound = true;
+	for (int i = 0; i < enemies.size() || candyFound; i++)
+	{
+		std::string nodeChar = "candy" + std::to_string(i);
+		pugi::xml_node parent = savedDataNode.child(nodeChar.c_str());
+		if (!parent)
+		{
+			candyFound = false;
+		}
+		else
+		{
+			candies[i]->LoadData(parent);
+		}
+	}
+
+	bool pumpkinFound = true;
+	for (int i = 0; i < enemies.size() || pumpkinFound; i++)
+	{
+		std::string nodeChar = "pumpkin" + std::to_string(i);
+		pugi::xml_node parent = savedDataNode.child(nodeChar.c_str());
+		if (!parent)
+		{
+			pumpkinFound = false;
+		}
+		else
+		{
+			pumpkins[i]->LoadData(parent);
+		}
 	}
 
 	loadFile.save_file("config.xml");
@@ -623,5 +660,19 @@ bool Scene::ReloadParameters(pugi::xml_node parameters)
 		player->SetParameters(configParameters.child("entities").child("player"));
 	}
 	return true;
+}
+
+bool Scene::GetStartBossFight()
+{
+	return startBossFight;
+}
+
+void Scene::SetStartBossFight(bool b)
+{
+	startBossFight = b;
+}
+void Scene::SetBossFightKilled(bool b)
+{
+	bossKilled = b;
 }
 
