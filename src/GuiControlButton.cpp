@@ -40,7 +40,7 @@ bool GuiControlButton::Update(float dt)
 
 			state = GuiControlState::FOCUSED;
 
-			if (Engine::GetInstance().input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_REPEAT) {
+			if (Engine::GetInstance().input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN) {
 				state = GuiControlState::PRESSED;
 			}
 

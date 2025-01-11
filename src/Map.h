@@ -3,6 +3,7 @@
 #include "Module.h"
 #include <list>
 #include <vector>
+#include "Physics.h"
 
 // L10: TODO 2: Define a property to store the Map Orientation and Load it from the map
 enum MapOrientation
@@ -199,6 +200,14 @@ public:
         this->mapParameters = parameters;
     }
 
+    void ActivateBossFightCollider(bool activate)
+    {
+        for (PhysBody* b : bossFightColliders)
+        {
+            b->body->SetEnabled(activate);
+        }
+    }
+
 
 
 public: 
@@ -211,5 +220,6 @@ private:
     MapData mapData;
     /*Paralax* paralaxLayers;*/
     pugi::xml_node mapParameters;
+    std::list<PhysBody*> bossFightColliders;
     
 };

@@ -170,7 +170,7 @@
 			</shot>
 			<enemies>
 				<skeleton x="100" y="420" w="48" h="48" texture="Assets/Textures/Enemies/Undead/SwordsMan-reorganized_spritesheet.png">
-					<properties speed="1" chaseArea="100" attackArea="20" jumpForce="0.3f" attackTime="1.0f" deathTime="1.5f" />
+					<properties speed="1" chaseArea="100" attackArea="20" jumpForce="0.3f" attackTime="1.0f" deathTime="1.5f" lives="1" />
 					<animations>
 						<idle loop="true" speed="0.2f">
 							<frame x="0" y="0" w="48" h="48" />
@@ -196,7 +196,7 @@
 					</animations>
 				</skeleton>
 				<bat x="250" y="350" w="32" h="32" texture="Assets/Textures/Enemies/Bat/Vampire/BatVampire_Sheet.png">
-					<properties speed="1" chaseArea="100" deathTime="1.0f" />
+					<properties speed="1" chaseArea="100" deathTime="1.0f" lives="1" />
 					<animations>
 						<idle loop="true" speed="0.2f">
 							<frame x="0" y="0" w="32" h="32" />
@@ -229,8 +229,8 @@
 						</death>
 					</animations>
 				</bat>
-				<santa x="250" y="350" w="32" h="32" texture="Assets/Textures/Enemies/Santa_Boss/idle_sheet.png" lvl="1">
-					<properties />
+				<santa x="250" y="350" w="32" h="32" texture="Assets/Textures/Enemies/Santa_Boss/santa_sheet.png" lvl="1">
+					<properties speed="1" deathTime="1.0f" jumpRange="100" jumpCooldown="5" attackRange="30" attackTime="1" pushForce="0.5f" hurtTime="1.0f" lives="10" />
 					<animations>
 						<idle loop="true" speed="0.2f">
 							<frame x="0" y="0" w="32" h="32" />
@@ -238,8 +238,50 @@
 							<frame x="64" y="0" w="32" h="32" />
 							<frame x="96" y="0" w="32" h="32" />
 							<frame x="128" y="0" w="32" h="32" />
+							<frame x="160" y="0" w="32" h="32" />
 						</idle>
-						<jump />
+						<walk loop="true" speed="0.2f">&gt;
+							<frame x="0" y="32" w="32" h="32" />
+							<frame x="32" y="32" w="32" h="32" />
+							<frame x="64" y="32" w="32" h="32" />
+							<frame x="96" y="32" w="32" h="32" />
+							<frame x="128" y="32" w="32" h="32" />
+							<frame x="160" y="32" w="32" h="32" />
+						</walk>
+						<jump loop="false" speed="0.2f">&gt;
+							<frame x="0" y="64" w="32" h="32" />
+							<frame x="32" y="64" w="32" h="32" />
+							<frame x="64" y="64" w="32" h="32" />
+							<frame x="96" y="64" w="32" h="32" />
+							<frame x="128" y="64" w="32" h="32" />
+							<frame x="160" y="64" w="32" h="32" />
+						</jump>
+						<fall loop="false" speed="0.2f">&gt;
+							<frame x="192" y="64" w="32" h="32" />
+							<frame x="224" y="64" w="32" h="32" />
+						</fall>
+						<hurt loop="false" speed="0.2f">
+							<frame x="0" y="96" w="32" h="32" />
+							<frame x="32" y="96" w="32" h="32" />
+							<frame x="64" y="96" w="32" h="32" />
+						</hurt>
+						<attack loop="false" speed="0.2f">&gt;
+							<frame x="0" y="128" w="32" h="32" />
+							<frame x="32" y="128" w="32" h="32" />
+							<frame x="64" y="128" w="32" h="32" />
+							<frame x="96" y="128" w="32" h="32" />
+							<frame x="128" y="128" w="32" h="32" />
+							<frame x="160" y="128" w="32" h="32" />
+						</attack>
+						<death loop="false" speed="0.2f">&gt;
+							<frame x="0" y="224" w="32" h="32" />
+							<frame x="32" y="224" w="32" h="32" />
+							<frame x="64" y="224" w="32" h="32" />
+							<frame x="96" y="224" w="32" h="32" />
+							<frame x="128" y="224" w="32" h="32" />
+							<frame x="160" y="224" w="32" h="32" />
+							<frame x="192" y="224" w="32" h="32" />
+						</death>
 					</animations>
 				</santa>
 				<instances>
@@ -264,10 +306,6 @@
 							<point x="1505" y="432" />
 							<point x="1713" y="432" />
 						</instance>
-						<instance enemyType="santa" entityType="7">
-							<point x="100" y="420" />
-							<point x="275" y="390" />
-						</instance>
 					</lvl1>
 					<lvl2>
 						<instance enemyType="skeleton" entityType="6">
@@ -286,7 +324,6 @@
 						</instance>
 						<instance enemyType="santa" entityType="7">
 							<point x="2660" y="400" />
-							<point x="2140" y="400" />
 						</instance>
 					</lvl2>
 				</instances>
@@ -349,18 +386,17 @@
 				</pumpkins>
 			</items>
 		</entities>
-		<savedData saved="true" level="2" time="15.9320002">
+		<savedData saved="true" level="1" time="25.9003525" startBossFight="false" bossKilled="false">
 			<lvl1>
-				<player x="1800" y="198" lives="4" transformable="false" transformed="false" lvl="0" candies="3" />
-				<enemy0 dead="false" x="133" y="423" />
-				<enemy1 dead="false" x="877" y="-96" />
-				<enemy2 dead="false" x="2153" y="119" />
-				<enemy3 dead="false" x="1626" y="199" />
-				<enemy4 dead="false" x="1679" y="439" />
-				<enemy5 dead="false" x="148" y="423" />
+				<player x="1832" y="196" lives="1" transformable="false" transformed="true" candies="2" />
+				<enemy0 dead="false" x="117" y="423" lives="0" />
+				<enemy1 dead="false" x="825" y="279" lives="0" />
+				<enemy2 dead="false" x="2000" y="135" lives="0" />
+				<enemy3 dead="true" x="1644" y="213" lives="-1" />
+				<enemy4 dead="false" x="1652" y="439" lives="0" />
 				<pumpkin0 alight="true" x="308" y="423" />
 				<pumpkin1 alight="true" x="824" y="312" />
-				<pumpkin2 alight="true" x="728" y="392" />
+				<pumpkin2 alight="true" x="728" y="391" />
 				<pumpkin3 alight="true" x="1177" y="329" />
 				<pumpkin4 alight="true" x="2247" y="265" />
 				<pumpkin5 alight="true" x="2026" y="378" />
@@ -369,21 +405,21 @@
 				<pumpkin8 alight="true" x="1816" y="200" />
 				<candy0 x="376" y="312" type="corn" picked="true" />
 				<candy1 x="616" y="328" type="swirl" picked="true" />
-				<candy2 x="1008" y="423" type="heart" picked="true" />
+				<candy2 x="1008" y="423" type="heart" picked="false" />
 			</lvl1>
 			<lvl2>
-				<player x="1480" y="333" lives="3" transformable="false" transformed="false" lvl="0" />
-				<enemy0 dead="false" x="419" y="359" />
-				<enemy1 dead="false" x="806" y="167" />
+				<player x="1513" y="406" lives="4" transformable="false" transformed="false" candies="1" />
+				<enemy0 dead="false" x="433" y="359" lives="0" />
+				<enemy1 dead="false" x="1040" y="200" lives="0" />
 				<pumpkin0 alight="true" x="183" y="392" />
-				<enemy2 dead="false" x="1890" y="215" />
+				<enemy2 dead="false" x="1840" y="216" lives="0" />
 				<pumpkin1 alight="true" x="1042" y="232" />
 				<pumpkin2 alight="true" x="1496" y="408" />
-				<enemy3 dead="false" x="2664" y="407" />
+				<enemy3 dead="false" x="2659" y="399" lives="0" />
 				<pumpkin3 alight="true" x="1787" y="360" />
 				<pumpkin4 alight="true" x="2128" y="408" />
-				<candy0 x="616" y="317" type="swirl" picked="true" />
-				<candy1 x="1241" y="317" type="corn" picked="true" />
+				<candy0 x="616" y="317" type="swirl" picked="false" />
+				<candy1 x="1241" y="317" type="corn" picked="false" />
 				<candy2 x="1862" y="244" type="swirl" picked="false" />
 				<candy3 x="1895" y="367" type="heart" picked="false" />
 			</lvl2>
@@ -456,7 +492,7 @@
 	</audio>
 	<playerPrefs>
 		<fullscreen toggle="0" />
-		<musicVolume value="88" />
+		<musicVolume value="40" />
 		<sfxVolume value="54" />
 	</playerPrefs>
 </config>

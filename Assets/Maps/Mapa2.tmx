@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="170" height="30" tilewidth="16" tileheight="16" infinite="0" nextlayerid="23" nextobjectid="617">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="170" height="30" tilewidth="16" tileheight="16" infinite="0" nextlayerid="25" nextobjectid="623">
  <tileset firstgid="1" name="Ground_Tiles" tilewidth="16" tileheight="16" tilecount="110" columns="11">
   <image source="Ground_Tiles.png" width="176" height="160"/>
   <wangsets>
@@ -25694,17 +25694,27 @@
   <object id="576" x="2080" y="416" width="640" height="64"/>
  </objectgroup>
  <objectgroup id="14" name="MapLimits">
-  <object id="192" x="2720" y="-68" width="160" height="552"/>
+  <object id="192" x="2720" y="-68" width="160" height="400"/>
   <object id="280" x="-156" y="-68" width="156" height="548"/>
+  <object id="619" x="2720" y="416" width="160" height="64"/>
+  <object id="620" x="2752" y="332" width="160" height="84"/>
  </objectgroup>
  <objectgroup id="13" name="Abyss">
   <object id="281" x="-156" y="504" width="3040" height="156"/>
  </objectgroup>
- <objectgroup id="20" name="Checkpoints" visible="0">
-  <object id="610" x="1488" y="164" width="16" height="319"/>
+ <objectgroup id="20" name="Checkpoints">
+  <object id="610" x="2032" y="16" width="16" height="319"/>
+  <object id="617" x="1488" y="160" width="16" height="319"/>
  </objectgroup>
  <objectgroup id="21" name="Items"/>
  <objectgroup id="22" name="LevelChanger">
-  <object id="616" x="2717" y="-70" width="29" height="558"/>
+  <object id="616" x="2736" y="332" width="16" height="84"/>
+ </objectgroup>
+ <objectgroup id="23" name="BossStarter">
+  <object id="618" x="2080" y="400" width="640" height="16"/>
+ </objectgroup>
+ <objectgroup id="24" name="BossFightColliders">
+  <object id="621" x="2720" y="332" width="16" height="84"/>
+  <object id="622" x="2064" y="-48" width="16" height="384"/>
  </objectgroup>
 </map>

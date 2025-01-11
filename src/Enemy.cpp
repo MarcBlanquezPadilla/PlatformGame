@@ -125,6 +125,7 @@ void Enemy::SetPath(pugi::xml_node pathNode)
 		{
 			route[i] = Engine::GetInstance().map.get()->WorldToWorldCenteredOnTile(route[i].getX(), route[i].getY());
 		}
+		LOG("%d", route.size());
 		routeDestinationIndex = 0;
 		destinationPoint = route[routeDestinationIndex];
 	}
@@ -136,6 +137,7 @@ void Enemy::SaveData(pugi::xml_node enemyNode)
 	enemyNode.attribute("dead").set_value(dead);
 	enemyNode.attribute("x").set_value(pbody->GetPhysBodyWorldPosition().getX());
 	enemyNode.attribute("y").set_value(pbody->GetPhysBodyWorldPosition().getY());
+	enemyNode.attribute("lives").set_value(lives);
 }
 
 
@@ -143,6 +145,7 @@ void Enemy::LoadData(pugi::xml_node enemyNode)
 {
 	pbody->SetPhysPositionWithWorld( enemyNode.attribute("x").as_float(), enemyNode.attribute("y").as_float() );
 	dead = enemyNode.attribute("dead").as_bool();
+	lives = enemyNode.attribute("lives").as_int();
 	if (dead) {
 		state = DEAD;
 		pbody->body->SetEnabled(false);
@@ -152,8 +155,6 @@ void Enemy::LoadData(pugi::xml_node enemyNode)
 		state = CHASING;
 		pbody->body->SetEnabled(true);
 	}
-	destinationPoint = route[routeDestinationIndex];
-	ResetPath();
 }
 
 void Enemy::Restart()
@@ -227,7 +228,12 @@ void Enemy::OnCollisionEnd(PhysBody* physA, PhysBody* physB)
 }
 
 void Enemy::DMGEnemy() {
-	deathTimer.Start();
-	death.Reset();
-	state = DEAD;
+	lives--;
+	if (lives <= 0)
+	{
+		deathTimer.Start();
+		death.Reset();
+		state = DEAD;
+	}
+	
 }

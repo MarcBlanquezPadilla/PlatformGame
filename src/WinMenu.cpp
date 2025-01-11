@@ -113,9 +113,6 @@ bool WinMenu::CleanUp() {
 	for (const auto& bt : winButtons) {
 		bt.second->active = false;
 	}
-	/*musicSlider->active = false;*/
-	Engine::GetInstance().textures.get()->UnLoad(screenTex);
-	Engine::GetInstance().textures.get()->UnLoad(candyIcon);
 
 	return true;
 }
@@ -135,7 +132,6 @@ bool WinMenu::OnGuiMouseClickEvent(GuiControl* control) {
 	case GuiControlId::BACKTOTITLE:
 		if (control->state == GuiControlState::PRESSED) {
 			Engine::GetInstance().fade.get()->Fade((Module*)this, (Module*)Engine::GetInstance().mainMenu.get(), 30);
-			Engine::GetInstance().scene.get()->SetLoadState(true);
 
 		}
 

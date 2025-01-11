@@ -148,8 +148,6 @@ bool Player::Start() {
 	hurtTimer = Timer();
 	respawnTimer = Timer();
 
-	lvl = baseFile.child("config").child("scene").child("savedData").child("player").attribute("lvl").as_int();
-
 	return true;
 }
 
@@ -169,11 +167,6 @@ void Player::Restart()
 
 bool Player::Update(float dt)
 {
-	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_K))
-	{
-		LOG("%f,%f", pbody->GetPhysBodyWorldPosition().getX(), pbody->GetPhysBodyWorldPosition().getY());
-	}
-
 	//FRUSTRUM
 	if (!Engine::GetInstance().render.get()->InCameraView(pbody->GetPosition().getX() - texW, pbody->GetPosition().getY() - texH, texW, texH))
 	{
@@ -527,14 +520,14 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 	case ColliderType::ABYSS:
 	{ 
 		if (!godMode) {
-			if (transformed) {
-				Engine::GetInstance().audio.get()->PlayFx(pDeathSFX);
-			}
-			else {
-				Engine::GetInstance().audio.get()->PlayFx(gDeathSFX);
-			}
-			lives = 0;
 			playerState = DEAD;
+			lives = 0;
+
+			if (transformed) Engine::GetInstance().audio.get()->PlayFx(pDeathSFX);
+			else Engine::GetInstance().audio.get()->PlayFx(gDeathSFX);
+
+			pbody->body->SetGravityScale(0);
+			respawnTimer.Start();
 			
 		}
 		LOG("Collision ABYSS");
@@ -558,7 +551,10 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			/*Engine::GetInstance().fade.get()->Fade(Engine::GetInstance().scene.get(), Engine::GetInstance().win.get(), 30);*/
 			won = true;
 		}
-		
+		break;
+	
+	case ColliderType::BOSS_STARTER:
+		if (!Engine::GetInstance().scene.get()->GetStartBossFight())Engine::GetInstance().scene.get()->SetStartBossFight(true);
 		break;
 	
 	case ColliderType::UNKNOWN:
@@ -609,7 +605,7 @@ void Player::SaveData(pugi::xml_node playerNode)
 		playerNode.attribute("y").set_value(pbody->GetPhysBodyWorldPosition().getY());
 		playerNode.attribute("lives").set_value(lives);
 		playerNode.attribute("transformed").set_value(transformed);
-		playerNode.attribute("lvl").set_value(lvl);
+		playerNode.attribute("candies").set_value(pickedCandies);
 	}
 	
 }
@@ -621,12 +617,10 @@ void Player::LoadData(pugi::xml_node playerNode)
 	position.setY(playerNode.attribute("y").as_int());
 	lives = playerNode.attribute("lives").as_int();
 	transformed = playerNode.attribute("transformed").as_bool();
+	pickedCandies = playerNode.attribute("candies").as_int();
 	if (transformed) jumpForce = parameters.child("propierties").attribute("pJumpForce").as_float();
 	else jumpForce = parameters.child("propierties").attribute("gJumpForce").as_float();
 	SetPosition(position);
-	lvl = playerNode.attribute("lvl").as_int();
-	/*if (lvl == 1) Engine::GetInstance().scene.get()->level = LVL1;
-	else if(lvl == 2) Engine::GetInstance().scene.get()->level = LVL2;*/
 }
 
 void Player::DMGPlayer(PhysBody* physA, PhysBody* physB) {
@@ -656,8 +650,11 @@ void Player::DMGPlayer(PhysBody* physA, PhysBody* physB) {
 			pushDir = b2Vec2_zero;
 			pushDir.x = physA->body->GetPosition().x - physB->body->GetPosition().x;
 			pushDir.y = physA->body->GetPosition().y - physB->body->GetPosition().y;
+
 			pushDir.Normalize();
-				
+			
+			LOG("%f, %f", pushDir.x, pushDir.y);
+
 			physA->body->SetLinearVelocity(b2Vec2_zero);
 			physA->body->ApplyLinearImpulseToCenter(b2Vec2(pushForce * pushDir.x, pushForce * pushDir.y), true);
 		}

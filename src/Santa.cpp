@@ -26,13 +26,13 @@ bool Santa::Start() {
 	drawOffsetX = 0;
 	drawOffsetY = 0;
 
-
 	idle.LoadAnimations(parameters.child("animations").child("idle"));
-	//attack.LoadAnimations(parameters.child("animations").child("attack"));
-	//hurt.LoadAnimations(parameters.child("animations").child("hurt"));
-	//death.LoadAnimations(parameters.child("animations").child("death"));
-
-
+	attack.LoadAnimations(parameters.child("animations").child("attack"));
+	hurt.LoadAnimations(parameters.child("animations").child("hurt"));
+	death.LoadAnimations(parameters.child("animations").child("death"));
+	jump.LoadAnimations(parameters.child("animations").child("jump"));
+	fall.LoadAnimations(parameters.child("animations").child("fall"));
+	walk.LoadAnimations(parameters.child("animations").child("walk"));
 
 	currentAnimation = &idle;
 
@@ -43,146 +43,139 @@ bool Santa::Start() {
 
 	//SFX LOAD
 	noSound = Engine::GetInstance().audio.get()->LoadFx(audioNode.child("noSound").attribute("path").as_string());
-
-
-	//INIT ROUTE
-	for (int i = 0; i < route.size(); i++)
-	{
-		route[i] = Engine::GetInstance().map.get()->WorldToWorldCenteredOnTile(route[i].getX(), route[i].getY());
-	}
-	routeDestinationIndex = 0;
-	destinationPoint = route[routeDestinationIndex];
-
 	//INIT PHYSICS
-	pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX(), (int)position.getY(), 32 / 4, bodyType::DYNAMIC);
+	pbody = Engine::GetInstance().physics.get()->CreateCircle((int)position.getX(), (int)position.getY(), 16, bodyType::DYNAMIC);
 	pbody->ctype = ColliderType::ENEMY;
-	pbody->body->SetGravityScale(0);
+	pbody->body->SetGravityScale(1);
 	pbody->body->SetFixedRotation(true);
-	pbody->body->SetTransform({ PIXEL_TO_METERS(destinationPoint.getX()), PIXEL_TO_METERS(destinationPoint.getY()) }, 0);
+	pbody->body->SetTransform({ PIXEL_TO_METERS(instanceParameters.child("point").attribute("x").as_float()), PIXEL_TO_METERS(instanceParameters.child("point").attribute("y").as_float())}, 0);
 	pbody->listener = this;
 
-	//INIT PATH
-	pathfinding = new Pathfinding();
-	ResetPath();
 
 	//INIT VARIABLES
 	speed = parameters.child("properties").attribute("speed").as_float();
-	chaseArea = parameters.child("properties").attribute("chaseArea").as_float();
 	deathTime = parameters.child("properties").attribute("deathTime").as_float();
+	jumpRange = parameters.child("properties").attribute("jumpRange").as_float();
+	jumpCooldown = parameters.child("properties").attribute("jumpCooldown").as_float();
+	attackRange = parameters.child("properties").attribute("attackRange").as_float();
+	attackTime = parameters.child("properties").attribute("attackTime").as_float();
+	lives = parameters.child("properties").attribute("lives").as_int();
+	hurtTime = parameters.child("properties").attribute("hurtTime").as_int();
+	pushForce = parameters.child("properties").attribute("pushForce").as_int();
 	state = PATROL;
 
-	
+	jumpCooldownTimer.Start();
+
+	dead = false;
 
 	return true;
 }
 
 bool Santa::Update(float dt) {
+	
 	ZoneScoped;
 
-	if (!Engine::GetInstance().render.get()->InCameraView(pbody->GetPosition().getX() - texW, pbody->GetPosition().getY() - texH, texW, texH))
-	{
-		return true;
-	}
-
+	
 	if (!dead) {
 
-		if (!Engine::GetInstance().scene.get()->paused) {
-			pbody->body->SetGravityScale(0);
-			//STATES CHANGERS
-			if (state != DEAD) {
-				if (pbody->GetPhysBodyWorldPosition().distanceEuclidean(player->pbody->GetPhysBodyWorldPosition()) > chaseArea && state != PATROL)
-				{
-					state = PATROL;
-					ResetPath();
-					destinationPoint = route[routeDestinationIndex];
+		if (!Engine::GetInstance().render.get()->InCameraView(pbody->GetPosition().getX() - texW, pbody->GetPosition().getY() - texH, texW, texH))
+		{
+			pbody->body->SetEnabled(false);
+			return true;
+		}
+		else
+		{
+			pbody->body->SetEnabled(true);
+		}
 
-				}
-				else if (pbody->GetPhysBodyWorldPosition().distanceEuclidean(player->pbody->GetPhysBodyWorldPosition()) <= chaseArea && state != CHASING)
+
+		if (!Engine::GetInstance().scene.get()->paused) {
+			//STATES CHANGERS
+			if (!Engine::GetInstance().scene.get()->GetStartBossFight())
+			{
+				state = PATROL;
+			}
+			else 
+			{
+				float deltaX = player->pbody->GetPhysBodyWorldPosition().getX() - pbody->GetPhysBodyWorldPosition().getX();
+				float deltaY = player->pbody->GetPhysBodyWorldPosition().getY() - pbody->GetPhysBodyWorldPosition().getY();
+				float distanceToPlayer = sqrt(deltaX * deltaX + deltaY * deltaY);
+				
+				if (state != ATTACK && state != JUMP && state != FALL && state != DEAD && state !=HURT)
 				{
-					state = CHASING;
-					ResetPath();
+					if (distanceToPlayer < attackRange)
+					{
+						state = ATTACK;
+						player->DMGPlayer(player->pbody, pbody);
+						pbody->body->SetLinearVelocity({ 0,0 });
+						attackTimer.Start();
+					}
+					else if (distanceToPlayer < jumpRange && distanceToPlayer > jumpRange - 10 && jumpCooldownTimer.ReadSec()>5) { // `attackRange` define el rango de ataque
+						state = JUMP;
+						jumpCooldownTimer.Start();
+						jumped = false;
+					}
+					else {
+						state = CHASING;
+					}
 				}
 			}
 
 			//STATES CONTROLER
+			if (state == CHASING) {
 
-			if (state == PATROL) {
+				Vector2D direction = {player->pbody->GetPhysBodyWorldPosition().getX()>pbody->GetPhysBodyWorldPosition().getX() ? 1.0f : -1.0f ,0.0f};
+				pbody->body->SetLinearVelocity({ direction.getX() * speed, pbody->body->GetLinearVelocity().y});
+			}
+			else if (state == JUMP) {
+				// Lógica para saltar hacia el jugador
+				Vector2D direction = {
+					player->pbody->GetPhysBodyWorldPosition().getX() > pbody->GetPhysBodyWorldPosition().getX() ? 1.0f : -1.0f,
+					-1.0f // Salto hacia arriba
+				};
 
-				if (CheckIfTwoPointsNear(destinationPoint, { (float)METERS_TO_PIXELS(pbody->body->GetPosition().x), (float)METERS_TO_PIXELS(pbody->body->GetPosition().y) }, 5))
-				{
-					routeDestinationIndex++;
-					if (routeDestinationIndex == route.size()) routeDestinationIndex = 0;
-					destinationPoint = route[routeDestinationIndex];
-					ResetPath();
+				// Verificar si aterrizó para volver al estado CHASING
+				if (VALUE_NEAR_TO_0(pbody->body->GetLinearVelocity().y) && inFloor) {
+					if (jumped)
+					{
+						state = CHASING; // Cambiar a otro estado al aterrizar
+					}
+					else
+					{
+						float jumpImpulseX = 0.2f; // Fuerza horizontal
+						float jumpImpulseY = 2; // Fuerza vertical
+						// Impulso para saltar hacia el jugador
+						Vector2D impulse = { direction.getX() * jumpImpulseX, direction.getY() * jumpImpulseY };
+						pbody->body->ApplyLinearImpulseToCenter({ impulse.getX(), impulse.getY() }, true);
+						jumped = true;
+					}
 				}
 			}
-			else if (state == CHASING) {
-
-				Vector2D playerPos = player->pbody->GetPhysBodyWorldPosition();
-				Vector2D playerPosCenteredOnTile = Engine::GetInstance().map.get()->WorldToWorldCenteredOnTile(playerPos.getX(), playerPos.getY());
-				if (destinationPoint != playerPosCenteredOnTile)
+			else if (state == ATTACK) {
+				
+				if (attackTimer.ReadSec() >= attackTime)
 				{
-					destinationPoint = playerPosCenteredOnTile;
-					ResetPath();
+					state = CHASING;
+					attack.Reset();
 				}
 			}
 			else if (state == DEAD) {
-				pbody->body->SetGravityScale(1);
 
 				if (deathTimer.ReadSec() > deathTime && !dead) {
 					pbody->body->SetEnabled(false);
 					dead = true;
+					Engine::GetInstance().scene.get()->SetBossFightKilled(true);
 
-					LOG("killed bat");
+					LOG("killed boss");
 				}
 			}
+			else if (state == HURT) {
 
-			//PATHFINDING CONTROLER
-			if (state == PATROL || state == CHASING) {
-
-				if (pbody->GetPhysBodyWorldPosition().distanceEuclidean(player->pbody->GetPhysBodyWorldPosition()) <= (float)chaseArea * 1.5f && !playingSound) {
-					/*Engine::GetInstance().audio.get()->PlayFx(farBatWingsSFX, 1);*/
-					playingSound = true;
-				}
-				else if (pbody->GetPhysBodyWorldPosition().distanceEuclidean(player->pbody->GetPhysBodyWorldPosition()) >= chaseArea * 1.5f && playingSound) {
-					Engine::GetInstance().audio.get()->PlayFx(noSound, 1);
-					playingSound = false;
-				}
-
-
-
-				if (pathfinding->pathTiles.empty())
-				{
-					while (pathfinding->pathTiles.empty())
-					{
-						pathfinding->PropagateAStar(SQUARED, destinationPoint);
-					}
-					pathfinding->pathTiles.pop_back();
-				}
-				else
-				{
-
-					Vector2D nextTile = pathfinding->pathTiles.back();
-					Vector2D nextTileWorld = Engine::GetInstance().map.get()->MapToWorldCentered(nextTile.getX(), nextTile.getY());
-
-
-					if (CheckIfTwoPointsNear(nextTileWorld, { (float)METERS_TO_PIXELS(pbody->body->GetPosition().x), (float)METERS_TO_PIXELS(pbody->body->GetPosition().y) }, 3)) {
-
-						pathfinding->pathTiles.pop_back();
-						if (pathfinding->pathTiles.empty()) ResetPath();
-					}
-					else {
-						Vector2D nextTilePhysics = { PIXEL_TO_METERS(nextTileWorld.getX()),PIXEL_TO_METERS(nextTileWorld.getY()) };
-						b2Vec2 direction = { nextTilePhysics.getX() - pbody->body->GetPosition().x, nextTilePhysics.getY() - pbody->body->GetPosition().y };
-						direction.Normalize();
-						pbody->body->SetLinearVelocity({ direction.x * speed, direction.y * speed });
-					}
+				if (hurtTimer.ReadSec() >= hurtTime) {
+					state = CHASING;
+					hurt.Reset();
 				}
 			}
-
-
-
-
 		}
 		else {
 
@@ -200,7 +193,7 @@ bool Santa::Update(float dt) {
 		switch (state) {
 			break;
 		case CHASING:
-			currentAnimation = &attack;
+			currentAnimation = &walk;
 			break;
 		case PATROL:
 			currentAnimation = &idle;
@@ -208,8 +201,15 @@ bool Santa::Update(float dt) {
 		case ATTACK:
 			currentAnimation = &attack;
 			break;
+		case JUMP:
+			if (pbody->body->GetLinearVelocity().y < 0) currentAnimation = &jump;
+			else currentAnimation = &fall;
+			break;
 		case DEAD:
 			currentAnimation = &death;
+			break;
+		case HURT:
+			currentAnimation = &hurt;
 			break;
 		default:
 			break;
@@ -223,7 +223,6 @@ bool Santa::Update(float dt) {
 			{
 				Engine::GetInstance().render.get()->DrawCircle(position.getX() + texW / 2, position.getY() + texH / 2, chaseArea * 2, 255, 255, 255);
 				Engine::GetInstance().render.get()->DrawCircle(destinationPoint.getX(), destinationPoint.getY(), 3, 255, 0, 0);
-				pathfinding->DrawPath();
 			}
 
 			currentAnimation->Update();
@@ -254,16 +253,19 @@ void Santa::OnCollision(PhysBody* physA, PhysBody* physB) {
 	case ColliderType::WEAPON:
 		LOG("Enemy was hit by WEAPON");
 		if (state != DEAD) {
-			DMGEnemy();
-			/*Engine::GetInstance().audio.get()->PlayFx(batDeathSFX, 0, 3);*/
+			DMGEnemy(physA, physB);
 		}
+
+		break;
+	case ColliderType::PLATFORM:
+		LOG("Enemy was hit by WEAPON");
+		inFloor = true;
 
 		break;
 	case ColliderType::SHOT:
 		LOG("Enemy was hit by SHOT");
 		if (state != DEAD) {
-			DMGEnemy();
-			/*Engine::GetInstance().audio.get()->PlayFx(batDeathSFX, 0, 3);*/
+			DMGEnemy(physA, physB);
 		}
 		break;
 	case ColliderType::PUMPKIN:
@@ -282,18 +284,15 @@ void Santa::OnCollision(PhysBody* physA, PhysBody* physB) {
 		LOG("Collision ABYSS");
 		break;
 		if (state != DEAD) {
-			DMGEnemy();
-			/*Engine::GetInstance().audio.get()->PlayFx(batDeathSFX, 0, 3);*/
+			KillEnemy();
+
 		}
 
 	case ColliderType::PLAYER:
 		LOG("Collision PLAYER");
-
-		if (state != DEAD) {
+		if (state == JUMP || state == FALL) {
 			player->DMGPlayer(physB, physA);
-
 		}
-
 		break;
 
 	case ColliderType::UNKNOWN:
@@ -303,4 +302,46 @@ void Santa::OnCollision(PhysBody* physA, PhysBody* physB) {
 	default:
 		break;
 	}
+}
+
+void Santa::OnCollisionEnd(PhysBody* physA, PhysBody* physB)
+{
+	switch (physB->ctype)
+	{
+
+	case ColliderType::PLATFORM:
+		LOG("Enemy was hit by WEAPON");
+		inFloor = false;
+
+		break;
+
+	default:
+		break;
+	}
+}
+
+void Santa::DMGEnemy(PhysBody* physA, PhysBody* physB)
+{
+	if (state != DEAD && state != HURT) {
+
+		lives--;
+		if (lives <= 0) {
+			state = DEAD;
+			deathTimer.Start();
+			death.Reset();
+		}
+		else
+		{
+			hurtTimer.Start();
+			state = HURT;
+		}
+	}
+}
+
+
+void Santa::KillEnemy()
+{
+	deathTimer.Start();
+	death.Reset();
+	state = DEAD;
 }

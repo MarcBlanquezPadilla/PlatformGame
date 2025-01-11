@@ -126,7 +126,6 @@ public:
 
 	int lives;
 	int pickedCandies;
-	int lvl; 
 
 	Animation* currentAnim = nullptr;
 
