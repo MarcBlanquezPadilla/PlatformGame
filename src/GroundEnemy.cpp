@@ -155,7 +155,6 @@ bool GroundEnemy::Update(float dt) {
 
 					pbody->body->SetEnabled(false);
 					dead = true;
-					LOG("killed skeleton");
 				}
 
 			}
@@ -298,7 +297,6 @@ void GroundEnemy::OnCollision(PhysBody* physA, PhysBody* physB) {
 	switch (physB->ctype)
 	{
 	case ColliderType::WEAPON:
-		LOG("Skeleton was hit by WEAPON");
 		if (state != DEAD) {
 			DMGEnemy();
 			Engine::GetInstance().audio.get()->PlayFx(skeletonDeathSFX, 0, 2);
@@ -306,17 +304,14 @@ void GroundEnemy::OnCollision(PhysBody* physA, PhysBody* physB) {
 
 		break;
 	case ColliderType::SHOT:
-		LOG("Skeleton was hit by SHOT");
 		if (state != DEAD) {
 			DMGEnemy();
 			Engine::GetInstance().audio.get()->PlayFx(skeletonDeathSFX, 0, 2);
 		}
 		break;
 	case ColliderType::PUMPKIN:
-		LOG("Skeleton collided with ITEM");
 		break;
 	case ColliderType::SPYKE:
-		LOG("Skeleton collided with SPYKE");
 		if (state != DEAD) {
 			DMGEnemy();
 			Engine::GetInstance().audio.get()->PlayFx(skeletonDeathSFX, 0, 2);
@@ -324,18 +319,15 @@ void GroundEnemy::OnCollision(PhysBody* physA, PhysBody* physB) {
 		break;
 
 	case ColliderType::ENEMY:
-		LOG("Skeleton collided with another ENEMY");
 		break;
 	case ColliderType::ABYSS:
 		if (state != DEAD) {
 			DMGEnemy();
 			Engine::GetInstance().audio.get()->PlayFx(skeletonDeathSFX, 0, 2);
 		}
-		LOG("Skeleton fell into the ABYSS");
 		break;
 
 	case ColliderType::PLAYER:
-		LOG("Skeleton hit PLAYER");
 
 		if (state != DEAD) {
 			player->DMGPlayer(physB, physA);
@@ -345,7 +337,6 @@ void GroundEnemy::OnCollision(PhysBody* physA, PhysBody* physB) {
 		break;
 
 	case ColliderType::UNKNOWN:
-		LOG("Skeleton collided with UNKNOWN");
 		break;
 
 	default:

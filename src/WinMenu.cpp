@@ -40,7 +40,6 @@ bool WinMenu::Start()
 	rootNode = configFile.child("config");
 	pugi::xml_node musicNode = rootNode.child("audio").child("music");
 
-
 	halloweenPixels = TTF_OpenFont("Assets/Fonts/Halloweenpixels.ttf", 100);
 	corvidConspirator = TTF_OpenFont("Assets/Fonts/Corvid Conspirator v1.1.ttf", 30);
 
@@ -74,7 +73,6 @@ bool WinMenu::Start()
 	textRect.w = rootNode.child("scene").child("winMenu").child("icons").child("candy").attribute("textW").as_int();
 	textRect.h = rootNode.child("scene").child("winMenu").child("icons").child("candy").attribute("textH").as_int();
 
-
 	return ret;
 }
 
@@ -84,7 +82,7 @@ bool WinMenu::Update(float dt)
 	Engine::GetInstance().render.get()->DrawTexture(screenTex, 0, 0, NULL);
 	Engine::GetInstance().render.get()->DrawTexture(candyIcon, candyRect.x, candyRect.y, NULL);
 
-	candyCount = std::to_string((Engine::GetInstance().scene.get()->finalCandyNum));
+	candyCount = std::to_string(finalCandyNum);
 
 	Engine::GetInstance().render.get()->DrawTextEx(candyCount.c_str(), textRect.x, textRect.y, textRect.w, textRect.h, halloweenPixels, {255, 255, 255, 255});
 

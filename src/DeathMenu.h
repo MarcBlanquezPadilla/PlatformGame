@@ -44,6 +44,7 @@ public:
 
 	TTF_Font* halloweenPixels, *corvidConspirator;
 	bool quit = false;
+	int finalCandyNum;
 
 	float _dt;
 	std::string candyCount;

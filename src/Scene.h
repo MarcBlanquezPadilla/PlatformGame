@@ -122,6 +122,10 @@ public:
 
 	GuiControlCheckBox* fullScreenCheckBox;
 	SDL_Texture* pausePanel;
+	
+	SDL_Texture* heartsTexture;
+	SDL_Texture* caramelsTexture;
+	
 	Vector2D pausePos;
 
 	int finalCandyNum;

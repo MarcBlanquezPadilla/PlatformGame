@@ -139,6 +139,61 @@ bool Audio::PlayMusic(const char* path, float fadeTime)
 	return ret;
 }
 
+bool Audio::PlayMusic(_Mix_Music* _music, float fadeTime)
+{
+	bool ret = true;
+
+	if (!active)
+		return false;
+
+	if (music != NULL)
+	{
+		if (fadeTime > 0.0f)
+		{
+			Mix_FadeOutMusic(int(fadeTime * 1000.0f));
+		}
+		else
+		{
+			Mix_HaltMusic();
+		}
+
+		// this call blocks until fade out is done
+		Mix_FreeMusic(music);
+	}
+
+	Mix_VolumeMusic(Engine::GetInstance().settings.get()->musicVolume);
+
+	music = _music;
+
+	if (music == NULL)
+	{
+		LOG("Cannot load music. Mix_GetError(): %s\n", Mix_GetError());
+		ret = false;
+	}
+	else
+	{
+		if (fadeTime > 0.0f)
+		{
+			if (Mix_FadeInMusic(music, -1, (int)(fadeTime * 1000.0f)) < 0)
+			{
+				LOG("Cannot fade in music. Mix_GetError(): %s", Mix_GetError());
+				ret = false;
+			}
+		}
+		else
+		{
+			if (Mix_PlayMusic(music, -1) < 0)
+			{
+				LOG("Cannot play in music. Mix_GetError(): %s", Mix_GetError());
+				ret = false;
+			}
+		}
+	}
+
+	LOG("Successfully playing music" );
+	return ret;
+}
+
 bool Audio::StopMusic(float fadeTime)
 {
 	bool ret = true;
@@ -191,16 +246,30 @@ bool Audio::PlayFx(int id, int repeat, int channel)
 {
 	bool ret = false;
 
-	if(!active)
+	if (!active)
 		return false;
+
+	// Ajusta el volumen del canal
 	Mix_Volume(channel, Engine::GetInstance().settings.get()->sfxVolume);
-	if(id > 0 && id <= fx.size())
+
+	// Si id es válido y dentro del rango
+	if (id > 0 && id <= fx.size())
 	{
 		auto fxIt = fx.begin();
-		std::advance(fxIt, id-1);
-		Mix_PlayChannel(channel, *fxIt, repeat);
+		std::advance(fxIt, id - 1);
+
+		// Usar un canal libre automáticamente
+		int freeChannel = Mix_PlayChannel(-1, *fxIt, repeat); // -1 para seleccionar un canal libre automáticamente
+
+		if (freeChannel == -1) {
+			// Error al reproducir el sonido
+			ret = false;
+		}
+		else {
+			// Sonido reproducido correctamente en un canal libre
+			ret = true;
+		}
 	}
 
 	return ret;
 }
-

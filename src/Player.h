@@ -100,7 +100,6 @@ public:
 
 	bool destroyed;
 	bool godMode;
-	bool tpToStart;
 	bool canClimb;
 	bool transformable;
 	bool transformed;

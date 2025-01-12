@@ -136,10 +136,6 @@ bool MainMenu::CleanUp() {
 		bt.second->active = false;
 	}
 	/*musicSlider->active = false;*/
-	Engine::GetInstance().textures.get()->UnLoad(btTex);
-	Engine::GetInstance().textures.get()->UnLoad(optPanel);
-	Engine::GetInstance().textures.get()->UnLoad(pausePanel);
-	Engine::GetInstance().textures.get()->UnLoad(credits);
 
 	return true;
 }

@@ -86,7 +86,7 @@ bool DeathMenu::Update(float dt)
 	Engine::GetInstance().render.get()->DrawTexture(screenTex, 0, 0, NULL);
 	Engine::GetInstance().render.get()->DrawTexture(candyIcon, candyRect.x, candyRect.y, NULL);
 
-	candyCount = std::to_string((Engine::GetInstance().scene.get()->finalCandyNum));
+	candyCount = std::to_string(finalCandyNum);
 
 	Engine::GetInstance().render.get()->DrawTextEx(candyCount.c_str(), textRect.x, textRect.y, textRect.w, textRect.h, halloweenPixels, {255, 255, 255, 255});
 

@@ -151,7 +151,6 @@ bool Settings::PostUpdate()
 bool Settings::CleanUp()
 {
 	LOG("Freeing UI");
-	Engine::GetInstance().textures.get()->UnLoad(optPanel);
 
 	for (GuiControl* gui : settingsGUI) {
 		gui->active = false;

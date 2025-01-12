@@ -45,6 +45,7 @@ public:
 
 	float _dt;
 	std::string candyCount;
+	int finalCandyNum;
 
 	GuiControlButton* replayBt, * backToTitleBt, * exitBt;
 

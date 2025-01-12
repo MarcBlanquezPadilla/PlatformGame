@@ -125,7 +125,7 @@ void Enemy::SetPath(pugi::xml_node pathNode)
 		{
 			route[i] = Engine::GetInstance().map.get()->WorldToWorldCenteredOnTile(route[i].getX(), route[i].getY());
 		}
-		LOG("%d", route.size());
+
 		routeDestinationIndex = 0;
 		destinationPoint = route[routeDestinationIndex];
 	}
@@ -173,31 +173,24 @@ void Enemy::OnCollision(PhysBody* physA, PhysBody* physB) {
 	switch (physB->ctype)
 	{
 	case ColliderType::WEAPON:
-		LOG("Enemy was hit by WEAPON");
 		if(state != DEAD)
 			DMGEnemy();
 		break;
 	case ColliderType::SHOT:
-		LOG("Enemy was hit by SHOT");
 
 		break;
 	case ColliderType::PUMPKIN:
-		LOG("Collision PUMPKIN");
 		break;
 	case ColliderType::SPYKE:
-		LOG("Collision SPYKE");
 		break;
 
 	case ColliderType::ENEMY:
-		LOG("Collision ENEMY");
 		break;
 	case ColliderType::ABYSS:
 	{
-		LOG("Collision ABYSS");
 		break;
 	}
 	case ColliderType::UNKNOWN:
-		LOG("Collision UNKNOWN");
 		break;
 
 	default:
@@ -210,17 +203,12 @@ void Enemy::OnCollisionEnd(PhysBody* physA, PhysBody* physB)
 	switch (physB->ctype)
 	{
 	case ColliderType::PLATFORM:
-		LOG("End Collision PLATFORM");
 		break;
 	case ColliderType::PUMPKIN:
-
-		LOG("End Collision ITEM");
 		break;
 	case ColliderType::LADDER:
-		LOG("End Collision LADDER");
 		break;
 	case ColliderType::UNKNOWN:
-		LOG("End Collision UNKNOWN");
 		break;
 	default:
 		break;

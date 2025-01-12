@@ -52,9 +52,9 @@ private:
 	Timer hurtTimer;
 
 	//SOUND FX
-	//int batWingsSFX;
-	//int farBatWingsSFX;
-	//int batDeathSFX;
+	int punchSFX;
+	int hurtSFX;
+	int jumpSFX;
 
 
 };

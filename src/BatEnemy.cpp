@@ -140,8 +140,6 @@ bool BatEnemy::Update(float dt) {
 				if (deathTimer.ReadSec() > deathTime && !dead) {
 					pbody->body->SetEnabled(false);
 					dead = true;
-
-					LOG("killed bat");
 				}
 			}
 
@@ -260,52 +258,43 @@ void BatEnemy::OnCollision(PhysBody* physA, PhysBody* physB) {
 	switch (physB->ctype)
 	{
 	case ColliderType::WEAPON:
-		LOG("Enemy was hit by WEAPON");
 		if (state != DEAD) {
 			DMGEnemy();
 			Engine::GetInstance().audio.get()->PlayFx(batDeathSFX, 0, 3);
 		}
-		
 		break;
+
 	case ColliderType::SHOT:
-		LOG("Enemy was hit by SHOT");
 		if (state != DEAD) {
 			DMGEnemy();
 			Engine::GetInstance().audio.get()->PlayFx(batDeathSFX, 0, 3);
 		}
 		break;
+
 	case ColliderType::PUMPKIN:
-		LOG("Collision ITEM");
 		break;
+
 	case ColliderType::SPYKE:
-		
-		LOG("Collision SPYKE");
 		break;
 
 	case ColliderType::ENEMY:
-		LOG("Collision ENEMY");
 		break;
+
 	case ColliderType::ABYSS:
-	
-		LOG("Collision ABYSS");
-		break;
 		if (state != DEAD) {
 			DMGEnemy();
 			Engine::GetInstance().audio.get()->PlayFx(batDeathSFX, 0, 3);
 		}
+		break;
 	
 	case ColliderType::PLAYER:
-		LOG("Collision PLAYER");
-
 		if (state != DEAD) {
 			player->DMGPlayer(physB, physA);
 			
 		}
-
 		break;
 	
 	case ColliderType::UNKNOWN:
-		LOG("Collision UNKNOWN");
 		break;
 	
 	default:

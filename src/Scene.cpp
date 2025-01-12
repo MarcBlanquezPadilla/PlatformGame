@@ -135,7 +135,6 @@ bool Scene::Start()
 
 	if (!loadScene)
 	{
-		SaveState();
 		if (level != LVL1)
 		{
 			LoadTimeLivesCandies();
@@ -144,12 +143,20 @@ bool Scene::Start()
 		{
 			currentTime = 0;
 		}
+		SaveState();
 	}
 
 	musicNode = Engine::GetInstance().GetConfig().child("audio").child("music");
-	Engine::GetInstance().audio.get()->PlayMusic(musicNode.child("lvl1Mus").attribute("path").as_string());
+	if (level == LVL1)Engine::GetInstance().audio.get()->PlayMusic(musicNode.child("lvl1Mus").attribute("path").as_string());
+	else if(level == LVL2)Engine::GetInstance().audio.get()->PlayMusic(musicNode.child("lvl2Mus").attribute("path").as_string());
+	
 	startBossFight = false;
 	bossKilled = false;
+
+	
+	//UI
+	heartsTexture = Engine::GetInstance().textures.get()->Load(configParameters.child("ui").attribute("heartsPath").as_string());
+	caramelsTexture = Engine::GetInstance().textures.get()->Load(configParameters.child("ui").attribute("caramelsPath").as_string());
 
 	return true;
 }
@@ -214,9 +221,11 @@ bool Scene::Update(float dt)
 	if (player->lives <= 0 && player->respawnTimer.ReadSec() > player->respawnTime-1) {
 		/*Engine::GetInstance().death.get()->Enable();*/
 
+		Engine::GetInstance().death.get()->finalCandyNum = player->pickedCandies;
 		Engine::GetInstance().fade.get()->Fade((Module*)this, Engine::GetInstance().death.get());
-		/*if(Engine::GetInstance().fade.get()->currentStep == Engine::GetInstance().fade.get()->FROM_BLACK)*/
 		
+		/*if(Engine::GetInstance().fade.get()->currentStep == Engine::GetInstance().fade.get()->FROM_BLACK)*/
+
 		
 		return true;
 	}
@@ -232,9 +241,10 @@ bool Scene::Update(float dt)
 
 	if (player->won) {
 
-		finalCandyNum = player->candyNum;
 		player->won = false;
+		Engine::GetInstance().win.get()->finalCandyNum = player->pickedCandies;
 		Engine::GetInstance().fade.get()->Fade(this, Engine::GetInstance().win.get());
+		
 		
 		return true;
 	}
@@ -263,8 +273,12 @@ bool Scene::Update(float dt)
 		else Engine::GetInstance().render.get()->camera.y = (player->position.getY() + CAM_EXTRA_DISPLACEMENT_Y) * -Engine::GetInstance().window.get()->scale;
 	}
 
-	if (!bossKilled && startBossFight) Engine::GetInstance().map.get()->ActivateBossFightCollider(true);
+	if (!bossKilled && startBossFight)
+	{
+		Engine::GetInstance().map.get()->ActivateBossFightCollider(true);
+	}
 	else Engine::GetInstance().map.get()->ActivateBossFightCollider(false);
+
 
 	return true;
 }
@@ -272,6 +286,7 @@ bool Scene::Update(float dt)
 // Called each loop iteration
 bool Scene::PostUpdate()
 {
+
 	
 	bool ret = true;
 
@@ -297,54 +312,73 @@ bool Scene::PostUpdate()
 	Window* window = Engine::GetInstance().window.get();
 
 
+
+	//UI
 	if (!Engine::GetInstance().settings.get()->settingsOpen) {
-		std::string timerText;
-		std::string livesText = "Lives: " + std::to_string(player->lives);
-		std::string ptsText = "Collected Candies: " + std::to_string(player->pickedCandies);
-		if (paused) timerText = "Time: " + std::to_string((int)currentTime) + " s";
-		else timerText = "Time: " + std::to_string((int)currentTime) + " s";
-		render->DrawText(livesText.c_str(), 20, 20, 100, 20);
-		render->DrawText(ptsText.c_str(), 150, 20, 200, 20);
-		render->DrawText(timerText.c_str(), 375, 20, 100, 20);
-	}
 
-	if (paused && !Engine::GetInstance().settings.get()->settingsOpen) {
+		int hearts = player->lives;
 
-		
-		Engine::GetInstance().render.get()->DrawRectangle({ -render->camera.x / window->scale , -render->camera.y / window->scale, window->width, window->height }, 0,0,0,200, true, true);
-		Engine::GetInstance().render.get()->DrawTexture(pausePanel, -render->camera.x / window->scale + pausePos.getX(), -render->camera.y / window->scale + pausePos.getY());
-		
-		for (const auto& bt : pauseButtons) {
-			if (bt.second->active == false) {
-				bt.second->active = true;
-			}	
-			else {
-				bt.second->Update(_dt);
-				OnGuiMouseClickEvent(bt.second);
-				
-			}
-			
+		for (int i = 0; i < hearts; i++) {
+			SDL_Rect rect = { 0, player->transformed ? 16 : 32, 16, 16 };
+			Engine::GetInstance().render.get()->DrawTexture(
+				heartsTexture,
+				-render->camera.x / window->scale + i * 16 + 10,
+				-render->camera.y / window->scale + 10,
+				&rect
+			);
+		}
+		std::string candiesText = std::to_string(player->pickedCandies);
+		const char* text = candiesText.c_str();
+
+		int candies = player->pickedCandies;
+
+		for (int i = 0; i < candies; i++) {
+			SDL_Rect candyRect = { 0, 0, 16, 16 };
+			Engine::GetInstance().render.get()->DrawTexture(
+				caramelsTexture,
+				-render->camera.x / window->scale + window->width / window->scale - 10 - 16 - 16 * i,
+				-render->camera.y / window->scale + 10,
+				&candyRect
+			);
 		}
 
-		if (Engine::GetInstance().settings.get()->settingsOpen) 
-			for (const auto& bt : pauseButtons) 
-				bt.second->state = GuiControlState::DISABLED;
-		else 
-			for (const auto& bt : pauseButtons) 
-				bt.second->state = GuiControlState::NORMAL;
-	}
-	else {
-		for (const auto& bt : pauseButtons) 
-			bt.second->active = false;
-		
-	}
+		if (paused && !Engine::GetInstance().settings.get()->settingsOpen) {
 
-	if (help)
-		render->DrawTexture(helpMenu, -render->camera.x / window->scale + helpPos.getX(), -render->camera.y / window->scale + helpPos.getY());
 
-	if (quit) return false;
-	
-	return ret;
+			Engine::GetInstance().render.get()->DrawRectangle({ -render->camera.x / window->scale , -render->camera.y / window->scale, window->width, window->height }, 0, 0, 0, 200, true, true);
+			Engine::GetInstance().render.get()->DrawTexture(pausePanel, -render->camera.x / window->scale + pausePos.getX(), -render->camera.y / window->scale + pausePos.getY());
+
+			for (const auto& bt : pauseButtons) {
+				if (bt.second->active == false) {
+					bt.second->active = true;
+				}
+				else {
+					bt.second->Update(_dt);
+					OnGuiMouseClickEvent(bt.second);
+
+				}
+
+			}
+
+			if (Engine::GetInstance().settings.get()->settingsOpen)
+				for (const auto& bt : pauseButtons)
+					bt.second->state = GuiControlState::DISABLED;
+			else
+				for (const auto& bt : pauseButtons)
+					bt.second->state = GuiControlState::NORMAL;
+		}
+		else {
+			for (const auto& bt : pauseButtons)
+				bt.second->active = false;
+		}
+
+		if (help)
+			render->DrawTexture(helpMenu, -render->camera.x / window->scale + helpPos.getX(), -render->camera.y / window->scale + helpPos.getY());
+
+		if (quit) return false;
+
+		return ret;
+	}
 }
 
 // Called before quitting
@@ -497,46 +531,31 @@ void Scene::LoadState() {
 
 
 	//TODO: add an attribute to tell enemies from first and second level apart
-	bool enemyFound = true;
-	for (int i = 0; i<enemies.size() || enemyFound; i++)
+	for (int i = 0; i < enemies.size(); i++)
 	{
 		std::string nodeChar = "enemy" + std::to_string(i);
 		pugi::xml_node parent = savedDataNode.child(nodeChar.c_str());
-		if (!parent)
-		{
-			enemyFound = false;
-		}
-		else
+		if (parent)
 		{
 			enemies[i]->LoadData(parent);
 		}
 	}
 
-	bool candyFound = true;
-	for (int i = 0; i < enemies.size() || candyFound; i++)
+	for (int i = 0; i < candies.size(); i++)
 	{
 		std::string nodeChar = "candy" + std::to_string(i);
 		pugi::xml_node parent = savedDataNode.child(nodeChar.c_str());
-		if (!parent)
-		{
-			candyFound = false;
-		}
-		else
+		if (parent)
 		{
 			candies[i]->LoadData(parent);
 		}
 	}
 
-	bool pumpkinFound = true;
-	for (int i = 0; i < enemies.size() || pumpkinFound; i++)
+	for (int i = 0; i < pumpkins.size(); i++)
 	{
 		std::string nodeChar = "pumpkin" + std::to_string(i);
 		pugi::xml_node parent = savedDataNode.child(nodeChar.c_str());
-		if (!parent)
-		{
-			pumpkinFound = false;
-		}
-		else
+		if (parent)
 		{
 			pumpkins[i]->LoadData(parent);
 		}

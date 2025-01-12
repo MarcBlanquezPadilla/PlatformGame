@@ -68,6 +68,14 @@ bool Santa::Start() {
 
 	dead = false;
 
+	pugi::xml_document baseFile;
+	pugi::xml_parse_result results = baseFile.load_file("config.xml");
+
+	//AUDIO
+	punchSFX = Engine::GetInstance().audio.get()->LoadFx(baseFile.child("config").child("audio").child("fx").child("punchSound").attribute("path").as_string());
+	jumpSFX = Engine::GetInstance().audio.get()->LoadFx(baseFile.child("config").child("audio").child("fx").child("santaJumpSound").attribute("path").as_string());
+	hurtSFX = Engine::GetInstance().audio.get()->LoadFx(baseFile.child("config").child("audio").child("fx").child("santaHurtSound").attribute("path").as_string());
+
 	return true;
 }
 
@@ -105,12 +113,14 @@ bool Santa::Update(float dt) {
 				{
 					if (distanceToPlayer < attackRange)
 					{
+						Engine::GetInstance().audio.get()->PlayFx(punchSFX);
 						state = ATTACK;
 						player->DMGPlayer(player->pbody, pbody);
 						pbody->body->SetLinearVelocity({ 0,0 });
 						attackTimer.Start();
 					}
 					else if (distanceToPlayer < jumpRange && distanceToPlayer > jumpRange - 10 && jumpCooldownTimer.ReadSec()>5) { // `attackRange` define el rango de ataque
+						Engine::GetInstance().audio.get()->PlayFx(jumpSFX);
 						state = JUMP;
 						jumpCooldownTimer.Start();
 						jumped = false;
@@ -324,6 +334,7 @@ void Santa::DMGEnemy(PhysBody* physA, PhysBody* physB)
 {
 	if (state != DEAD && state != HURT) {
 
+		Engine::GetInstance().audio.get()->PlayFx(hurtSFX);
 		lives--;
 		if (lives <= 0) {
 			state = DEAD;

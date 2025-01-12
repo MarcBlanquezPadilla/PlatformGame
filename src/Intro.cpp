@@ -72,7 +72,6 @@ bool Intro::PostUpdate()
 bool Intro::CleanUp()
 {
 	LOG("Freeing Intro");
-	Engine::GetInstance().textures.get()->UnLoad(intro);
 	
 	return true;
 }

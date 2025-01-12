@@ -85,7 +85,6 @@ bool Player::Start() {
 
 	destroyed = false;
 	godMode = false;
-	tpToStart = false;
 	canClimb = false;
 	transformed = false;
 	reachedCheckPoint = false;
@@ -148,6 +147,7 @@ bool Player::Start() {
 	hurtTimer = Timer();
 	respawnTimer = Timer();
 
+
 	return true;
 }
 
@@ -178,16 +178,6 @@ bool Player::Update(float dt)
 		shoot->Update(dt);
 		if (playerState != ATTACK1) {
 			attackCollider->body->SetEnabled(false);
-		}
-
-		//TELEPORT TO START
-		if (tpToStart)
-		{
-			b2Vec2 initPosInMeters = { PIXEL_TO_METERS(initPos.x), PIXEL_TO_METERS(initPos.y) };
-			if (reachedCheckPoint) Engine::GetInstance().scene.get()->LoadState();
-			else Engine::GetInstance().scene.get()->RestartScene();
-
-			tpToStart = false;
 		}
 
 		pbody->body->SetAwake(true);
@@ -356,11 +346,8 @@ bool Player::Update(float dt)
 			pbody->body->SetLinearVelocity(b2Vec2_zero);
 			if (respawnTimer.ReadSec() >= respawnTime)
 			{
-				tpToStart = true;
 				playerState = IDLE;
 				dir = RIGHT;
-				
-
 
 				pbody->body->SetGravityScale(godMode == true || canClimb == true || playerState == DEAD ? 0 : gravity);
 
@@ -484,12 +471,9 @@ bool Player::PostUpdate(float dt) {
 bool Player::CleanUp()
 {
 	LOG("Cleanup player");
-	//delete pbody;
-	//pbody = nullptr;
-	//renderable = false;
+
 	active = false;
-	Engine::GetInstance().textures.get()->UnLoad(texture);
-	/*delete this;*/
+
 	
 	return true;
 }
@@ -652,8 +636,6 @@ void Player::DMGPlayer(PhysBody* physA, PhysBody* physB) {
 			pushDir.y = physA->body->GetPosition().y - physB->body->GetPosition().y;
 
 			pushDir.Normalize();
-			
-			LOG("%f, %f", pushDir.x, pushDir.y);
 
 			physA->body->SetLinearVelocity(b2Vec2_zero);
 			physA->body->ApplyLinearImpulseToCenter(b2Vec2(pushForce * pushDir.x, pushForce * pushDir.y), true);
