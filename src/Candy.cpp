@@ -53,13 +53,7 @@ bool Candy::Start() {
 		function = HEALING;
 	}
 
-	
-	/*pugi::xml_node floatAnimNode = baseParameters.child("animations").child("floating").first_child();
-	for (floatAnimNode; floatAnimNode != nullptr; floatAnimNode = floatAnimNode.next_sibling()) {
-		floatAnimNode.
-		
-	}*/
-	/*LOG("yAnim = %d", floatAnimNode.attribute("y").as_int());*/
+
 	floating.LoadAnimations(parameters.child("animations").child("floating"));
 
 	for (int i = 0; i < floating.totalFrames; ++i)
@@ -143,12 +137,10 @@ void Candy::OnCollision(PhysBody* physA, PhysBody* physB) {
 	switch (physB->ctype)
 	{
 	case ColliderType::PLAYER:
-		LOG("Collision CANDY");
 		picked = true;
 		break;
 
 	case ColliderType::UNKNOWN:
-		LOG("Collision UNKNOWN");
 		break;
 
 	default:
