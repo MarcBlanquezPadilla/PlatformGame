@@ -386,41 +386,12 @@ bool Scene::CleanUp()
 {
 	Engine::GetInstance().textures.get()->UnLoad(pausePanel);
 	Engine::GetInstance().map.get()->CleanUp();
-	Engine::GetInstance().entityManager.get()->Disable();
-	Engine::GetInstance().intro->Disable();
 	Engine::GetInstance().physics.get()->DeleteAllPhysBody();
+	Engine::GetInstance().entityManager.get()->Disable();
 
-	if (player)
-	{		
-		player->CleanUp();
-		delete player;
-		player = nullptr;
-	}
-
-	for (const auto& enemy : enemies) {
-		enemy->CleanUp();
-		delete enemy;
-	}
 	enemies.clear();
-
-	for (const auto& candy : candies) {
-		candy->CleanUp();
-		delete candy;
-	}
-	candies.clear();
-
-	for (const auto& pumpking : pumpkins) {
-		pumpking->CleanUp();
-		delete pumpking;
-	}
 	pumpkins.clear();
-
-	for (const auto& bt : pauseButtons) {
-		bt.second->active = false;
-	}
-
-	
-	/*Mix_HaltMusic();*/
+	candies.clear();
 	
 	LOG("Freeing scene");
 	return true;

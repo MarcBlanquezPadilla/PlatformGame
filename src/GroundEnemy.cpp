@@ -14,7 +14,7 @@ GroundEnemy::GroundEnemy()
 }
 
 GroundEnemy::~GroundEnemy() {
-	delete pathfinding;
+
 }
 
 

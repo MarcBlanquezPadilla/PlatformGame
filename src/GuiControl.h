@@ -71,7 +71,7 @@ public:
 		texture = tex;
 	}
 
-
+	virtual ~GuiControl(){}
 
 	// Called each loop iteration
 	virtual bool Update(float dt)

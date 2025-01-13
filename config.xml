@@ -387,14 +387,14 @@
 				</pumpkins>
 			</items>
 		</entities>
-		<savedData saved="true" level="2" time="43.4793434" startBossFight="false" bossKilled="false">
+		<savedData saved="true" level="2" time="47.0580368" startBossFight="false" bossKilled="false">
 			<lvl1>
-				<player x="2730" y="246" lives="4" transformable="false" transformed="false" candies="2" />
-				<enemy0 dead="false" x="116" y="423" />
-				<enemy1 dead="false" x="791" y="282" />
-				<enemy2 dead="false" x="2080" y="135" />
-				<enemy3 dead="false" x="1635" y="199" />
-				<enemy4 dead="false" x="1710" y="439" />
+				<player x="2730" y="246" lives="3" transformable="false" transformed="false" candies="2" />
+				<enemy0 dead="false" x="144" y="423" />
+				<enemy1 dead="false" x="816" y="264" />
+				<enemy2 dead="false" x="2077" y="107" />
+				<enemy3 dead="false" x="1636" y="184" />
+				<enemy4 dead="false" x="1643" y="439" />
 				<pumpkin0 alight="true" x="308" y="423" />
 				<pumpkin1 alight="true" x="824" y="312" />
 				<pumpkin2 alight="true" x="728" y="391" />
@@ -406,24 +406,24 @@
 				<pumpkin8 alight="true" x="1816" y="200" />
 				<candy0 x="376" y="312" type="corn" picked="true" />
 				<candy1 x="616" y="328" type="swirl" picked="true" />
-				<candy2 x="1008" y="423" type="heart" picked="true" />
+				<candy2 x="1008" y="423" type="heart" picked="false" />
 				<candy3 x="1895" y="367" type="heart" picked="true" />
 			</lvl1>
 			<lvl2>
-				<player x="2023" y="261" lives="4" transformable="false" transformed="false" candies="3" />
-				<enemy0 dead="false" x="417" y="359" />
-				<enemy1 dead="false" x="1051" y="199" />
-				<enemy2 dead="false" x="1844" y="327" />
+				<player x="2023" y="275" lives="4" transformable="false" transformed="false" candies="5" />
+				<enemy0 dead="false" x="532" y="359" />
+				<enemy1 dead="false" x="1038" y="214" />
+				<enemy2 dead="false" x="1912" y="296" />
 				<enemy3 dead="false" x="2659" y="399" />
 				<pumpkin0 alight="true" x="183" y="391" />
 				<pumpkin1 alight="true" x="1042" y="232" />
 				<pumpkin2 alight="true" x="1496" y="408" />
-				<pumpkin3 alight="true" x="1785" y="360" />
+				<pumpkin3 alight="true" x="1786" y="360" />
 				<pumpkin4 alight="true" x="2128" y="408" />
 				<candy0 x="616" y="316" type="swirl" picked="true" />
-				<candy1 x="1241" y="316" type="corn" picked="false" />
-				<candy2 x="1860" y="244" type="swirl" picked="false" />
-				<candy3 x="1893" y="366" type="heart" picked="false" />
+				<candy1 x="1241" y="316" type="corn" picked="true" />
+				<candy2 x="1861" y="244" type="swirl" picked="true" />
+				<candy3 x="1894" y="366" type="heart" picked="true" />
 			</lvl2>
 		</savedData>
 		<pauseMenu>

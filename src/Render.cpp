@@ -319,9 +319,6 @@ bool Render::DrawText(const char* text, int posx, int posy, int w, int h) const
 
 	SDL_RenderCopy(renderer, texture, NULL, &dstrect);
 
-	SDL_DestroyTexture(texture);
-	SDL_FreeSurface(surface);
-
 	return true;
 }
 

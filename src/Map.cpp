@@ -130,12 +130,14 @@ bool Map::CleanUp()
     }
     mapData.layers.clear();
 
-    for (const auto& objectGroup : mapData.objectsGroups)
-    {
-        delete objectGroup;
+    for (const auto& objectGroup : mapData.objectsGroups) {
+        for (const auto& object : objectGroup->object) {
+            delete object;  
+        }
+        objectGroup->object.clear();  
+        delete objectGroup;  
     }
     mapData.objectsGroups.clear();
-
 
     for (const auto& paralax : mapData.paralaxs)
     {

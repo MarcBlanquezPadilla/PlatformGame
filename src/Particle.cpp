@@ -100,7 +100,5 @@ void Particle::Restart(Vector2D pos, Vector2D dir)
 
 bool Particle::CleanUp()
 {
-	delete pbody;
-	delete this;
 	return true;
 }

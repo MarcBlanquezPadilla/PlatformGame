@@ -14,7 +14,7 @@ BatEnemy::BatEnemy()
 }
 
 BatEnemy::~BatEnemy() {
-	delete pathfinding;
+
 }
 
 bool BatEnemy::Start() {

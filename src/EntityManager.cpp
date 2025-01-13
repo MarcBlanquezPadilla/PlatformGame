@@ -55,11 +55,16 @@ bool EntityManager::Start() {
 bool EntityManager::CleanUp()
 {
 	bool ret = true;
+	LOG("Cleaning entities");
 
-	for(const auto entity : entities)
+	for (auto entity : entities)
 	{
-		if (entity->active == false) continue;
-		ret = entity->CleanUp();
+		if (!entity->CleanUp()) {
+			LOG("Error cleaning up entity");
+			ret = false;
+		}
+
+		delete entity;
 	}
 
 	entities.clear();
@@ -71,7 +76,6 @@ Entity* EntityManager::CreateEntity(EntityType type)
 {
 	Entity* entity = nullptr; 
 
-	//L04: TODO 3a: Instantiate entity according to the type and add the new entity to the list of Entities
 	switch (type)
 	{
 	case EntityType::PLAYER:

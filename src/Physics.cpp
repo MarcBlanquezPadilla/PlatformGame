@@ -450,17 +450,6 @@ void Physics::EndContact(b2Contact* contact)
 	}
 }
 
-void Physics::DeletePhysBody(PhysBody* physBody) {
-	
-	if (physBody)
-	{
-		world->DestroyBody(physBody->body);
-		physBody->body = nullptr;
-		physBody->listener = nullptr;
-		delete physBody;
-		physBody = nullptr;
-	}
-}
 
 void Physics::DeleteAllPhysBody()
 {
@@ -469,7 +458,6 @@ void Physics::DeleteAllPhysBody()
 		PhysBody* physBody = list_physBodies[i];
 		if (physBody)
 		{
-			physBody->body->SetEnabled(false);
 			world->DestroyBody(physBody->body);
 			physBody->body = nullptr;
 			physBody->listener = nullptr;

@@ -70,6 +70,7 @@ private:
 	// Private constructor to prevent instantiation
 	// Constructor
 	Engine();
+	~Engine() {};
 
 	// Delete copy constructor and assignment operator to prevent copying
 	Engine(const Engine&) = delete;

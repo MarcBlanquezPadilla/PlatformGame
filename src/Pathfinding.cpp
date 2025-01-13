@@ -157,8 +157,7 @@ bool Pathfinding::IsFlyable(int x, int y) {
 
 bool Pathfinding::CleanUp()
 {
-    //delete layerNav;
-    //delete map;
+    
     return true;
 }
 

@@ -14,7 +14,7 @@ Santa::Santa()
 }
 
 Santa::~Santa() {
-	delete pathfinding;
+	
 }
 
 bool Santa::Start() {

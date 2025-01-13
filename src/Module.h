@@ -13,10 +13,11 @@ public:
 	
 	Module(bool startEnabled) : active(startEnabled) {}
 
+	virtual ~Module() {}
+
 	void Init()
 	{
-		/*active = true;*/
-		LOG("module active: %d", active);
+
 	}
 
 	// Called before render is available

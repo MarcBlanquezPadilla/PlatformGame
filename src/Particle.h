@@ -11,6 +11,7 @@ class Particle : public Entity
 public:
 
 	Particle();
+	virtual ~Particle() {};
 
 	bool Start();
 

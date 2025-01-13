@@ -67,7 +67,7 @@ bool Enemy::Update(float dt)
 bool Enemy::CleanUp()
 {
 	pathfinding->CleanUp();
-	//delete pathfinding;
+	delete pathfinding;
 	return true;
 }
 
