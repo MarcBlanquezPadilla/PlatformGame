@@ -69,7 +69,6 @@ public:
 
 	void LoadEnemy(Enemy* enemy, pugi::xml_node instanceNode);
 
-	void RestartScene();
 
 	void LoadItem(Pumpkin* pumpkins, pugi::xml_node instanceNode);
 

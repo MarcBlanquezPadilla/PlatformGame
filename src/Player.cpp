@@ -344,21 +344,6 @@ bool Player::Update(float dt)
 		else if (playerState == DEAD) {
 
 			pbody->body->SetLinearVelocity(b2Vec2_zero);
-			if (respawnTimer.ReadSec() >= respawnTime)
-			{
-				playerState = IDLE;
-				dir = RIGHT;
-
-				pbody->body->SetGravityScale(godMode == true || canClimb == true || playerState == DEAD ? 0 : gravity);
-
-				if (lives <= 0) {
-					lives = parameters.attribute("lives").as_int();
-					
-				}
-
-				death.Reset();
-				t_death.Reset();
-			}
 		}
 	}
 	
@@ -511,8 +496,8 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			else Engine::GetInstance().audio.get()->PlayFx(gDeathSFX);
 
 			pbody->body->SetGravityScale(0);
+			pbody->body->SetGravityScale(0);
 			respawnTimer.Start();
-			
 		}
 		LOG("Collision ABYSS");
 		break;
@@ -532,7 +517,6 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			Engine::GetInstance().scene.get()->ChangeLevel();
 		}
 		else if (Engine::GetInstance().scene.get()->level == LVL2) {
-			/*Engine::GetInstance().fade.get()->Fade(Engine::GetInstance().scene.get(), Engine::GetInstance().win.get(), 30);*/
 			won = true;
 		}
 		break;
@@ -641,6 +625,17 @@ void Player::DMGPlayer(PhysBody* physA, PhysBody* physB) {
 			physA->body->ApplyLinearImpulseToCenter(b2Vec2(pushForce * pushDir.x, pushForce * pushDir.y), true);
 		}
 	}
+}
+void Player::KillPlayer() {
+
+	lives = 0;
+	playerState = DEAD;
+
+	if (transformed) Engine::GetInstance().audio.get()->PlayFx(pDeathSFX);
+	else Engine::GetInstance().audio.get()->PlayFx(gDeathSFX);
+
+	pbody->body->SetGravityScale(0);
+	respawnTimer.Start();
 }
 
 void Player::SetCandies(int candies)

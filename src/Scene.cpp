@@ -186,17 +186,6 @@ void Scene::LoadItem(Candy* candy, pugi::xml_node instanceNode) {
 	candies.push_back(candy);
 }
 
-void Scene::RestartScene()
-{
-	player->Restart();
-
-
-	for (int i = 0; i < enemies.size()/2; i++)
-	{
-		enemies[i]->Restart();
-	}
-}
-
 
 int Scene::GetLevel()
 {
@@ -230,7 +219,12 @@ bool Scene::Update(float dt)
 		return true;
 	}
 
-	if (changeLevel)
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F7) == KEY_DOWN)
+	{
+		player->KillPlayer();
+	}
+
+	if (changeLevel || level == LVL1 && Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F8) == KEY_DOWN)
 	{
 		changeLevel = false;
 		SaveState();
@@ -239,7 +233,7 @@ bool Scene::Update(float dt)
 		return true;
 	}
 
-	if (player->won) {
+	if (player->won || level == LVL2 && Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F8) == KEY_DOWN) {
 
 		player->won = false;
 		Engine::GetInstance().win.get()->finalCandyNum = player->pickedCandies;

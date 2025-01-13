@@ -63,7 +63,11 @@ public:
 	void Restart();
 
 	void DMGPlayer(PhysBody* physA, PhysBody* physB);
+
+	void KillPlayer();
+
 	void PickCandies();
+
 	void Heal();
 
 public:
