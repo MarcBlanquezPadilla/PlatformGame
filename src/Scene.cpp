@@ -224,6 +224,27 @@ bool Scene::Update(float dt)
 		player->KillPlayer();
 	}
 
+	if (level != LVL1 && Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
+	{
+		level = LVL1;
+		loadScene = false;
+		Engine::GetInstance().fade.get()->Fade(this, this);
+	}
+
+	if (level != LVL2 && Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F2) == KEY_DOWN)
+	{
+		level = LVL2;
+		loadScene = false;
+		Engine::GetInstance().fade.get()->Fade(this, this);
+	}
+
+	if (Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F3) == KEY_DOWN)
+	{
+		loadScene = false;
+		Engine::GetInstance().fade.get()->Fade(this, this);
+		
+	}
+
 	if (changeLevel || level == LVL1 && Engine::GetInstance().input.get()->GetKey(SDL_SCANCODE_F8) == KEY_DOWN)
 	{
 		changeLevel = false;
